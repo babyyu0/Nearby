@@ -6,7 +6,8 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item to="/trip">관광지 보기</b-nav-item>
+        <b-nav-item to="/trip/list">관광지 보기</b-nav-item>
+        <b-nav-item to="/trip/board">자유 게시판</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -16,6 +17,7 @@
           <template #button-content>
             <b-avatar variant="info" src="https://placekitten.com/300/300" class="mr-2"></b-avatar> {{ member.name }} 님
           </template>
+          <b-dropdown-item to="/user/friend">친구</b-dropdown-item>
           <b-dropdown-item to="/user/info">회원 정보</b-dropdown-item>
           <b-dropdown-item to="/user/logout">로그아웃</b-dropdown-item>
         </b-nav-item-dropdown>
@@ -30,6 +32,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {

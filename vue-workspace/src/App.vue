@@ -2,7 +2,6 @@
   <div id="app">
     <trip-header></trip-header>
     <router-view />
-    <KakaoMap />
   </div>
 </template>
 

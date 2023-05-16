@@ -23,6 +23,16 @@ const routes = [
         name: "tripList",
         component: () => import("@/components/trip/TripList.vue"),
       },
+      {
+        path: "info",
+        name: "tripInfo",
+        component: () => import("@/components/trip/TripInfo.vue"),
+      },
+      {
+        path: "board",
+        name: "tripBoard",
+        component: () => import("@/components/trip/TripBoard.vue"),
+      },
     ],
   },
   {

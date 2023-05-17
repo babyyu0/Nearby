@@ -1,0 +1,21 @@
+### DataSource
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/enjoytrips
+spring.datasource.username=ssafy
+spring.datasource.password=ssafy
+
+#hikari cp
+spring.datasource.hikari.data-source-properties.cachePrepStmts=true
+spring.datasource.hikari.data-source-properties.prepStmtCacheSize=200
+spring.datasource.hikari.data-source-properties.prepStmtCacheSqlLimit=2048
+spring.datasource.hikari.data-source-properties.useServerPrepStmts=true
+spring.datasource.hikari.minimumIdle=5
+spring.datasource.hikari.connectionTimeout=10000
+spring.datasource.hikari.maximumPoolSize=10
+spring.datasource.hikari.maxLifeTime=580000
+spring.datasource.hikari.autoCommit=true
+
+mybatis.config-location=classpath*:mybatis/config/myBatisConfig.xml
+mybatis.type-aliases-package=com.ssafy.trip.model.vo
+
+spring.main.allow-circular-references=true

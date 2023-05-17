@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import TripView from "@/views/TripView.vue";
 import MemberView from "@/views/MemberView.vue";
+import BoardView from "@/views/BoardView.vue";
 
 Vue.use(VueRouter);
 
@@ -12,7 +13,7 @@ const routes = [
     name: "home",
     component: HomeView,
   },
-  {
+  {  // 여행
     path: "/trip",
     name: "trip",
     redirect: "trip/list",
@@ -35,7 +36,7 @@ const routes = [
       },
     ],
   },
-  {
+  {  // 회원
     path: "/member",
     name: "member",
     component: MemberView,
@@ -55,6 +56,24 @@ const routes = [
         name: "memberInfo",
         component: () => import("@/components/member/MemberInfo.vue"),
       },
+    ],
+  },
+  {  // 게시판
+    path: "/board",
+    name: "board",
+    redirect: "board/free",
+    component: BoardView,
+    children: [
+      {
+        path: "free",
+        name: "boardFree",
+        component: () => import("@/components/board/BoardFree.vue"),
+      },
+      {
+        path: "qna",
+        name: "boardQna",
+        component: () => import("@/components/board/BoardQna.vue"),
+      }
     ],
   },
 ];

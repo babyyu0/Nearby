@@ -1,0 +1,28 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ssafy.trip.model.dao.TripDAO">
+ 
+ 	<select id="selectAllSido" resultType="SidoVO">
+ 		SELECT sido_code AS sidoCode, sido_name AS sidoName FROM sido
+ 	</select>
+ 
+ 	<select id="selectAllTripType" resultType="TripTypeVO">
+ 		SELECT content_code AS contentCode, content_name AS contentName FROM trip_type
+ 	</select>
+ 
+ 	<select id="selectGugunBySidoCode" parameterType="int" resultType="GugunVO">
+ 		SELECT gugun_code AS gugunCode, gugun_name AS gugunName FROM gugun WHERE sido_code = ${sidoCode}
+ 	</select>
+ 
+ 	<select id="selectTripByRegion" parameterType="TripVO" resultType="TripVO">
+ 		SELECT content_id AS contentId, title, addr1 AS addr, addr2, latitude, longitude, first_image AS firstImage
+		 FROM attraction_info
+		  WHERE sido_code = #{sidoCode}
+		   AND gugun_code = #{gugunCode}
+		   AND content_type_id = #{contentTypeId}
+ 	</select>
+ 	
+ </mapper>

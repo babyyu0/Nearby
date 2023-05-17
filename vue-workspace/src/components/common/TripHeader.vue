@@ -6,8 +6,8 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item to="/trip/list">관광지 보기</b-nav-item>
-        <b-nav-item to="/trip/board">자유 게시판</b-nav-item>
+        <b-nav-item to="/trip">관광지 보기</b-nav-item>
+        <b-nav-item to="/board">게시판</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -34,13 +34,11 @@
 <script>
 
 export default {
-  data() {
-    return {
-      member: {
-        id: "",
-        name: ""
-      }
-    }
+  props: {
+    member: Object
+  }, 
+  updated() {
+    console.log(this.member);
   }
 }
 </script>

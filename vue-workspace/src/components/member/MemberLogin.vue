@@ -3,10 +3,10 @@
         <h1 class="mt-5">로그인</h1>
         <div class="mt-4">
             <b-card class="m-auto" style="max-width: 40rem;">
-                <b-form-input class="mt-4" placeholder="아이디"></b-form-input>
-                <b-form-input class="mt-2" placeholder="비밀번호"></b-form-input>
+                <b-form-input class="mt-4" placeholder="아이디" v-model="id"></b-form-input>
+                <b-form-input class="mt-2" placeholder="비밀번호" v-model="password" type="password"></b-form-input>
                 <div class="mt-4">
-                    <b-button variant="primary">로그인</b-button>
+                    <b-button variant="primary" @click="login">로그인</b-button>
                 </div>
             </b-card>
             </div>
@@ -22,8 +22,15 @@
 
 export default {
     data() {
-        return {};
+        return {
+            id: "",
+            password: ""
+        };
     },
-    components: {}
+    methods: {
+        login() {
+            this.$emit("login", { id: this.id, password: this.password });
+        }
+    }
 }
 </script>

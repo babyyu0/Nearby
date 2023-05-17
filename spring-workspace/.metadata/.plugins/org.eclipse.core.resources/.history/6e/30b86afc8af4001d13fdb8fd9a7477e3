@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ssafy.trip.model.dao.BoardDAO">
+ 
+ 	<select id="selectAll" parameterType="BoardVO" resultType="BoardVO">
+ 		SELECT *, writer_id AS writerId FROM #{type}_board
+ 	</select>
+ 	
+ 	<select id="selectOne" parameterType="BoardVO" resultType="BoardVO">
+ 		SELECT *, writer_id AS writerId FROM #{type}_board WHERE code=#{code}
+ 	</select>
+ 	
+ 	<insert id="insert" parameterType="BoardVO">
+ 		INSERT INTO #{type}_board VALUES (#{title}, #{contents}, #{writerId}, NOW())
+ 	</insert>
+ 	
+ 	<update id="update" parameterType="BoardVO">
+ 		UPDATE #{type}_board SET title=#{title}, contents=#{contents}, writer_id=#{writerId} WHERE code=#{code} 
+ 	</update>
+ 	
+ 	<delete id="delete" parameterType="BoardVO">
+ 		DELETE FROM #{type}_board WHERE code=#{code}
+ 	</delete>
+
+ </mapper>

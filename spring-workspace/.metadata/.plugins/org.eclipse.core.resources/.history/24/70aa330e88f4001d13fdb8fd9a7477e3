@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ssafy.trip.model.dao.MemberDAO">
+ 
+ 	<select id="selectAll" parameterType="BoardVO" resultType="BoardVO">
+ 		SELECT *, writer_id AS writerId FROM #{type}_board
+ 	</select>
+ 	
+ 	<select id="selectOne" parameterType="BoardVO" resultType="BoardVO">
+ 		SELECT *, writer_id AS writerId FROM #{type}_board WHERE code=#{code}
+ 	</select>
+ 	
+ 	<insert id="insert" parameterType="BoarderVO">
+ 		INSERT INTO member VALUES (#{id}, #{password}, #{name}, #{email}, #{sidoCode}, #{gugunCode}, NOW())
+ 	</insert>
+ 	
+ </mapper>

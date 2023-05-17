@@ -68,11 +68,23 @@ const routes = [
         path: "free",
         name: "boardFree",
         component: () => import("@/components/board/BoardFree.vue"),
+        children: [
+          {
+            path: ":code",
+            component: () => import("@/components/board/BoardFree.vue"),
+          }
+        ]
       },
       {
         path: "qna",
         name: "boardQna",
         component: () => import("@/components/board/BoardQna.vue"),
+        children: [
+          {
+            path: ":code",
+            component: () => import("@/components/board/BoardQna.vue"),
+          }
+        ]
       }
     ],
   },

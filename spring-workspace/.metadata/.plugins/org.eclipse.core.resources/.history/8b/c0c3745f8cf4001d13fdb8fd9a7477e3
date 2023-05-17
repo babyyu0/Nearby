@@ -1,0 +1,46 @@
+package com.ssafy.trip.model.vo;
+
+public class BoardVO {
+	private int code;
+	private String type;
+	private String title;
+	private String contents;
+	private String writerId;
+	public BoardVO(int code, String title, String contents, String writerId) {
+		super();
+		setCode(code);
+		setTitle(title);
+		setContents(contents);
+		setWriterId(writerId);
+	}
+	public int getCode() {
+		return code;
+	}
+	public void setCode(int code) {
+		this.code = code;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getContents() {
+		return contents;
+	}
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+	public String getWriterId() {
+		return writerId;
+	}
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
+	@Override
+	public String toString() {
+		return "BoardVO [code=" + code + ", title=" + title + ", contents=" + contents + ", writerId=" + writerId + "]";
+	}
+	
+	
+}

@@ -48,7 +48,7 @@ public class TripProcessController {
 	}
 	
 	@PostMapping("list")
-	public List<TripVO> getTrip(TripVO trip) {
+	public List<TripVO> getList(TripVO trip) {
 		List<TripVO> trips = tripService.getTripByRegion(trip);
 		
 		return trips;

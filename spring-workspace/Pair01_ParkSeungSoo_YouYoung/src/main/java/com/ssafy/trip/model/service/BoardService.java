@@ -17,5 +17,13 @@ public class BoardService {
 	public List<BoardVO> selectAll(String type) {
 		return boardDAO.selectAll(type);
 	}
+
+	public BoardVO selectOne(BoardVO boardVO) {
+		return boardDAO.selectOne(boardVO);
+	}
+
+	public int update(BoardVO boardVO) {
+		return boardDAO.update(boardVO);
+	}
 	
 }

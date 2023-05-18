@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ssafy.trip.model.service.BoardService;
 import com.ssafy.trip.model.vo.BoardVO;
 
@@ -20,11 +22,21 @@ public class BoardProcessController {
 	BoardService boardService;
 	
 	@PostMapping("list")
-	public List<BoardVO> getList(String type) {
-		System.out.println(type);
-		List<BoardVO> trips = boardService.selectAll(type);
+	public PageInfo<BoardVO> getList(String type, int pageNum, int pageSize) {
+		PageHelper.startPage(pageNum, pageSize);
+		List<BoardVO> boards = boardService.selectAll(type);
 		
-		return trips;
+		return PageInfo.of(boards);
+	}
+	
+	@PostMapping("view")
+	public BoardVO getBoard(BoardVO boardVO) {
+		return boardService.selectOne(boardVO);
+	}
+	
+	@PostMapping("update")
+	public int updateBoard (BoardVO boardVO) {
+		return boardService.update(boardVO);
 	}
 	
 }

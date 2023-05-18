@@ -38,7 +38,6 @@ public class MemberProcessController {
 	@PostMapping("duplicate-check")
 	public String duplicateCheck(MemberVO member) throws MyException {
 		MemberVO selMember = memberService.selectOne(member);
-		//System.out.println(selMember);
 		
 		if(selMember == null) return "ok";
 		return null;

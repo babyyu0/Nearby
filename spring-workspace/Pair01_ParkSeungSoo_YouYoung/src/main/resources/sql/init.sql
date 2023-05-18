@@ -33,11 +33,24 @@ INSERT INTO trip_type (content_code, content_name)
 VALUES (12, '관광지'),(14, '문화시설'),(15, '축제공연행사'),(25, '여행코스'),(28, '레포츠'),(32, '숙박'),(38, '쇼핑'),(39, '음식점');
 
 
-CREATE TABLE free_board (
+CREATE TABLE location_board (
   code int AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(50) NOT NULL,
   contents VARCHAR(50) NOT NULL,
     writer_id VARCHAR(50) NOT NULL,
+    latitude DECIMAL(20, 17) NOT NULL,
+    longitude DECIMAL(20, 17) NOT NULL,
+    created_at TIMESTAMP,
+    
+    FOREIGN KEY (writer_id) REFERENCES member(id)
+);
+
+CREATE TABLE location_board (
+  code int AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(50) NOT NULL,
+  contents VARCHAR(50) NOT NULL,
+    writer_id VARCHAR(50) NOT NULL,
+    
     created_at TIMESTAMP,
     
     FOREIGN KEY (writer_id) REFERENCES member(id)

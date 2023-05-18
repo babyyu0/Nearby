@@ -14,4 +14,8 @@ public interface BoardDAO {
 
 	public List<BoardVO> selectAll(String type) throws DataAccessException;
 
+	public BoardVO selectOne(BoardVO boardVO) throws DataAccessException;
+
+	public int update(BoardVO boardVO) throws DataAccessException;
+
 }

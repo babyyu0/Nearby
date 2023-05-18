@@ -18,7 +18,7 @@
  	</insert>
  	
  	<update id="update" parameterType="BoardVO">
- 		UPDATE ${type}_board SET title=#{title}, contents=#{contents}, writer_id=#{writerId} WHERE code=#{code} 
+ 		UPDATE ${type}_board SET title=#{title}, contents=#{contents} WHERE code=#{code} 
  	</update>
  	
  	<delete id="delete" parameterType="BoardVO">

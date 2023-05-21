@@ -4,7 +4,7 @@
         <div class="mt-4">
             <b-card class="m-auto" style="max-width: 40rem;">
                 <b-form-input class="mt-4" placeholder="아이디" v-model="id"></b-form-input>
-                <b-form-input class="mt-2" placeholder="비밀번호" v-model="password" type="password"></b-form-input>
+                <b-form-input type="password" class="mt-2" placeholder="비밀번호" v-model="password"></b-form-input>
                 <div class="mt-4">
                     <b-button variant="primary" @click="login">로그인</b-button>
                 </div>

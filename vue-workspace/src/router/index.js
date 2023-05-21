@@ -65,26 +65,24 @@ const routes = [
     component: BoardView,
     children: [
       {
-        path: "free",
-        name: "boardFree",
-        component: () => import("@/components/board/BoardFree.vue"),
-        children: [
-          {
-            path: ":code",
-            component: () => import("@/components/board/BoardFree.vue"),
-          }
-        ]
+        path: ":type",
+        name: "boardList",
+        component: () => import("@/components/board/BoardList.vue")
       },
       {
-        path: "qna",
-        name: "boardQna",
-        component: () => import("@/components/board/BoardQna.vue"),
-        children: [
-          {
-            path: ":code",
-            component: () => import("@/components/board/BoardQna.vue"),
-          }
-        ]
+        path: ":type/:code",
+        name: "boardInfo",
+        component: () => import("@/components/board/BoardInfo.vue")
+      },
+      {
+        path: ":type/:code/modify",
+        name: "boardModify",
+        component: () => import("@/components/board/BoardUpdate.vue")
+      },
+      {
+        path: ":type/:code/write",
+        name: "boardWrite",
+        component: () => import("@/components/board/BoardUpdate.vue")
       }
     ],
   },

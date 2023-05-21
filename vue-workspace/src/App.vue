@@ -4,7 +4,7 @@
     <router-view  @setMember="setMember"/>
     <b-modal id="bv-modal" title="알림" ok-only centered>
       <p class="my-4">{{ modalMsg }}</p>
-  </b-modal>
+    </b-modal>
   </div>
 </template>
 

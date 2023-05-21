@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="map"></div>
-    <b-jumbotron header="Enjoy Your Trip ✈️" lead="Enjoy Trip과 함께 여행지를 찾아보세요!" style="background-color: white;">
+    <b-jumbotron header="Enjoy Your Trip ✈️" lead="PyP Trip과 함께 여행지를 찾아보세요!" style="background-color: white;">
     </b-jumbotron>
     <b-container>
       <b-carousel id="carousel-fade" style="text-shadow: 0px 0px 2px #000" fade indicators img-width="1024" img-height="480">

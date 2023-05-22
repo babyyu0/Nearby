@@ -57,7 +57,6 @@ public class MemberService {
 	}
 
 	public void regist(MemberVO member) throws MyException {
-		System.out.println(member);
 		try {
 			//회원가입 시 입력한 비밀번호를 암호화 하기 위해 렌덤해시값인 salt를 UUID.randomUUID()을 통해서 생성합니다.
 			String salt = UUID.randomUUID().toString();

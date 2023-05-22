@@ -25,7 +25,7 @@ const routes = [
         component: () => import("@/components/trip/TripList.vue"),
       },
       {
-        path: "info",
+        path: "info/:contentId",
         name: "tripInfo",
         component: () => import("@/components/trip/TripInfo.vue"),
       },

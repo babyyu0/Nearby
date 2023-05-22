@@ -1,10 +1,7 @@
 <template>
   <div id="app">
-    <trip-header :member="member"></trip-header>
-    <router-view  @setMember="setMember"/>
-    <b-modal id="bv-modal" title="알림" ok-only centered>
-      <p class="my-4">{{ modalMsg }}</p>
-    </b-modal>
+    <trip-header></trip-header>
+    <router-view />
   </div>
 </template>
 
@@ -13,28 +10,13 @@ import TripHeader from "@/components/common/TripHeader.vue";
 
 export default {
   name: "App",
-  data() {
-    return {
-      modalMsg: "",
-      member: {
-        id: "",
-        name: "",
-      }
-    };
-  },
   components: {
     TripHeader,
   },
-  methods: {
-    setMember(member) {
-      if (member.name != "") {
-        this.member = member;
-        this.$router.push("/");
-      } else {
-        this.modalMsg = "아이디 혹은 비밀번호가 일치하지 않습니다!";
-        this.$bvModal.show('bv-modal');
-      }
-    }
+  data() {
+    return {
+      contentId: null,
+    };
   }
 };
 </script>

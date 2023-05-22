@@ -23,4 +23,32 @@
 		   AND gugun_code = #{gugunCode}
 		   AND content_type_id = #{contentTypeId}
  	</select>
+ 
+ 	<select id="selectOneTripBySidoCode" parameterType="int" resultType="TripVO">
+ 		SELECT content_id AS contentId, title, addr1 AS addr, addr2, latitude, longitude, first_image AS firstImage
+		FROM attraction_info
+		WHERE sido_code = #{sidoCode}
+		  AND first_image != ""
+		LIMIT 1
+ 	</select>
+ 	<select id="selectTripByLocation" parameterType="double" resultType="TripVO">
+		SELECT content_id AS contentId, title, addr1 AS addr, addr2, latitude, longitude, first_image AS firstImage,
+		(
+       		6371 * acos ( cos ( radians(#{latitude}) )
+	          	* cos( radians( latitude ) )
+	          	* cos( radians( longitude ) - radians(#{longitude}) )
+	          	+ sin ( radians(#{latitude}) ) * sin( radians( latitude ) )
+       		)
+   		) AS distance
+		FROM attraction_info
+		ORDER BY distance
+		LIMIT 4
+ 	</select>
+ 	<select id="selectOneTripByContentId" parameterType="int" resultType="HashMap">
+		SELECT info.content_id AS contentId, info.title, info.zipcode, info.addr1 AS addr, info.addr2, info.latitude, info.longitude, info.first_image AS firstImage,
+		(SELECT content_name FROM trip_type type WHERE type.content_code = info.content_type_id) AS content_type, description.overview
+		FROM attraction_info info
+		JOIN attraction_description description ON info.content_id = description.content_id 
+		WHERE info.content_id = #{contentId}
+ 	</select>
  </mapper>

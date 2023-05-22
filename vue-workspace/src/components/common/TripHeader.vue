@@ -12,11 +12,11 @@
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto" v-if="member.id">
+        <b-navbar-nav class="ml-auto" v-if="isLogged">
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
-              <b-avatar variant="info" src="https://placekitten.com/300/300" class="mr-2"></b-avatar> {{ member.name }} 님
+              <b-avatar variant="info" src="https://placekitten.com/300/300" class="mr-2"></b-avatar> 유영 님
             </template>
             <b-dropdown-item to="/user/friend">친구</b-dropdown-item>
             <b-dropdown-item to="/user/info">회원 정보</b-dropdown-item>
@@ -33,10 +33,15 @@
 </template>
 
 <script>
+// import axios from "axios";
 
 export default {
-  props: {
-    member: Object
+  data() {
+    return {
+      isLogged: false,
+      id: null,
+      profile: "",
+    }
   }
 }
 </script>

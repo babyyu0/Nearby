@@ -1,5 +1,6 @@
 package com.ssafy.trip.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,51 @@ public class TripProcessController {
 		List<TripVO> trips = tripService.getTripByRegion(trip);
 		
 		return trips;
+	}
+	
+	@PostMapping("view")
+	public HashMap<String, Object> getView(int contentId) {
+		HashMap<String, Object> trip = tripService.getOneTripByContentId(contentId);
+		
+		return trip;
+	}
+	
+	@PostMapping("get-thumbnail")
+	public List<HashMap<String, Object>> getThumbnail() {
+		List<HashMap<String, Object>> thumbnails = new ArrayList<>();
+		
+		// 썸네일 개수
+		final int thumbCnt = 3;
+		HashMap<String, Object> thumb = new HashMap<>();
+		
+		List<SidoVO> sidos = tripService.getSido();
+		boolean[] visited = new boolean[sidos.size()];
+		
+		for(int i = 0; i < thumbCnt; i++) {
+			thumb = new HashMap<>();
+			
+			int pick = (int)(Math.random() * sidos.size());
+			if(visited[pick]) {  // 이미 뽑힌 난수일 경우
+				i--;
+				continue;
+			}
+			visited[pick] = true;  // 방문처리
+			
+			thumb.put("sidoCode", sidos.get(pick).getSidoCode());
+			thumb.put("sidoName", sidos.get(pick).getSidoName());
+			thumb.put("thumbImg", tripService.getRepresentative(sidos.get(pick).getSidoCode()).getFirstImage());
+			
+			thumbnails.add(thumb);
+		}
+		
+		return thumbnails;
+	}
+	
+	@PostMapping("get-closest-trip")
+	public List<TripVO> getClosestTrip(double latitude, double longitude) {
+		List<TripVO> closestTrip = tripService.getClosestTrip(latitude, longitude);
+		
+		return closestTrip;
 	}
 	
 }

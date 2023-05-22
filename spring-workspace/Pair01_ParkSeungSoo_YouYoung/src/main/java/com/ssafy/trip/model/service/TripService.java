@@ -1,5 +1,6 @@
 package com.ssafy.trip.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,18 @@ public class TripService {
 
 	public List<TripVO> getTripByRegion(TripVO trip) {
 		return tripDAO.selectTripByRegion(trip);
+	}
+
+	public TripVO getRepresentative(int sidoCode) {
+		return tripDAO.selectOneTripBySidoCode(sidoCode);
+	}
+
+	public List<TripVO> getClosestTrip(double latitude, double longitude) {
+		return tripDAO.selectTripByLocation(latitude, longitude);
+	}
+
+	public HashMap<String, Object> getOneTripByContentId(int contentId) {
+		return tripDAO.selectOneTripByContentId(contentId);
 	}
 
 }

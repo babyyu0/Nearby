@@ -1,0 +1,85 @@
+package com.ssafy.trip.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ssafy.trip.model.service.TripService;
+import com.ssafy.trip.model.vo.GugunVO;
+import com.ssafy.trip.model.vo.SidoVO;
+import com.ssafy.trip.model.vo.TripTypeVO;
+import com.ssafy.trip.model.vo.TripVO;
+
+@RestController
+@RequestMapping("/trip")
+@CrossOrigin
+public class TripProcessController {
+	
+	@Autowired
+	private TripService tripService;
+	
+	@PostMapping("get-region")
+	public Map<String, List<?>> getRegion() {
+		Map<String, List<?>> regions = new HashMap<>();
+		
+		List<SidoVO> sidos = tripService.getSido();
+		regions.put("sido", sidos);
+		
+		List<GugunVO> guguns = tripService.getGugunBySidoCode(sidos.get(0).getSidoCode());
+		regions.put("gugun", guguns);
+		
+		List<TripTypeVO> tripTypes = tripService.getTripType();
+		regions.put("tripType", tripTypes);
+		
+		return regions;
+	}
+	
+	@PostMapping("get-gugun")
+	public List<GugunVO> getGugun(int sidoCode) {
+		List<GugunVO> guguns = tripService.getGugunBySidoCode(sidoCode);
+		
+		return guguns;
+	}
+	
+	@PostMapping("list")
+	public List<TripVO> getList(TripVO trip) {
+		List<TripVO> trips = tripService.getTripByRegion(trip);
+		
+		return trips;
+	}
+	
+	@PostMapping("get-thumbnail")
+	public List<HashMap<String, String>> getThumbnail() {
+		List<HashMap<String, String>> thumbnails = new ArrayList<>();
+		
+		// 썸네일 개수
+		final int thumbCnt = 3;
+		HashMap<String, ?> thumb = new HashMap<>();
+		
+		List<SidoVO> sidos = tripService.getSido();
+		boolean[] visited = new boolean[sidos.size()];
+		
+		for(int i = 0; i < thumbCnt; i++) {
+			int pick = (int)(Math.random() * sidos.size());
+			if(visited[pick]) {  // 이미 뽑힌 난수일 경우
+				i--;
+				continue;
+			}
+			visited[pick] = true;  // 방문처리
+			
+			thumb.put("sidoCode", sidos.get(pick).getSidoCode());
+			thumb.put("sidoCode", sidos.get(pick).getSidoCode());
+		}
+		
+		
+		return thumbnails;
+	}
+	
+}

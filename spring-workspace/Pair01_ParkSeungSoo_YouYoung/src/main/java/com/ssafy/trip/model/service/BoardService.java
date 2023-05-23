@@ -25,5 +25,9 @@ public class BoardService {
 	public int update(BoardVO boardVO) {
 		return boardDAO.update(boardVO);
 	}
+
+	public int write(BoardVO boardVO) {
+		return boardDAO.insert(boardVO);
+	}
 	
 }

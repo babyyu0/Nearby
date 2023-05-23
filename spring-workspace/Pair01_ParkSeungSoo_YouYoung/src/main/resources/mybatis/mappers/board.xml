@@ -7,6 +7,7 @@
  
  	<select id="selectAll" parameterType="BoardVO" resultType="BoardVO">
  		SELECT *, writer_id AS writerId, created_at AS createdAt FROM ${type}_board
+ 		ORDER BY created_at DESC
  	</select>
  	
  	<select id="selectOne" parameterType="BoardVO" resultType="BoardVO">

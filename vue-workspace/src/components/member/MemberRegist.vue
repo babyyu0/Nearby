@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import axios from "axios";
+
 
 export default {
   data() {
@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     changeGugun() {
-      axios({
+      this.$axios({
         url: "http://localhost:9999/trip/get-gugun",
         method: "post",
         params: { sidoCode: this.member.sidoCode },
@@ -119,7 +119,7 @@ export default {
         this.validCheck.idFeedback = "아이디를 4자 이상 입력해 주세요.";
         return;
       }
-      axios({
+      this.$axios({
         url: "http://localhost:9999/member/duplicate-check",
         method: "post",
         params: { id: this.member.id },
@@ -133,12 +133,11 @@ export default {
       });
     },
     regist() {
-      axios({
+      this.$axios({
         url: "http://localhost:9999/member/regist",
         method: "post",
         params: { id: this.member.id, password: this.member.password, name: this.member.name, email: this.member.email, sidoCode: this.member.sidoCode, gugunCode: this.member.gugunCode },
       }).then((response) => {
-        console.log("response : ", response.data);
         if (response.data == "ok") {
           this.modalMsg = "회원가입이 완료 되었습니다.";
           this.$bvModal.show('bv-modal-regist');
@@ -150,7 +149,7 @@ export default {
     }
   },
   created() {
-    axios({
+    this.$axios({
       url: "http://localhost:9999/trip/get-region",
       method: "post",
     }).then((response) => {

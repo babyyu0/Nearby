@@ -39,4 +39,9 @@ public class BoardProcessController {
 		return boardService.update(boardVO);
 	}
 	
+	@PostMapping("write")
+	public int writeBoard (BoardVO boardVO) {
+		return boardService.write(boardVO);
+	}
+	
 }

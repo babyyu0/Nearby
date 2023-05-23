@@ -70,6 +70,11 @@ const routes = [
         component: () => import("@/components/board/BoardList.vue")
       },
       {
+        path: ":type/write",
+        name: "boardWrite",
+        component: () => import("@/components/board/BoardUpdate.vue")
+      },
+      {
         path: ":type/:code",
         name: "boardInfo",
         component: () => import("@/components/board/BoardInfo.vue")
@@ -77,11 +82,6 @@ const routes = [
       {
         path: ":type/:code/modify",
         name: "boardModify",
-        component: () => import("@/components/board/BoardUpdate.vue")
-      },
-      {
-        path: ":type/:code/write",
-        name: "boardWrite",
         component: () => import("@/components/board/BoardUpdate.vue")
       }
     ],

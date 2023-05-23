@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import axios from "axios";
+
 
 export default {
     data() {
@@ -35,12 +35,11 @@ export default {
         console.log(this.trip.contentId);  // 관광지 정보
         
         // 관광지 정보 가져오기
-        axios({
+        this.$axios({
             url: "http://localhost:9999/trip/view",
             method: "POST",
             params: { contentId: this.trip.contentId }
         }).then((response) => {
-            console.log(response.data);
             this.trip = response.data;
         });
     }

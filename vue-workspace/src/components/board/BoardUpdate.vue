@@ -22,19 +22,22 @@
             </div>
             <b-row class="mt-4" align-h="between">
                 <b-col cols="4"></b-col>
-                <b-col cols="4"><b-button class="mr-1" variant="primary" @click="updateBoard">수정 완료</b-button></b-col>
+                <b-col cols="4">
+                    <b-button class="mr-1" variant="primary" @click="updateBoard" v-if="this.board.code">수정 완료</b-button>
+                    <b-button class="mr-1" variant="primary" @click="writeBoard" v-else>글쓰기</b-button>
+                </b-col>
                 <b-col cols="4"></b-col>
             </b-row>
         </div>
       </b-container>
-        <b-modal id="bv-modal-modify" title="알림" ok-only centered>
+        <b-modal id="bv-modal-update" title="알림" ok-only centered>
         <p class="my-4">{{ modalMsg }}</p>
         </b-modal>
     </div>
 </template>
 
 <script>
-import axios from "axios";
+
 import BoardHeader from "@/components/common/BoardHeader.vue";
 
 export default {
@@ -44,24 +47,26 @@ export default {
     data() {
         return {
             modalMsg: "",
-            type: "",
-            board: {},
+            type: this.$route.params.type,
+            board: {
+                code: this.$route.params.code,
+                createdAt: "-",
+                writerId: "추후 추가 요망"
+            },
         };
     },
     methods: {
         getArticle() {
-            this.type = this.$route.params.type;
-            axios({
+            this.$axios({
                 url: "http://localhost:9999/board/view",
                 method: "post",
-                params: { code: this.$route.params.code, type: this.type },
+                params: { code: this.board.code, type: this.type },
             }).then((response) => {
                 this.board = response.data;
             });
         },
         updateBoard() {
-            this.board.type = this.type;
-            axios({
+            this.$axios({
                 url: "http://localhost:9999/board/update",
                 method: "post",
                 params: {
@@ -80,17 +85,44 @@ export default {
                     this.$bvModal.show('bv-modal-modify');
                 }
             });
+        },
+        writeBoard() {
+            this.$axios({
+                url: "http://localhost:9999/board/write",
+                method: "post",
+                params: {
+                    code: 0,
+                    type: this.type,
+                    title: this.board.title,
+                    writerId: this.$store.state.id,
+                    contents: this.board.contents,
+                },
+            }).then((response) => {
+                if (response.data == 1) {
+                    this.modalMsg = "작성 완료.";
+                    this.$bvModal.show('bv-modal-update');
+                    this.$router.go(-1);
+                } else {
+                    this.modalMsg = "작성 오류!";
+                    this.$bvModal.show('bv-modal-update');
+                }
+            });
         }
     },
     created() {
-        this.getArticle();
-    },
-    watch: {
-        $route: function() {
+        console.log(this.board.code);
+        if (!this.board.code) {  // 글 작성
+            this.board.writerId = this.$store.state.name;
+        } else {
             this.getArticle();
-        },
+        }
+    },
+    // watch: {
+    //     $route: function() {
+    //         this.getArticle();
+    //     },
 
-    }
+    // }
 }
 </script>
 

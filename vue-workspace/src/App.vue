@@ -8,15 +8,19 @@
 <script>
 import TripHeader from "@/components/common/TripHeader.vue";
 
+
 export default {
   name: "App",
   components: {
     TripHeader,
   },
-  data() {
-    return {
-      contentId: null,
-    };
+  created() {
+    this.$axios({
+      url: "http://localhost:9999/member/get-logged-member",
+      method: "POST"
+    }).then((response) => {
+      console.log(response.data);
+    });
   }
 };
 </script>

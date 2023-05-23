@@ -18,4 +18,6 @@ public interface BoardDAO {
 
 	public int update(BoardVO boardVO) throws DataAccessException;
 
+	public int insert(BoardVO boardVO) throws DataAccessException;
+
 }

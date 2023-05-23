@@ -32,12 +32,32 @@
           </b-card>
         </b-card-group>
       </div>
+      <div class="mt-5">
+        <b-row>
+          <b-col cols="6">
+            <h4 align="left">📋 자유게시판</h4>
+            <b-list-group v-if="boards.freeBoards.length > 0" flush align="left">
+              <b-list-group-item v-for="(freeboard, index) in boards.freeBoards" :key="index">{{ freeboard.title }}</b-list-group-item>
+            </b-list-group>
+            <div class="mt-5" v-else> 아직 게시글이 없습니다.</div>
+          </b-col>
+          <b-col cols="6">
+            <h4 align="left">📋 거리별 게시판</h4>
+            <b-table :fields="boards.fields" :items="boards.locationBoards" v-if="boards.locationBoards.length > 0">
+              <template #cell(title)="row">
+                <div class="text-truncate" @click="moveInfo(row.item.code)" v-text="row.item.title" align="left"></div>
+              </template>
+            </b-table>
+            <div class="mt-5" v-else> 아직 게시글이 없습니다.</div>
+          </b-col>
+        </b-row>
+      </div>
     </b-container>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+
 
 export default {
     name: "HomeView",
@@ -46,18 +66,50 @@ export default {
             thumbnails: [],
             latitude: null,
             longitude: null,
-            closestTrips: []
+          closestTrips: [],
+            boards: {
+              fields: [
+                { key: "code",      label: "번호" },
+                { key: "writerId",  label: "작성자" },
+                { key: "title",     label: "게시글" },
+                { key: "createdAt", label: "날짜", sortable: true },
+              ],
+              freeBoards: [],
+              locationBoards: []
+            }
         };
     },
     methods: {
       moveTripInfo(contentId) {
         this.$emit("moveTripInfo", contentId);
         this.$router.push("/trip/info");
+      },
+      getBoards() {
+        // Free Board
+        this.$axios({
+          url: "http://localhost:9999/board/list",
+          method: "POST",
+          params: { type: "free", pageNum: 1, pageSize: 5}
+        }).then((response) => {
+          this.boards.freeBoards = response.data.list;
+          console.log(this.boards.freeBoards.list);
+        });
+
+        // Location Board
+        this.$axios({
+          url: "http://localhost:9999/board/list",
+          method: "POST",
+          params: { type: "location", pageNum: 1, pageSize: 5}
+        }).then((response) => {
+          this.boards.locationBoards = response.data.list;
+          console.log(this.boards.locationBoards.list);
+        });
       }
     },
     created() {
+      this.getBoards();
         // 랜덤 썸네일 가져오기
-        axios({
+        this.$axios({
             url: "http://localhost:9999/trip/get-thumbnail",
             method: "POST",
         }).then((response) => {
@@ -68,8 +120,8 @@ export default {
         navigator.geolocation.getCurrentPosition(pos => {
             this.latitude = pos.coords.latitude;
             this.longitude = pos.coords.longitude;
-            console.log("Your location data is " + this.latitude + ", " + this.longitude);
-            axios({
+            // console.log("Your location data is " + this.latitude + ", " + this.longitude);
+            this.$axios({
                 url: "http://localhost:9999/trip/get-closest-trip",
                 method: "POST",
                 params: { latitude: this.latitude, longitude: this.longitude }

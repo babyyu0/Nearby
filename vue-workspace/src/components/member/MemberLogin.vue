@@ -22,7 +22,7 @@
     </b-container>
 </template>
 <script>
-import axios from "axios";
+
 
 export default {
     data() {
@@ -34,7 +34,7 @@ export default {
     },
     methods: {
         login() {
-            axios({
+            this.$axios({
                 url: "http://localhost:9999/member/login",
                 method: "post",
                 params: { id: this.id, password: this.password },
@@ -43,6 +43,7 @@ export default {
                     this.modalMsg = "아이디 혹은 비밀번호가 틀렸습니다.";
                     this.$bvModal.show('bv-modal-login');
                 } else {
+                    this.$store.commit('login', { id: this.id, name: response.data });
                     this.$router.push("/");
                 }
             });

@@ -6,7 +6,7 @@
             <b-card-header>
                 <!-- 제목 -->
                 <b-row align-h="between">
-                    <b-col cols="8" align="left"><b>{{ article.title }}</b></b-col>
+                    <b-col cols="8" align="left"><b>제목 : {{ article.title }}</b></b-col>
                     <b-col cols="4">{{ article.createdAt }}</b-col>
                 </b-row>
             </b-card-header>
@@ -31,25 +31,29 @@
                 <b-col cols="4"><b-button @click="$router.go(-1)" variant="outline-secondary">목록으로</b-button></b-col>
                 <b-col cols="4" align="right">
                     <b-button class="mr-1" @click="$router.push($route.path + '/modify')" variant="outline-primary">수정</b-button>
-                    <b-button variant="secondary">삭제</b-button>
+                    <b-button variant="secondary" @click="deleteBoard">삭제</b-button>
                 </b-col>
             </b-row>
         </div>
       </b-container>
+      <alert-modal :modalMsg="modalMsg"></alert-modal>
     </div>
 </template>
 
 <script>
 
 import BoardHeader from "@/components/common/BoardHeader.vue";
+import AlertModal from "../common/AlertModal.vue";
 
 export default {
     components: {
-        BoardHeader
+        BoardHeader,
+        AlertModal
     },
     data() {
         return {
             code: this.$route.params.code,
+            modalMsg: "",
             type: "",
             article: {},
         };
@@ -64,19 +68,29 @@ export default {
             }).then((response) => {
                 this.article = response.data;
             });
+        },
+        deleteBoard() {
+            if (this.$store.state.id != this.article.writerId) {
+                this.modalMsg = "삭제할 수 있는 권한이 없습니다.";
+                this.$bvModal.show('bv-modal');
+                return;
+            }
+            this.$axios({
+                url: "http://localhost:9999/board/delete",
+                method: "post",
+                params: { code: this.code, type: this.type },
+            }).then((response) => {
+                console.log(response.data);
+            });
         }
     },
     created() {
         this.getBoard();
     },
-    watch: {
+    code: {
         $route: function() {
             this.getBoard();
         }
     }
 }
 </script>
-
-<style scoped>
-
-</style>

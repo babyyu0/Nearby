@@ -1,5 +1,6 @@
 package com.ssafy.trip.controller;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -8,9 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.trip.model.service.MemberService;
@@ -27,21 +32,21 @@ public class MemberProcessController {
 	private MemberService memberService;
 
 	@PostMapping("login")
-	public String login(HttpServletRequest request, MemberVO member) throws MyException {
-	    String name = memberService.login(member);
-	    HttpSession session = request.getSession();
-	    
-	    //세션에 유저정보를 넣어놓음
-	    //TODO 이후에 세션 탙취당했을경우 or 환경이 바뀔경우 재 로그인 받아야함.
-	    session.setAttribute("userCheck",(request.getHeader("user-agent")));
-	    
-	    //세션 중복 처리
-	    if(name != null){
-	        SessionListener.getSessionidCheck("id", member.getId());
-	        session.setAttribute("id", member.getId());
-	    }
-	    
-	    return name;
+	public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody MemberVO member) throws MyException {
+		String name = memberService.login(member);
+		HttpSession session = request.getSession();
+
+		// 세션에 유저정보를 넣어놓음
+		// TODO 이후에 세션 탙취당했을경우 or 환경이 바뀔경우 재 로그인 받아야함.
+		session.setAttribute("userCheck", (request.getHeader("user-agent")));
+
+		// 세션 중복 처리
+		if (name != null) {
+			SessionListener.getSessionidCheck("id", member.getId());
+			session.setAttribute("id", member.getId());
+		}
+
+		return new ResponseEntity<>(name, HttpStatus.OK);
 	}
 
 	@PostMapping("logout")
@@ -72,44 +77,45 @@ public class MemberProcessController {
 
 	@PostMapping("get-logged-member")
 	public MemberVO getLoggedMember(HttpServletRequest request) throws MyException {
-		HttpSession session = request.getSession();
-		System.out.println("Session id : " + session.getAttribute("id"));
-		MemberVO selMember = memberService.selectOne(new MemberVO((String) session.getAttribute("id"), null, null, null, null, null));
+		HttpSession session = request.getSession(false);
+		System.out.println("생성된 세션 : " + session);
+		if(session != null)
+			return memberService.selectOne(new MemberVO((String) session.getAttribute("id"), null, null, null, null, null));
 
-		return selMember;
+		return null;
 	}
-	
-   public void csrfIn(HttpServletResponse response, HttpServletRequest request) {
-       String uuid = UUID.randomUUID().toString();
-       response.addCookie(new Cookie("CSRF", uuid));
-       HttpSession session = request.getSession(false);
-       
-       if (session != null) {
-           session.setAttribute("CSRF", uuid);
-       }
-       
-   }
-   
-   public void csrfOut(HttpServletRequest request) {
-       HttpSession session = request.getSession(false);
-       if (session != null) {
-           session.getAttribute("CSRF").equals("");
-           Cookie[] cookie = request.getCookies();
-           
-           boolean isAccept = false;
-           
-           for (int idx = 0; idx< cookie.length; idx++) {
-               if (cookie[idx].getName().equals("CSRF")) {
-                   isAccept = true;
-                   break;
-               }
-           }
-           
-           if (isAccept) {
-               System.out.println("작업 고고");
-           }else {
-               System.out.println("비정상적인 요청");
-           }
-       }
-   }
+
+	public void csrfIn(HttpServletResponse response, HttpServletRequest request) {
+		String uuid = UUID.randomUUID().toString();
+		response.addCookie(new Cookie("CSRF", uuid));
+		HttpSession session = request.getSession(false);
+
+		if (session != null) {
+			session.setAttribute("CSRF", uuid);
+		}
+
+	}
+
+	public void csrfOut(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.getAttribute("CSRF").equals("");
+			Cookie[] cookie = request.getCookies();
+
+			boolean isAccept = false;
+
+			for (int idx = 0; idx < cookie.length; idx++) {
+				if (cookie[idx].getName().equals("CSRF")) {
+					isAccept = true;
+					break;
+				}
+			}
+
+			if (isAccept) {
+				System.out.println("작업 고고");
+			} else {
+				System.out.println("비정상적인 요청");
+			}
+		}
+	}
 }

@@ -41,7 +41,6 @@ public class SessionListener implements HttpSessionListener{
 
     @Override
     public void sessionCreated(HttpSessionEvent hse) {
-        System.out.println("세션 생성");
         int targetIdx = StringToIdx(hse.getSession().getId()); 
         sessions.get(targetIdx).put(hse.getSession().getId(), hse.getSession());
     }

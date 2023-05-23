@@ -16,15 +16,14 @@
                 <b-nav-item to="/member/regist">회원가입</b-nav-item>
             </b-nav>
         </div>
-        <b-modal id="bv-modal-login" title="알림" ok-only centered>
-            <p class="my-4">{{ modalMsg }}</p>
-        </b-modal>
+        <alert-modal :modalMsg="modalMsg"></alert-modal>
     </b-container>
 </template>
 <script>
-
+import AlertModal from "../common/AlertModal.vue";
 
 export default {
+    components: { AlertModal },
     data() {
         return {
             modalMsg: "",
@@ -36,14 +35,14 @@ export default {
         login() {
             this.$axios({
                 url: "http://localhost:9999/member/login",
-                method: "post",
-                params: { id: this.id, password: this.password },
-            }).then((response) => {
+                method: "POST",
+                data: { id: this.id, password: this.password },
+        }).then((response) => {
                 if (response.data == "") {
                     this.modalMsg = "아이디 혹은 비밀번호가 틀렸습니다.";
-                    this.$bvModal.show('bv-modal-login');
+                    this.$bvModal.show('bv-modal');
                 } else {
-                    this.$store.commit('login', { id: this.id, name: response.data });
+                    this.$store.commit('login', { id: this.id, name: response.data.name });
                     this.$router.push("/");
                 }
             });

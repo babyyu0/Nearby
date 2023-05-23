@@ -2,7 +2,7 @@
   <div id="app">
     <trip-header></trip-header>
     <router-view />
-  </div>
+    </div>
 </template>
 
 <script>
@@ -14,20 +14,24 @@ export default {
   components: {
     TripHeader,
   },
-  created() {
+  watch: {
+    "$store.state.id": function () {
+      
     this.$axios({
       url: "http://localhost:9999/member/get-logged-member",
-      method: "POST"
+      method: "POST",
+      withCredentials : true
     }).then((response) => {
       console.log(response.data);
     });
+    }
   }
 };
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif, "NanumSquareNeo-Variable";
+  font-family: "NanumSquareNeo-Variable";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -38,6 +42,10 @@ export default {
   -webkit-user-select: none;
   -khtml-user-select: none;
   user-select: none;
+}
+
+.font-hyun {
+  font-family: "UhBeeSe_hyun";
 }
 
 nav {

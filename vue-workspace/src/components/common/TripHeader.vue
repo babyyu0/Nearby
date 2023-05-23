@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-navbar toggleable="lg" type="light" variant="light">
-      <b-navbar-brand to="/">✈️ PyP Trip</b-navbar-brand>
+      <b-navbar-brand class="font-hyun" to="/">✈️ PyP Trip</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 

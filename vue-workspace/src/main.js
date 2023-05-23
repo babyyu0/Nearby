@@ -22,7 +22,8 @@ Vue.use(Vuex);
 var sessionOptions = {
   persist: true
 }
-Vue.use(VueSession, sessionOptions)
+Vue.use(VueSession, sessionOptions);
+
 
 const store = new Vuex.Store({
   state: {
@@ -45,7 +46,9 @@ const store = new Vuex.Store({
 });
 
 Vue.config.productionTip = false;
-Vue.prototype.$axios = Axios; 
+Vue.prototype.$axios = Axios;
+
+Axios.defaults.withCredentials = true;
 
 new Vue({
   router,

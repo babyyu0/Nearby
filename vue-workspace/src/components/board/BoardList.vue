@@ -27,10 +27,10 @@
         </b-row>
         <b-table class="mt-3" :fields="fields" :items="boards" hover head-variant="light">
           <template #cell(title)="row">
-            <span @click="moveInfo(row.item.code)" style="cursor:pointer"> {{ row.item.title }} </span>
+            <span @click="$router.push(`/board/${type}/${row.item.code}`);" style="cursor:pointer"> {{ row.item.title }} </span>
           </template>
           <template #cell(createdAt)="row">
-            <div @click="moveInfo(row.item.code)"> {{ row.item.createdAt | dateFilter }} </div>
+            <div> {{ row.item.createdAt | dateFilter }} </div>
           </template>
         </b-table>
           

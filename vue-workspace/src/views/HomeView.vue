@@ -1,7 +1,9 @@
 <template>
   <div>
     <div id="map"></div>
-    <b-jumbotron header="Enjoy Your Trip ✈️" lead="PyP Trip과 함께 여행지를 찾아보세요!" style="background-color: white;">
+    <b-jumbotron style="background-color: white;">
+      <template #header><div class="font-hyun mb-5">Enjoy Your Trip ✈️</div></template>
+      <template #lead>PyP Trip과 함께 여행지를 찾아보세요!</template>
     </b-jumbotron>
     <b-container>
       <b-carousel id="carousel-fade" style="text-shadow: 0px 0px 2px #000" fade controls indicators img-width="1024" img-height="480">
@@ -27,27 +29,37 @@
             <b-card-body>
               <b-card-title class="text-truncate">{{ close.title }}</b-card-title>
               <b-card-text>{{ close.addr }} {{ close.addr2 }}</b-card-text>
-              <b-button size="sm" variant="outline-info" v-model="close.title" @click="$router.push(`/trip/info/${close.contentId}`)">관광지 보기</b-button>
             </b-card-body>
+            <b-card-footer footer-bg-variant="transparent" footer-border-variant="light">
+              <b-button size="sm" variant="outline-info" v-model="close.title" @click="$router.push(`/trip/info/${close.contentId}`)">관광지 보기</b-button>
+            </b-card-footer>
           </b-card>
         </b-card-group>
       </div>
       <div class="mt-5">
         <b-row>
           <b-col cols="6">
-            <h4 align="left">📋 자유게시판</h4>
+            <b-row align-v="center">
+              <b-col><h4 align="left">📋 자유 게시판</h4></b-col>
+              <b-col align="right"><b-link to="/board/free">더보기 ></b-link></b-col>
+            </b-row>
             <b-list-group v-if="boards.freeBoards.length > 0" flush align="left">
-              <b-list-group-item v-for="(freeboard, index) in boards.freeBoards" :key="index">{{ freeboard.title }}</b-list-group-item>
+              <b-list-group-item v-for="(freeboard, index) in boards.freeBoards" :key="index">
+                <div @click="$router.push(`/board/free/${freeboard.code}`);" style="cursor: pointer;">{{ freeboard.title }}</div>
+              </b-list-group-item>
             </b-list-group>
             <div class="mt-5" v-else> 아직 게시글이 없습니다.</div>
           </b-col>
           <b-col cols="6">
-            <h4 align="left">📋 거리별 게시판</h4>
-            <b-table :fields="boards.fields" :items="boards.locationBoards" v-if="boards.locationBoards.length > 0">
-              <template #cell(title)="row">
-                <div class="text-truncate" @click="moveInfo(row.item.code)" v-text="row.item.title" align="left"></div>
-              </template>
-            </b-table>
+            <b-row align-v="center">
+              <b-col><h4 align="left">📋 거리별 게시판</h4></b-col>
+              <b-col align="right"><b-link to="/board/location">더보기 ></b-link></b-col>
+            </b-row>
+            <b-list-group v-if="boards.locationBoards.length > 0" flush align="left">
+              <b-list-group-item v-for="(locationboard, index) in boards.locationBoards" :key="index">
+                <div @click="$router.push(`/board/location/${locationboard.code}`);" style="cursor: pointer;">{{ locationboard.title }}</div>
+              </b-list-group-item>
+            </b-list-group>
             <div class="mt-5" v-else> 아직 게시글이 없습니다.</div>
           </b-col>
         </b-row>
@@ -107,20 +119,18 @@ export default {
         this.$axios({
           url: "http://localhost:9999/board/list",
           method: "POST",
-          params: { type: "free", pageNum: 1, pageSize: 5}
+          params: { type: "free", pageNum: 1, pageSize: 4}
         }).then((response) => {
           this.boards.freeBoards = response.data.list;
-          console.log(this.boards.freeBoards.list);
         });
 
         // Location Board
         this.$axios({
           url: "http://localhost:9999/board/list",
           method: "POST",
-          params: { type: "location", pageNum: 1, pageSize: 5}
+          params: { type: "location", pageNum: 1, pageSize: 4}
         }).then((response) => {
           this.boards.locationBoards = response.data.list;
-          console.log(this.boards.locationBoards.list);
         });
       }
     },

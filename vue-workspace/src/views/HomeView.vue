@@ -52,6 +52,24 @@
           </b-col>
         </b-row>
       </div>
+      <div class="holder">
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <filter id="stripes">
+              <feTurbulence baseFrequency=".1 0.5"/>
+              <feColorMatrix values=".05 .1 0 0 0 .65 .4 0 0 0 .07 .1 .1 0 0 0 0 0 0 1"/>
+            </filter>
+            <pattern id="pattern" width="1" height="1">
+              <rect width="200%" height="200%" filter="url(#stripes)"/>
+            </pattern>
+            <filter id="filter">
+                <feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="11"/>
+                <feDisplacementMap in="SourceGraphic" scale="250"/>
+              <feComposite operator="in" in2="SourceGraphic" />
+            </filter>
+          <circle cx="50%" cy="50%" r="25%" fill="darkblue"/>
+          <circle cx="50%" cy="50%" r="25%" fill="url(#pattern)" filter="url(#filter)" stroke="tan" stroke-width="2"/>
+        </svg>
+      </div>
     </b-container>
   </div>
 </template>
@@ -134,3 +152,33 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+
+svg {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	animation: go 5s ease-in-out infinite;
+	height: auto;
+	width: 100%;
+}
+.holder {
+  position: relative;
+  margin: 0 auto;
+	height: 250px;
+	width: 400px;
+}
+@keyframes go {
+	0% {
+		width: 100%;
+	}
+	50% {
+		width: 50%;
+	}
+	100% {
+		width: 100%
+	}
+}
+</style>

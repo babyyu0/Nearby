@@ -17,8 +17,11 @@ import com.ssafy.trip.model.vo.TripVO;
 public interface TripDAO {
 
 	List<SidoVO> selectAllSido() throws DataAccessException;
+	
+	SidoVO selectOneSido(int sidoCode) throws DataAccessException;
 
-	List<GugunVO> selectGugunBySidoCode(int sidoCode) throws DataAccessException;
+	List<GugunVO> selectAllGugunBySidoCode(int sidoCode) throws DataAccessException;
+	GugunVO selectOneGugunBySidoCode(int gugunCode, int sidoCode) throws DataAccessException;
 
 	List<TripTypeVO> selectAllTripType() throws DataAccessException;
 
@@ -26,7 +29,7 @@ public interface TripDAO {
 
 	TripVO selectOneTripBySidoCode(int sidoCode) throws DataAccessException;
 
-	List<TripVO> selectTripByLocation(double latitude, double longitude) throws DataAccessException;
+	List<TripVO> selectTripByLocation(TripVO trip) throws DataAccessException;
 
 	HashMap<String, Object> selectOneTripByContentId(int contentId) throws DataAccessException;
 	

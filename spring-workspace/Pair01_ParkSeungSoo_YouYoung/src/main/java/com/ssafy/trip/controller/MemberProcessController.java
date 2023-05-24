@@ -1,6 +1,5 @@
 package com.ssafy.trip.controller;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.trip.model.service.MemberService;
+import com.ssafy.trip.model.service.TripService;
 import com.ssafy.trip.model.vo.MemberVO;
 import com.ssafy.trip.util.MyException;
 import com.ssafy.trip.util.SessionListener;
@@ -30,6 +30,9 @@ public class MemberProcessController {
 
 	@Autowired
 	private MemberService memberService;
+
+	@Autowired
+	private TripService tripService;
 
 	@PostMapping("login")
 	public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody MemberVO member) throws MyException {
@@ -50,14 +53,15 @@ public class MemberProcessController {
 	}
 
 	@PostMapping("logout")
-	public String logout(HttpSession session) throws MyException {
+	public String logout(HttpServletRequest request) throws MyException {
+		HttpSession session = request.getSession(false);
 		session.invalidate();
 
 		return null;
 	}
 
 	@PostMapping("duplicate-check")
-	public String duplicateCheck(MemberVO member) throws MyException {
+	public String duplicateCheck(@RequestBody MemberVO member) throws MyException {
 		MemberVO selMember = memberService.selectOne(member);
 
 		if (selMember == null)
@@ -66,7 +70,7 @@ public class MemberProcessController {
 	}
 
 	@PostMapping("regist")
-	public String regist(MemberVO member) throws MyException {
+	public String regist(@RequestBody MemberVO member) throws MyException {
 		MemberVO selMember = memberService.selectOne(member);
 		if (selMember != null)
 			return null;
@@ -76,11 +80,17 @@ public class MemberProcessController {
 	}
 
 	@PostMapping("get-logged-member")
-	public MemberVO getLoggedMember(HttpServletRequest request) throws MyException {
+	public ResponseEntity<?> getLoggedMember(HttpServletRequest request) throws MyException {
 		HttpSession session = request.getSession(false);
-		System.out.println("생성된 세션 : " + session);
-		if(session != null)
-			return memberService.selectOne(new MemberVO((String) session.getAttribute("id"), null, null, null, null, null));
+		
+		if(session != null) {
+			MemberVO member = memberService.selectOne(new MemberVO((String) session.getAttribute("id"), null, null, null, 0, 0));
+			member.setSidoVO(tripService.getOneSido(member.getSidoCode()));
+			member.setGugunVO(tripService.getOneGugunBySidoCode(member.getGugunCode(), member.getSidoCode()));
+			
+			System.out.println(member);
+			return new ResponseEntity<>(member, HttpStatus.OK);
+		}
 
 		return null;
 	}

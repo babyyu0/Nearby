@@ -1,5 +1,4 @@
 <template>
-  <div>
     <b-container>
       <board-header :type="type"></board-header>
       <h1 class="mt-5">{{ title }} 게시판</h1>
@@ -22,7 +21,7 @@
             </b-input-group>
           </b-col>
           <b-col cols="2" align="right">
-            <b-button variant="primary" @click="$router.push(`/board/${type}/write`)">글쓰기</b-button>
+            <b-button variant="primary" @click="moveWriteBoard" v-if="this.$store.state.member.logged">글쓰기</b-button>
           </b-col>
         </b-row>
         <b-table class="mt-3" :fields="fields" :items="boards" hover head-variant="light">
@@ -41,19 +40,22 @@
         ></b-pagination>
       </div>
         <div class="mt-5" v-else>게시물이 존재하지 않습니다.</div>
+        <alert-modal :modalMsg="modalMsg"></alert-modal>
     </b-container>
-  </div>
 </template>
 
 <script>
 import BoardHeader from "@/components/common/BoardHeader.vue";
+import AlertModal from "../common/AlertModal.vue";
 
 export default {
   components: {
     BoardHeader,
+    AlertModal
   },
   data() {
     return {
+      modalMsg: "",
       type: "",
       title: "",
       searchCategory: "title",
@@ -98,16 +100,15 @@ export default {
     },
     getPage() {
       this.$axios({
-        url: "http://localhost:9999/board/list",
+        url: "board/list",
         method: "post",
-        params: {
+        data: {
           type: this.type,
           pageNum: this.page.pageNum,
           pageSize: this.page.pageSize, 
         },
       })
         .then((response) => {
-          console.log(response.data);
           this.page.pages = response.data.pages;
           this.boards = response.data.list;
         })
@@ -118,6 +119,16 @@ export default {
     moveInfo(code) {
       this.$router.push(`/board/${this.type}/${code}`);
     },
+    moveWriteBoard() {
+      if (!this.$store.state.member.logged) {
+        this.modalMsg = "로그인된 사용자만 글을 작성할 수 있습니다.";
+        this.$bvModal.show('bv-modal');
+
+        return;
+      } else {
+        this.$router.push(`/board/${this.type}/write`);
+      }
+    }
   },
   created() {
     this.changeType();

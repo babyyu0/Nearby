@@ -17,13 +17,19 @@ public class TripService {
 
 	@Autowired
 	private TripDAO tripDAO;
-	
-	public List<SidoVO> getSido() {
+
+	public List<SidoVO> getAllSido() {
 		return tripDAO.selectAllSido();
 	}
+	public SidoVO getOneSido(int sidoCode) {
+		return tripDAO.selectOneSido(sidoCode);
+	}
 
-	public List<GugunVO> getGugunBySidoCode(int sidoCode) {
-		return tripDAO.selectGugunBySidoCode(sidoCode);
+	public List<GugunVO> getAllGugunBySidoCode(int sidoCode) {
+		return tripDAO.selectAllGugunBySidoCode(sidoCode);
+	}
+	public GugunVO getOneGugunBySidoCode(int gugunCode, int sidoCode) {
+		return tripDAO.selectOneGugunBySidoCode(gugunCode, sidoCode);
 	}
 
 	public List<TripTypeVO> getTripType() {
@@ -38,8 +44,8 @@ public class TripService {
 		return tripDAO.selectOneTripBySidoCode(sidoCode);
 	}
 
-	public List<TripVO> getClosestTrip(double latitude, double longitude) {
-		return tripDAO.selectTripByLocation(latitude, longitude);
+	public List<TripVO> getClosestTrip(TripVO trip) {
+		return tripDAO.selectTripByLocation(trip);
 	}
 
 	public HashMap<String, Object> getOneTripByContentId(int contentId) {

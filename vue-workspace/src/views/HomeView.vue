@@ -17,7 +17,7 @@
             >
           </template>
           <h4>{{ thumbnail.sidoName }}에 갈까요?</h4>
-          <b-button variant="success" class="m-2">여행지 보기</b-button>
+          <b-button variant="success" class="m-2" to="/trip/list">여행지 보기</b-button>
         </b-carousel-slide>
       </b-carousel>
       <div class="mt-5">
@@ -87,8 +87,6 @@
 </template>
 
 <script>
-
-
 export default {
     name: "HomeView",
     data() {
@@ -110,25 +108,19 @@ export default {
         };
     },
     methods: {
-      moveTripInfo(contentId) {
-        this.$emit("moveTripInfo", contentId);
-        this.$router.push("/trip/info");
-      },
       getBoards() {
         // Free Board
         this.$axios({
-          url: "http://localhost:9999/board/list",
-          method: "POST",
-          params: { type: "free", pageNum: 1, pageSize: 4}
+          url: "board/list",
+          data: { type: "free", pageNum: 1, pageSize: 4 }
         }).then((response) => {
           this.boards.freeBoards = response.data.list;
         });
 
         // Location Board
         this.$axios({
-          url: "http://localhost:9999/board/list",
-          method: "POST",
-          params: { type: "location", pageNum: 1, pageSize: 4}
+          url: "board/list",
+          data: { type: "location", pageNum: 1, pageSize: 4}
         }).then((response) => {
           this.boards.locationBoards = response.data.list;
         });
@@ -137,10 +129,7 @@ export default {
     created() {
       this.getBoards();
         // 랜덤 썸네일 가져오기
-        this.$axios({
-            url: "http://localhost:9999/trip/get-thumbnail",
-            method: "POST",
-        }).then((response) => {
+      this.$axios.post("trip/get-thumbnail").then((response) => {
             this.thumbnails = response.data;
         });
 
@@ -150,9 +139,8 @@ export default {
             this.longitude = pos.coords.longitude;
             // console.log("Your location data is " + this.latitude + ", " + this.longitude);
             this.$axios({
-                url: "http://localhost:9999/trip/get-closest-trip",
-                method: "POST",
-                params: { latitude: this.latitude, longitude: this.longitude }
+                url: "trip/get-closest-trip",
+                data: { latitude: this.latitude, longitude: this.longitude }
             }).then((response) => {
               this.closestTrips = response.data;
             });

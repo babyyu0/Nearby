@@ -34,7 +34,7 @@ export default {
     methods: {
         login() {
             this.$axios({
-                url: "http://localhost:9999/member/login",
+                url: "member/login",
                 method: "POST",
                 data: { id: this.id, password: this.password },
         }).then((response) => {
@@ -42,7 +42,7 @@ export default {
                     this.modalMsg = "아이디 혹은 비밀번호가 틀렸습니다.";
                     this.$bvModal.show('bv-modal');
                 } else {
-                    this.$store.commit('login', { id: this.id, name: response.data.name });
+                    this.$store.commit('login', { id: this.id, name: response.data });
                     this.$router.push("/");
                 }
             });

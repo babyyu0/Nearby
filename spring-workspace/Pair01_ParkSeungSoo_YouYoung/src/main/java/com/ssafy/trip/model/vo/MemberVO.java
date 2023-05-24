@@ -5,13 +5,13 @@ public class MemberVO {
 	private String password;
 	private String name;
 	private String email;
-	private String sidoCode;
-	private String gugunCode;
+	private int sidoCode;
+	private int gugunCode;
 	
 	private SidoVO sidoVO;
-	private SidoVO gugunVO;
+	private GugunVO gugunVO;
 
-	public MemberVO(String id, String password, String name, String email, String sidoCode, String gugunCode) {
+	public MemberVO(String id, String password, String name, String email, int sidoCode, int gugunCode) {
 		super();
 		setId(id);
 		setPassword(password);
@@ -53,20 +53,37 @@ public class MemberVO {
 		this.email = email;
 	}
 
-	public String getSidoCode() {
+
+	public int getSidoCode() {
 		return sidoCode;
 	}
 
-	public void setSidoCode(String sidoCode) {
+	public void setSidoCode(int sidoCode) {
 		this.sidoCode = sidoCode;
 	}
 
-	public String getGugunCode() {
+	public int getGugunCode() {
 		return gugunCode;
 	}
 
-	public void setGugunCode(String gugunCode) {
+	public void setGugunCode(int gugunCode) {
 		this.gugunCode = gugunCode;
+	}
+
+	public SidoVO getSidoVO() {
+		return sidoVO;
+	}
+
+	public void setSidoVO(SidoVO sidoVO) {
+		this.sidoVO = sidoVO;
+	}
+
+	public GugunVO getGugunVO() {
+		return gugunVO;
+	}
+
+	public void setGugunVO(GugunVO gugunVO) {
+		this.gugunVO = gugunVO;
 	}
 
 	@Override

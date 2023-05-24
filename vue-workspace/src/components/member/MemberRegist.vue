@@ -106,9 +106,9 @@ export default {
   methods: {
     changeGugun() {
       this.$axios({
-        url: "http://localhost:9999/trip/get-gugun",
+        url: "trip/get-gugun",
         method: "post",
-        params: { sidoCode: this.member.sidoCode },
+        data: { sidoCode: this.member.sidoCode },
       }).then((response) => {
         this.guguns = response.data;
       });
@@ -120,9 +120,9 @@ export default {
         return;
       }
       this.$axios({
-        url: "http://localhost:9999/member/duplicate-check",
+        url: "member/duplicate-check",
         method: "post",
-        params: { id: this.member.id },
+        data: { id: this.member.id },
       }).then((response) => {
         if (response.data == "") {
           this.validCheck.id = false;
@@ -134,9 +134,8 @@ export default {
     },
     regist() {
       this.$axios({
-        url: "http://localhost:9999/member/regist",
-        method: "post",
-        params: { id: this.member.id, password: this.member.password, name: this.member.name, email: this.member.email, sidoCode: this.member.sidoCode, gugunCode: this.member.gugunCode },
+        url: "member/regist",
+        data: { id: this.member.id, password: this.member.password, name: this.member.name, email: this.member.email, sidoCode: this.member.sidoCode, gugunCode: this.member.gugunCode },
       }).then((response) => {
         if (response.data == "ok") {
           this.modalMsg = "회원가입이 완료 되었습니다.";
@@ -150,8 +149,7 @@ export default {
   },
   created() {
     this.$axios({
-      url: "http://localhost:9999/trip/get-region",
-      method: "post",
+      url: "trip/get-region",
     }).then((response) => {
       this.sidos = response.data.sido;
       this.guguns = response.data.gugun;

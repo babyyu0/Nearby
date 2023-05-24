@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,10 +30,10 @@ public class TripProcessController {
 	public Map<String, List<?>> getRegion() {
 		Map<String, List<?>> regions = new HashMap<>();
 		
-		List<SidoVO> sidos = tripService.getSido();
+		List<SidoVO> sidos = tripService.getAllSido();
 		regions.put("sido", sidos);
 		
-		List<GugunVO> guguns = tripService.getGugunBySidoCode(sidos.get(0).getSidoCode());
+		List<GugunVO> guguns = tripService.getAllGugunBySidoCode(sidos.get(0).getSidoCode());
 		regions.put("gugun", guguns);
 		
 		List<TripTypeVO> tripTypes = tripService.getTripType();
@@ -42,21 +43,23 @@ public class TripProcessController {
 	}
 	
 	@PostMapping("get-gugun")
-	public List<GugunVO> getGugun(int sidoCode) {
-		List<GugunVO> guguns = tripService.getGugunBySidoCode(sidoCode);
+	public List<GugunVO> getGugun(@RequestBody HashMap<String, ?> map) {
+		int sidoCode = (int) map.get("sidoCode");
+		List<GugunVO> guguns = tripService.getAllGugunBySidoCode(sidoCode);
 		
 		return guguns;
 	}
 	
 	@PostMapping("list")
-	public List<TripVO> getList(TripVO trip) {
+	public List<TripVO> getList(@RequestBody TripVO trip) {
 		List<TripVO> trips = tripService.getTripByRegion(trip);
 		
 		return trips;
 	}
 	
 	@PostMapping("view")
-	public HashMap<String, Object> getView(int contentId) {
+	public HashMap<String, Object> getView(@RequestBody HashMap<String, ?> map) {
+		int contentId = Integer.parseInt((String) map.get("contentId"));
 		HashMap<String, Object> trip = tripService.getOneTripByContentId(contentId);
 		
 		return trip;
@@ -70,7 +73,7 @@ public class TripProcessController {
 		final int thumbCnt = 3;
 		HashMap<String, Object> thumb = new HashMap<>();
 		
-		List<SidoVO> sidos = tripService.getSido();
+		List<SidoVO> sidos = tripService.getAllSido();
 		boolean[] visited = new boolean[sidos.size()];
 		
 		for(int i = 0; i < thumbCnt; i++) {
@@ -94,8 +97,8 @@ public class TripProcessController {
 	}
 	
 	@PostMapping("get-closest-trip")
-	public List<TripVO> getClosestTrip(double latitude, double longitude) {
-		List<TripVO> closestTrip = tripService.getClosestTrip(latitude, longitude);
+	public List<TripVO> getClosestTrip(@RequestBody TripVO trip) {
+		List<TripVO> closestTrip = tripService.getClosestTrip(trip);
 		
 		return closestTrip;
 	}

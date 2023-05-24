@@ -1,5 +1,6 @@
 package com.ssafy.trip.model.service;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,6 @@ public class MemberService {
 	}
 
 	public MemberVO selectOne(MemberVO member) {
-		MemberVO selMember = memberDAO.selectOne(member);
-		
 		return memberDAO.selectOne(member);
 	}
 

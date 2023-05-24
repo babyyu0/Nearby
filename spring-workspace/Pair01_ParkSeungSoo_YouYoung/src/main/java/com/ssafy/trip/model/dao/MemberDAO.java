@@ -1,5 +1,7 @@
 package com.ssafy.trip.model.dao;
 
+import java.util.HashMap;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;

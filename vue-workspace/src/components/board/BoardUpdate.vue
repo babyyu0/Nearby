@@ -51,25 +51,23 @@ export default {
             board: {
                 code: this.$route.params.code,
                 createdAt: "-",
-                writerId: "추후 추가 요망"
+                writerId: ""
             },
         };
     },
     methods: {
         getArticle() {
             this.$axios({
-                url: "http://localhost:9999/board/view",
-                method: "post",
-                params: { code: this.board.code, type: this.type },
+                url: "board/view",
+                data: { code: this.board.code, type: this.type },
             }).then((response) => {
                 this.board = response.data;
             });
         },
         updateBoard() {
             this.$axios({
-                url: "http://localhost:9999/board/update",
-                method: "post",
-                params: {
+                url: "board/update",
+                data: {
                     type: this.type,
                     code: this.board.code,
                     title: this.board.title,
@@ -87,14 +85,20 @@ export default {
             });
         },
         writeBoard() {
+            if (!this.$store.state.member.logged) {
+                this.modalMsg = "로그인된 사용자만 글을 작성할 수 있습니다.";
+                this.$bvModal.show('bv-modal');
+                return;
+            }
+            
             this.$axios({
-                url: "http://localhost:9999/board/write",
+                url: "board/write",
                 method: "post",
-                params: {
+                data: {
                     code: 0,
                     type: this.type,
                     title: this.board.title,
-                    writerId: this.$store.state.id,
+                    writerId: this.$store.state.member.id,
                     contents: this.board.contents,
                 },
             }).then((response) => {
@@ -110,19 +114,21 @@ export default {
         }
     },
     created() {
-        console.log(this.board.code);
+        
         if (!this.board.code) {  // 글 작성
-            this.board.writerId = this.$store.state.name;
+            this.board.writerId = this.$store.state.member.name;
         } else {
             this.getArticle();
+            
+            if (this.$store.state.member.id != this.board.writerId) {
+                this.modalMsg = "수정할 수 있는 권한이 없습니다.";
+                this.$bvModal.show('bv-modal');
+
+                this.$router.push(`/board/${this.type}`);
+                return;
+            } 
         }
     },
-    // watch: {
-    //     $route: function() {
-    //         this.getArticle();
-    //     },
-
-    // }
 }
 </script>
 

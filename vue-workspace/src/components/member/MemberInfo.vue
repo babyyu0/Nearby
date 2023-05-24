@@ -5,11 +5,11 @@
             <b-list-group flush>
                 <b-list-group-item><b-row>
                     <b-col cols="2">아이디</b-col>
-                    <b-col>1234</b-col>
+                    <b-col>{{ member.id }}</b-col>
                 </b-row></b-list-group-item>
                 <b-list-group-item><b-row>
                     <b-col cols="2">비밀번호</b-col>
-                    <b-col>1234</b-col>
+                    <b-col><b-button>비밀번호 변경</b-button></b-col>
                 </b-row></b-list-group-item>
             </b-list-group>
         </b-card>
@@ -17,11 +17,11 @@
             <b-list-group flush>
                 <b-list-group-item><b-row>
                     <b-col cols="2">이름</b-col>
-                    <b-col>1234</b-col>
+                    <b-col>{{ member.name }}</b-col>
                 </b-row></b-list-group-item>
                 <b-list-group-item><b-row>
                     <b-col cols="2">이메일</b-col>
-                    <b-col>1234</b-col>
+                    <b-col>{{ member.email }}</b-col>
                 </b-row></b-list-group-item>
             </b-list-group>
         </b-card>
@@ -29,11 +29,11 @@
             <b-list-group flush>
                 <b-list-group-item><b-row>
                     <b-col cols="2">지역</b-col>
-                    <b-col>1234</b-col>
+                    <b-col>{{ member.sidoVO.sidoName }}</b-col>
                 </b-row></b-list-group-item>
                 <b-list-group-item><b-row>
                     <b-col cols="2">시 · 군 · 구</b-col>
-                    <b-col>1234</b-col>
+                    <b-col>{{ member.gugunVO.gugunName }}</b-col>
                 </b-row></b-list-group-item>
             </b-list-group>
         </b-card>
@@ -44,15 +44,21 @@
 export default {
     data() {
         return {
-            member: "",
+            member: {
+                sidoVO: {
+                    sidoName: "",
+                },
+                gugunVO: {
+                    gugunName: ""
+                }
+            },
         };
     },
     created() {
       this.$axios({
-        url: "http://localhost:9999/member/get-logged-member",
-        method: "post",
+        url: "member/get-logged-member",
       }).then((response) => {
-          console.log(response.data);
+          this.member = response.data;
       });
     }
 }

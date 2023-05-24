@@ -14,16 +14,25 @@ export default {
   components: {
     TripHeader,
   },
+  methods: {
+    isLogged() {
+      this.$axios({
+        url: "member/get-logged-member",
+      }).then((response) => {
+        if (response.data == "") {
+          this.$store.commit('logout');
+        } else {
+          this.$store.commit('login', { id: response.data.id, name: response.data.name });
+        }
+      });
+    },
+  },
+  created() {
+    this.isLogged();
+  },
   watch: {
     "$store.state.id": function () {
-      
-    this.$axios({
-      url: "http://localhost:9999/member/get-logged-member",
-      method: "POST",
-      withCredentials : true
-    }).then((response) => {
-      console.log(response.data);
-    });
+      this.isLogged();
     }
   }
 };

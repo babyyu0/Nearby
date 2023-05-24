@@ -17,12 +17,13 @@
         <b-card class="mt-3">
             <b-card-text>{{ trip.overview }}</b-card-text>
         </b-card>
+        <div class="mt-3" align="center">
+            <b-button to="/trip/list">목록으로</b-button>
+        </div>
     </b-container>
 </template>
 
 <script>
-
-
 export default {
     data() {
         return {
@@ -31,16 +32,15 @@ export default {
             }
         };
     },
-    created() {
-        console.log(this.trip.contentId);  // 관광지 정보
-        
+    created() {        
         // 관광지 정보 가져오기
         this.$axios({
-            url: "http://localhost:9999/trip/view",
+            url: "trip/view",
             method: "POST",
-            params: { contentId: this.trip.contentId }
+            data: { contentId: this.trip.contentId }
         }).then((response) => {
             this.trip = response.data;
+            console.log(this.trip);
         });
     }
 }

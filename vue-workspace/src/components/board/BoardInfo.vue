@@ -1,5 +1,4 @@
 <template>
-    <div>
       <b-container>
         <board-header :type="type"></board-header>
         <b-card border-variant="light">
@@ -29,15 +28,15 @@
             <b-row class="mt-4" align-h="between">
                 <b-col cols="4" align="left"><!--공감 : 추후 구현--></b-col>
                 <b-col cols="4"><b-button @click="$router.go(-1)" variant="outline-secondary">목록으로</b-button></b-col>
-                <b-col cols="4" align="right">
-                    <b-button class="mr-1" @click="$router.push($route.path + '/modify')" variant="outline-primary">수정</b-button>
+                <b-col cols="4" align="right" v-if="article.writerId == $store.state.member.id">
+                    <b-button class="mr-1" @click="moveModifyBoard" variant="outline-primary">수정</b-button>
                     <b-button variant="secondary" @click="deleteBoard">삭제</b-button>
                 </b-col>
+                <b-col cols="4" v-else></b-col>
             </b-row>
         </div>
+        <alert-modal :modalMsg="modalMsg"></alert-modal>
       </b-container>
-      <alert-modal :modalMsg="modalMsg"></alert-modal>
-    </div>
 </template>
 
 <script>
@@ -54,31 +53,39 @@ export default {
         return {
             code: this.$route.params.code,
             modalMsg: "",
-            type: "",
+            type: this.$route.params.type,
             article: {},
         };
     },
     methods: {
         getBoard() {
-            this.type = this.$route.params.type;
             this.$axios({
-                url: "http://localhost:9999/board/view",
+                url: "board/view",
                 method: "post",
-                params: { code: this.code, type: this.type },
+                data: { code: this.code, type: this.type },
             }).then((response) => {
                 this.article = response.data;
             });
         },
+        moveModifyBoard() {
+            if (this.$store.state.member.id != this.article.writerId) {
+                this.modalMsg = "수정할 수 있는 권한이 없습니다.";
+                this.$bvModal.show('bv-modal');
+                return;
+            } else {
+                this.$router.push(`/board/${this.type}/${this.code}/modify`);
+            }
+        },
         deleteBoard() {
-            if (this.$store.state.id != this.article.writerId) {
+            if (this.$store.state.member.id != this.article.writerId) {
                 this.modalMsg = "삭제할 수 있는 권한이 없습니다.";
                 this.$bvModal.show('bv-modal');
                 return;
             }
             this.$axios({
-                url: "http://localhost:9999/board/delete",
+                url: "board/delete",
                 method: "post",
-                params: { code: this.code, type: this.type },
+                data: { code: this.code, type: this.type },
             }).then((response) => {
                 console.log(response.data);
             });

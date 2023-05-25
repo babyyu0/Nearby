@@ -5,6 +5,10 @@ public class BoardVO {
 	private String type;
 	private String title;
 	private String contents;
+	
+	private double latitude;
+	private double longitude;
+	
 	private String writerId;
 	private String createdAt;
 	
@@ -25,19 +29,19 @@ public class BoardVO {
 		return title;
 	}
 	public void setTitle(String title) {
-		this.title = title;
+		if(title != null || !title.trim().equals("")) this.title = title;
 	}
 	public String getContents() {
 		return contents;
 	}
 	public void setContents(String contents) {
-		this.contents = contents;
+		if(contents != null || !contents.trim().equals("")) this.contents = contents;
 	}
 	public String getWriterId() {
 		return writerId;
 	}
 	public void setWriterId(String writerId) {
-		this.writerId = writerId;
+		if(writerId != null || !writerId.trim().equals("")) this.writerId = writerId;
 	}
 	public String getType() {
 		return type;
@@ -49,12 +53,28 @@ public class BoardVO {
 		return createdAt;
 	}
 	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
+		if(createdAt != null || !createdAt.trim().equals("")) this.createdAt = createdAt;
+	}
+	
+	public double getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	public double getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 	@Override
 	public String toString() {
-		return "BoardVO [code=" + code + ", title=" + title + ", contents=" + contents + ", writerId=" + writerId + "]";
+		return "BoardVO [code=" + code + ", type=" + type + ", title=" + title + ", contents=" + contents
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", writerId=" + writerId + ", createdAt="
+				+ createdAt + "]";
 	}
+	
 	
 	
 }

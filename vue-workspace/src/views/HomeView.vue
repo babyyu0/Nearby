@@ -112,17 +112,24 @@ export default {
         // Free Board
         this.$axios({
           url: "board/list",
-          data: { type: "free", pageNum: 1, pageSize: 4 }
+          data: { type: "free", limit: 5 }
         }).then((response) => {
-          this.boards.freeBoards = response.data.list;
+          this.boards.freeBoards = response.data;
         });
 
         // Location Board
-        this.$axios({
-          url: "board/list",
-          data: { type: "location", pageNum: 1, pageSize: 4}
-        }).then((response) => {
-          this.boards.locationBoards = response.data.list;
+        navigator.geolocation.getCurrentPosition(pos => {
+          this.$axios({
+            url: "board/list",
+            data: {
+              type: "location",
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude,
+              limit: 5
+            }
+          }).then((response) => {
+            this.boards.locationBoards = response.data;
+          });
         });
       }
     },

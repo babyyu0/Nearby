@@ -26,7 +26,7 @@ public class MemberVO {
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		if(id != null || !id.trim().equals("")) this.id = id;
 	}
 
 	public String getPassword() {
@@ -42,7 +42,7 @@ public class MemberVO {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		if(name != null || !name.trim().equals("")) this.name = name;
 	}
 
 	public String getEmail() {
@@ -50,7 +50,7 @@ public class MemberVO {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		if(email != null || !email.trim().equals("")) this.email = email;
 	}
 
 

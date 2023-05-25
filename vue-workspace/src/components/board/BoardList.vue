@@ -24,24 +24,32 @@
             <b-button variant="primary" @click="moveWriteBoard" v-if="this.$store.state.member.logged">글쓰기</b-button>
           </b-col>
         </b-row>
-        <b-table class="mt-3" :fields="fields" :items="boards" hover head-variant="light">
+        <b-table id="board-table" class="mt-3" :fields="fields" :items="boards" hover head-variant="light" :per-page="page.perPage" :current-page="page.currentPage">
           <template #cell(title)="row">
             <span @click="$router.push(`/board/${type}/${row.item.code}`);" style="cursor:pointer"> {{ row.item.title }} </span>
           </template>
           <template #cell(createdAt)="row">
             <div> {{ row.item.createdAt | dateFilter }} </div>
           </template>
+						<template #cell(distance)="row">
+							{{ row.item.distance.toFixed(2) }} km
+						</template>
         </b-table>
           
-        <b-pagination
-        align="center"
-          v-model="page.pageNum"
-          :per-page="page.pages"
-        ></b-pagination>
+				<b-pagination
+					v-model="page.currentPage"
+					:total-rows="boards.length"
+					:per-page="page.perPage"
+					aria-controls="board-table"
+					align="center"
+				></b-pagination>
       </div>
-        <div class="mt-5" v-else>게시물이 존재하지 않습니다.</div>
-        <alert-modal :modalMsg="modalMsg"></alert-modal>
-    </b-container>
+      <div class="mt-5" v-else>
+        게시물이 존재하지 않습니다.
+        <b-link @click="moveWriteBoard" class="d-block mt-5">글쓰러 가기</b-link>
+      </div>
+      <alert-modal :modalMsg="modalMsg"></alert-modal>
+  </b-container>
 </template>
 
 <script>
@@ -60,10 +68,11 @@ export default {
       title: "",
       searchCategory: "title",
       searchWord: "",
+			latitude: 0,
+			longitude: 0,
       page: {
-        pages: null,
-        pageNum: 1,
-        pageSize: 20,
+        perPage: 10,
+        currentPage: 1,
       },
       fields: [
         { key: "code", label: "번호", sortable: true },
@@ -99,36 +108,61 @@ export default {
       this.getPage();
     },
     getPage() {
-      this.$axios({
-        url: "board/list",
-        method: "post",
-        data: {
-          type: this.type,
-          pageNum: this.page.pageNum,
-          pageSize: this.page.pageSize, 
-        },
-      })
-        .then((response) => {
-          this.page.pages = response.data.pages;
-          this.boards = response.data.list;
+      
+      navigator.geolocation.getCurrentPosition(pos => {
+          this.latitude = pos.coords.latitude;
+          this.longitude = pos.coords.longitude;
+      
+        this.$axios({
+          url: "board/list",
+          data: {
+            type: this.type,
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+          },
+        })
+          .then((response) => {
+            this.boards = response.data;
+            if (this.type == "location") {
+              this.getDistanceFromLatLonInKm();
+              this.fields.push({ key: "distance", label: "거리", sortable: true });
+            } else {
+              this.fields.length = 4;
+          }
         })
         .catch(() => {
           this.boards = [];
         });
-    },
-    moveInfo(code) {
-      this.$router.push(`/board/${this.type}/${code}`);
+      }, err => {
+          console.log(err.message);
+      });
     },
     moveWriteBoard() {
       if (!this.$store.state.member.logged) {
         this.modalMsg = "로그인된 사용자만 글을 작성할 수 있습니다.";
         this.$bvModal.show('bv-modal');
-
         return;
       } else {
         this.$router.push(`/board/${this.type}/write`);
       }
-    }
+    },
+		getDistanceFromLatLonInKm() {
+			function deg2rad(deg) {
+				return deg * (Math.PI/180)
+			}
+
+			var R = 6371; // Radius of the earth in km
+			for (var index in this.boards) {
+				//console.log(this.tripList[index]);
+
+				var dLat = deg2rad(this.latitude - this.boards[index].latitude);  // deg2rad below
+				var dLon = deg2rad(this.longitude - this.boards[index].longitude);
+				var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(this.boards[index].latitude)) * Math.cos(deg2rad(this.latitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+				var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+				var d = R * c; // Distance in km
+        this.boards[index].distance = d;
+			}
+		},
   },
   created() {
     this.changeType();

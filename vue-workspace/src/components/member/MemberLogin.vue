@@ -35,7 +35,6 @@ export default {
         login() {
             this.$axios({
                 url: "member/login",
-                method: "POST",
                 data: { id: this.id, password: this.password },
         }).then((response) => {
                 if (response.data == "") {

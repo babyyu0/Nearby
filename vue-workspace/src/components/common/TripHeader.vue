@@ -18,7 +18,6 @@
             <template #button-content>
               <b-avatar variant="info" src="https://placekitten.com/300/300" class="mr-2"></b-avatar> {{ $store.state.member.name }} 님
             </template>
-            <b-dropdown-item to="/member/friend">친구</b-dropdown-item>
             <b-dropdown-item to="/member/info">회원 정보</b-dropdown-item>
             <b-dropdown-item @click="logout">로그아웃</b-dropdown-item>
           </b-nav-item-dropdown>

@@ -5,8 +5,19 @@
   
  <mapper namespace="com.ssafy.trip.model.dao.BoardDAO">
  
- 	<select id="selectAll" parameterType="BoardVO" resultType="BoardVO">
+ 	<select id="selectAll" parameterType="double" resultType="BoardVO">
  		SELECT *, writer_id AS writerId, created_at AS createdAt FROM ${type}_board
+ 		<where>
+	 		<if test="type == 'location'">
+				AND (
+	       		6371 * acos ( cos ( radians(#{latitude}) )
+		          	* cos( radians( latitude ) )
+		          	* cos( radians( longitude ) - radians(#{longitude}) )
+		          	+ sin ( radians(#{latitude}) ) * sin( radians( latitude ) )
+		       		)
+		   		) &lt; 5000
+			</if>
+		</where>
  		ORDER BY created_at DESC
  	</select>
  	
@@ -15,7 +26,11 @@
  	</select>
  	
  	<insert id="insert" parameterType="BoardVO">
- 		INSERT INTO ${type}_board(`title`, `contents`, `writer_id`, `created_at`) VALUES (#{title}, #{contents}, #{writerId}, NOW())
+ 		INSERT INTO ${type}_board(`title`, `contents`, `writer_id`, `created_at`
+ 			<if test="type == 'location'">, `latitude`, `longitude`</if>
+ 		) VALUES (#{title}, #{contents}, #{writerId}, NOW()
+ 			<if test="type == 'location'">, #{latitude}, #{longitude}</if>
+ 		)
  	</insert>
  	
  	<update id="update" parameterType="BoardVO">

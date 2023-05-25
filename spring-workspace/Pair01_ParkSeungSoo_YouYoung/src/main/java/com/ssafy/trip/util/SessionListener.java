@@ -1,6 +1,4 @@
  package com.ssafy.trip.util;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,63 +9,37 @@ import javax.servlet.http.HttpSessionListener;
 
 @WebListener
 public class SessionListener implements HttpSessionListener{
+
+    //name : sessionID
+    private static final Map<String, HttpSession> sessionID = new ConcurrentHashMap<>();
     
-    private static final ArrayList<Map<String, HttpSession>> sessions = new ArrayList<Map<String, HttpSession>>(Arrays.asList(new ConcurrentHashMap<>(),new ConcurrentHashMap<>(),new ConcurrentHashMap<>(),new ConcurrentHashMap<>(),new ConcurrentHashMap<>()));
-    //중복로그인 지우기
-    public synchronized static void getSessionidCheck(String type,String compareId){
+    public synchronized static void getSessionidCheck(String compareId){
         
-        int targetIdx = StringToIdx(compareId);
-        System.out.println(compareId);
-        String result = "";
-        for( String key : sessions.get(targetIdx).keySet() ){
-            HttpSession value = sessions.get(targetIdx).get(key);
-            if(value != null &&  value.getAttribute(type) != null && value.getAttribute(type).toString().equals(compareId) ){
-                result =  key.toString();
-                removeSessionForDoubleLogin(result);
-                break;
-            }
+        //만약 세션이 이미 존재한다면
+        if (sessionID.containsKey(compareId)) {
+            //sessions 에서 sessionID에 있는 친구를 invalidate 해준뒤
+            sessionID.get(compareId).invalidate();
+            //Map에서 제거해준다
+            sessionID.remove(compareId);
         }
-
     }
     
-    private static void removeSessionForDoubleLogin(String userId){        
-        System.out.println("remove userId : " + userId);
-        int targetIdx = StringToIdx(userId);
-        if(userId != null && userId.length() > 0){
-            sessions.get(targetIdx).get(userId).invalidate();
-            sessions.get(targetIdx).remove(userId);            
-        }
+    public static void addSessionId(String userId,HttpSession session) {
+        sessionID.put(userId, session);
     }
-
+    
     @Override
     public void sessionCreated(HttpSessionEvent hse) {
-        int targetIdx = StringToIdx(hse.getSession().getId()); 
-        sessions.get(targetIdx).put(hse.getSession().getId(), hse.getSession());
+        
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent hse) {
-        int targetIdx = StringToIdx(hse.getSession().getId());
-        
-        if(sessions.get(targetIdx).get(hse.getSession().getId()) != null){
-            sessions.get(targetIdx).get(hse.getSession().getId()).invalidate();
-            sessions.get(targetIdx).remove(hse.getSession().getId());    
+
+        if (sessionID.containsKey(hse.getSession().getAttribute("id"))) {
+            sessionID.get(hse.getSession().getAttribute("id")).invalidate();
+            sessionID.remove(hse.getSession().getAttribute("id"));
         }
     }
-    
-    public static int StringToInt(String target) {
-        int sum = 0;
-        for (int i = 0; i < target.length(); i++) {
-            sum += target.charAt(i);
-        }
-        return sum;
-    }
-    
-    public static int sumToIdx(int sum) {
-        return sum % 5;
-    }
-    
-    public static int StringToIdx(String target) {
-        return sumToIdx(StringToInt(target));
-    }
+
 }

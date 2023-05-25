@@ -68,16 +68,15 @@
         <b-nav-item to="/member/login">이미 아이디가 있으신가요?</b-nav-item>
       </b-nav>
     </div>
-    <b-modal id="bv-modal-regist" title="알림" ok-only centered>
-      <p class="my-4">{{ modalMsg }}</p>
-    </b-modal>
+    <alert-modal :modalMsg="modalMsg"></alert-modal>
   </b-container>
 </template>
 
 <script>
-
+import AlertModal from "@/components/common/AlertModal.vue";
 
 export default {
+    components: { AlertModal },
   data() {
     return {
       modalMsg: "",
@@ -124,7 +123,7 @@ export default {
         method: "post",
         data: { id: this.member.id },
       }).then((response) => {
-        if (response.data == "") {
+        if (response.data != "ok") {
           this.validCheck.id = false;
           this.validCheck.idFeedback = "중복된 아이디입니다.";
         } else {
@@ -133,16 +132,42 @@ export default {
       });
     },
     regist() {
+      if (this.validCheck.id != true) {
+        this.modalMsg = "아이디 중복 확인을 해주세요.";
+        this.$bvModal.show('bv-modal');
+        return;
+      }
+
+      if (this.validCheck.password != true) {
+        this.modalMsg = "비밀번호를 다시 입력해 주세요.";
+        this.$bvModal.show('bv-modal');
+        return;
+      }
+
+      if (this.validCheck.email != true) {
+        this.modalMsg = "이메일을 다시 입력해 주세요.";
+        this.$bvModal.show('bv-modal');
+        return;
+      }
+
+      if (this.member.name.length <= 0 || this.member.length > 12 ) {
+        this.modalMsg = "올바른 이름을 입력해 주세요.";
+        this.$bvModal.show('bv-modal');
+        return;
+      }
+
       this.$axios({
         url: "member/regist",
         data: { id: this.member.id, password: this.member.password, name: this.member.name, email: this.member.email, sidoCode: this.member.sidoCode, gugunCode: this.member.gugunCode },
       }).then((response) => {
         if (response.data == "ok") {
-          this.modalMsg = "회원가입이 완료 되었습니다.";
-          this.$bvModal.show('bv-modal-regist');
+          this.modalMsg = "회원가입이 완료되었습니다.";
+          this.$bvModal.show('bv-modal');
+
+          this.$router.push("/");
         } else {
-          this.modalMsg = "회원가입을  실패하였습니다.";
-          this.$bvModal.show('bv-modal-regist');
+          this.modalMsg = "회원가입을 실패하였습니다.";
+          this.$bvModal.show('bv-modal');
         }
       });
     }
@@ -182,7 +207,7 @@ export default {
       }
     },
     'member.email': function (value) {
-      let emailReg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~!@#$%^&*_-])[A-Za-z0-9~!@#$%^&*_-]{8,16}$/;
+      let emailReg = /^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
       if (!emailReg.test(value)) {
         this.validCheck.email = false;

@@ -55,11 +55,22 @@ export default {
         };
     },
     created() {
+        if (!this.$store.state.member.logged) {
+            this.$router.push("/");
+        }
+
       this.$axios({
         url: "member/get-logged-member",
       }).then((response) => {
           this.member = response.data;
       });
+    },
+    watch: {
+        "$store.state.member.logged": function () {
+            if (!this.$store.state.member.logged) {
+                this.$router.push("/");
+            }
+        }
     }
 }
 </script>

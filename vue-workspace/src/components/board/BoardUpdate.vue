@@ -30,19 +30,19 @@
             </b-row>
         </div>
       </b-container>
-        <b-modal id="bv-modal-update" title="알림" ok-only centered>
-        <p class="my-4">{{ modalMsg }}</p>
-        </b-modal>
+        <alert-modal :modal-msg="modalMsg"></alert-modal>
     </div>
 </template>
 
 <script>
 
 import BoardHeader from "@/components/common/BoardHeader.vue";
+import AlertModal from "../common/AlertModal.vue";
 
 export default {
     components: {
-        BoardHeader
+        BoardHeader,
+        AlertModal
     },
     data() {
         return {
@@ -62,6 +62,13 @@ export default {
                 data: { code: this.board.code, type: this.type },
             }).then((response) => {
                 this.board = response.data;
+                if (this.$store.state.member.id != this.board.writerId) {
+                    this.modalMsg = "수정할 수 있는 권한이 없습니다.";
+                    this.$bvModal.show('bv-modal');
+
+                    this.$router.push(`/board/${this.type}`);
+                    return;
+                }
             });
         },
         updateBoard() {
@@ -74,13 +81,14 @@ export default {
                     contents: this.board.contents,
                 },
             }).then((response) => {
-                if (response.data == 1) {
+                if (response.data == "ok") {
                     this.modalMsg = "수정 완료.";
-                    this.$bvModal.show('bv-modal-modify');
-                    this.$router.go(-1);
+                    this.$bvModal.show('bv-modal');
+
+                    this.$router.push(`/board/${this.type}/${this.board.code}`);
                 } else {
                     this.modalMsg = "수정 오류!";
-                    this.$bvModal.show('bv-modal-modify');
+                    this.$bvModal.show('bv-modal');
                 }
             });
         },
@@ -90,45 +98,80 @@ export default {
                 this.$bvModal.show('bv-modal');
                 return;
             }
-            
-            this.$axios({
-                url: "board/write",
-                method: "post",
-                data: {
-                    code: 0,
-                    type: this.type,
-                    title: this.board.title,
-                    writerId: this.$store.state.member.id,
-                    contents: this.board.contents,
-                },
-            }).then((response) => {
-                if (response.data == 1) {
-                    this.modalMsg = "작성 완료.";
-                    this.$bvModal.show('bv-modal-update');
-                    this.$router.go(-1);
-                } else {
-                    this.modalMsg = "작성 오류!";
-                    this.$bvModal.show('bv-modal-update');
-                }
-            });
+
+            if (this.type == "location") {
+                navigator.geolocation.getCurrentPosition(pos => {
+
+                    this.$axios({
+                        url: "board/write",
+                        method: "post",
+                        data: {
+                            code: 0,
+                            type: this.type,
+                            title: this.board.title,
+                            writerId: this.$store.state.member.id,
+                            contents: this.board.contents,
+                            latitude: pos.coords.latitude,
+                            longitude: pos.coords.longitude
+                        },
+                    }).then((response) => {
+                        if (response.data == "ok") {
+                            this.modalMsg = "작성 완료.";
+                            this.$bvModal.show('bv-modal-update');
+                            
+                            this.$router.push(`/board/${this.type}`);
+                        } else {
+                            this.modalMsg = "작성 오류!";
+                            this.$bvModal.show('bv-modal-update');
+                        }
+                    });
+                }, err => {
+                    console.log(err.message);
+                });
+            } else {
+                this.$axios({
+                    url: "board/write",
+                    method: "post",
+                    data: {
+                        code: 0,
+                        type: this.type,
+                        title: this.board.title,
+                        writerId: this.$store.state.member.id,
+                        contents: this.board.contents,
+                    },
+                }).then((response) => {
+                    if (response.data == "ok") {
+                        this.modalMsg = "작성 완료.";
+                        this.$bvModal.show('bv-modal-update');
+                        this.$router.push(`/board/${this.type}`);
+                        
+                    } else {
+                        this.modalMsg = "작성 오류!";
+                        this.$bvModal.show('bv-modal-update');
+                    }
+                });
+            }
+
         }
     },
     created() {
-        
+        if (!this.$store.state.member.logged) {
+            this.$router.push(`/board/${this.type}`);
+        }
+
         if (!this.board.code) {  // 글 작성
             this.board.writerId = this.$store.state.member.name;
         } else {
-            this.getArticle();
-            
-            if (this.$store.state.member.id != this.board.writerId) {
-                this.modalMsg = "수정할 수 있는 권한이 없습니다.";
-                this.$bvModal.show('bv-modal');
-
-                this.$router.push(`/board/${this.type}`);
-                return;
-            } 
+            this.getArticle(); 
         }
     },
+    watch: {
+        "$store.state.member.logged": function () {
+            if (!this.$store.state.member.logged) {
+                this.$router.push(`/board/${this.type}`);
+            }
+        }
+    }
 }
 </script>
 

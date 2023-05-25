@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.ssafy.trip.model.service.BoardService;
 import com.ssafy.trip.model.vo.BoardVO;
 
@@ -32,15 +30,16 @@ public class BoardProcessController {
 	BoardService boardService;
 
 	@PostMapping("list")
-	public ResponseEntity<PageInfo<BoardVO>> getList(@RequestBody HashMap<String, ?> map) {
-		int pageNum = (int) map.get("pageNum");
-		int pageSize = (int) map.get("pageSize");
+	public List<BoardVO> getList(@RequestBody HashMap<String, Object> map) {
 		String type = (String) map.get("type");
 		
-		PageHelper.startPage(pageNum, pageSize);
-		List<BoardVO> boards = boardService.selectAll(type);
-
-		return new ResponseEntity<>(PageInfo.of(boards), HttpStatus.OK);
+		double latitude = (double) map.getOrDefault("latitude", 0.0);
+		double longitude = (double) map.getOrDefault("longitude", 0.0);
+		
+		List<BoardVO> boards = boardService.selectAll(type, latitude, longitude);
+		if(map.containsKey("limit") && (int) map.get("limit") < boards.size()) return boards.subList(0, (int) map.get("limit")); 
+			
+		return boards;
 	}
 
 	@PostMapping("view")
@@ -52,24 +51,13 @@ public class BoardProcessController {
 		if (session != null) {
 			session.setAttribute("CSRF", uuid);
 		}
+		
 		return boardService.selectOne(boardVO);
 	}
 
 	@PostMapping("update")
-	public int updateBoard(@RequestBody BoardVO boardVO) {
-		return boardService.update(boardVO);
-	}
-
-	@PostMapping("write")
-	public int writeBoard(@RequestBody BoardVO boardVO) {
-		return boardService.write(boardVO);
-	}
-
-	@PostMapping("delete")
-	public ResponseEntity<String> deleteBoard(HttpServletRequest request, @RequestBody BoardVO boardVO) {
-		// return boardService.delete(boardVO);
+	public ResponseEntity<String> updateBoard(HttpServletRequest request, @RequestBody BoardVO boardVO) {
 		HttpSession session = request.getSession(false);
-		System.out.println();
 		if (session != null) {
 			session.getAttribute("CSRF").equals("");
 			Cookie[] cookie = request.getCookies();
@@ -82,11 +70,58 @@ public class BoardProcessController {
 					break;
 				}
 			}
+			
+			BoardVO board = boardService.selectOne(boardVO);
+			System.out.println(board.getWriterId() + " : " + session.getAttribute("id"));
+			if(!board.getWriterId().equals(session.getAttribute("id"))) isAccept = false;
 
 			if (isAccept) {
-				//System.out.println("작업 고고");
-				//boardService.delete(boardVO);
-				return new ResponseEntity<>("", HttpStatus.OK);
+				boardService.update(boardVO);
+				return new ResponseEntity<>("ok", HttpStatus.OK);
+			} else {
+				System.out.println("비정상적인 요청");
+			}
+		}
+		return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
+	}
+
+	@PostMapping("write")
+	public ResponseEntity<String> writeBoard(HttpServletRequest request, @RequestBody BoardVO boardVO) {
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+			if(session.getAttribute("userCheck").equals(request.getHeader("user-agent"))) {
+				boardService.write(boardVO);
+				return new ResponseEntity<>("ok", HttpStatus.OK);
+			} else {
+				System.out.println("비정상적인 요청");
+			}
+			
+		}
+		return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
+	}
+
+	@PostMapping("delete")
+	public ResponseEntity<String> deleteBoard(HttpServletRequest request, @RequestBody BoardVO boardVO) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.getAttribute("CSRF").equals("");
+			Cookie[] cookie = request.getCookies();
+
+			boolean isAccept = false;
+
+			for (int idx = 0; idx < cookie.length; idx++) {
+				if (cookie[idx].getName().equals("CSRF")) {
+					isAccept = true;
+					break;
+				}
+			}
+			
+			BoardVO board = boardService.selectOne(boardVO);
+			if(!board.getWriterId().equals(session.getAttribute("id"))) isAccept = false;
+
+			if (isAccept) {
+				boardService.delete(boardVO);
+				return new ResponseEntity<>("ok", HttpStatus.OK);
 			} else {
 				System.out.println("비정상적인 요청");
 			}

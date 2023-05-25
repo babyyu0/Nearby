@@ -14,8 +14,8 @@ public class BoardService {
 	@Autowired
 	BoardDAO boardDAO;
 	
-	public List<BoardVO> selectAll(String type) {
-		return boardDAO.selectAll(type);
+	public List<BoardVO> selectAll(String type, double latitude, double longitude) {
+		return boardDAO.selectAll(type, latitude, longitude);
 	}
 
 	public BoardVO selectOne(BoardVO boardVO) {

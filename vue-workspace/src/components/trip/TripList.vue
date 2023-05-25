@@ -32,7 +32,7 @@
 							<span @click="setCenter(row.item.latitude, row.item.longitude)" style="cursor:pointer">{{ row.item.addr }} {{ row.item.addr2 }}</span>
 						</template>
 						<template #cell(distance)="row">
-							{{ row.item.distance.toFixed(2) }} m
+							{{ row.item.distance.toFixed(2) }} km
 						</template>
 					</b-table>
 					<b-pagination

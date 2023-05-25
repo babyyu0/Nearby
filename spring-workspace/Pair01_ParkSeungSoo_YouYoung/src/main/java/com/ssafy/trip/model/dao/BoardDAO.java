@@ -12,7 +12,7 @@ import com.ssafy.trip.model.vo.BoardVO;
 @Repository
 public interface BoardDAO {
 
-	public List<BoardVO> selectAll(String type) throws DataAccessException;
+	public List<BoardVO> selectAll(String type, double latitude, double longitude) throws DataAccessException;
 
 	public BoardVO selectOne(BoardVO boardVO) throws DataAccessException;
 

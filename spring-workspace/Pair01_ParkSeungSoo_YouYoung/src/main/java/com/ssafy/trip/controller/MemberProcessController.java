@@ -35,21 +35,16 @@ public class MemberProcessController {
 	private TripService tripService;
 
 	@PostMapping("login")
-	public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody MemberVO member) throws MyException {
-		String name = memberService.login(member);
-		HttpSession session = request.getSession();
-
-		// 세션에 유저정보를 넣어놓음
-		// TODO 이후에 세션 탙취당했을경우 or 환경이 바뀔경우 재 로그인 받아야함.
-		session.setAttribute("userCheck", (request.getHeader("user-agent")));
-
-		// 세션 중복 처리
-		if (name != null) {
-			SessionListener.getSessionidCheck("id", member.getId());
-			session.setAttribute("id", member.getId());
-		}
-
-		return new ResponseEntity<>(name, HttpStatus.OK);
+	public synchronized ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody MemberVO member) throws MyException {
+       String name = memberService.login(member);
+       HttpSession session = request.getSession();
+       session.setAttribute("id", member.getId());
+       //세션에 유저정보를 넣어놓음
+       //TODO 이후에 세션 탙취당했을경우 or 환경이 바뀔경우 재 로그인 받아야함.
+       session.setAttribute("userCheck",(request.getHeader("user-agent")));
+       
+       
+       return new ResponseEntity<>(name, HttpStatus.OK);
 	}
 
 	@PostMapping("logout")
@@ -70,13 +65,13 @@ public class MemberProcessController {
 	}
 
 	@PostMapping("regist")
-	public String regist(@RequestBody MemberVO member) throws MyException {
-		MemberVO selMember = memberService.selectOne(member);
-		if (selMember != null)
-			return null;
-
-		memberService.regist(member);
-		return "ok";
+	public ResponseEntity<?> regist(@RequestBody MemberVO member) {
+		try {
+			memberService.regist(member);
+			return new ResponseEntity<>("ok", HttpStatus.OK);
+		} catch(MyException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+		}
 	}
 
 	@PostMapping("get-logged-member")

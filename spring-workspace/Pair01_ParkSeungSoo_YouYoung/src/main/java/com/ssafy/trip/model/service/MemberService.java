@@ -1,6 +1,6 @@
 package com.ssafy.trip.model.service;
 
-import java.util.HashMap;
+import java.util.regex.Pattern;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ public class MemberService {
 	private MemberSecDAO memberSecDAO;
 	
 	public String login(MemberVO member) throws MyException {
-
 		try {
 			MemberSecVO loggedMemberSec = memberSecDAO.login(member);
 			if(loggedMemberSec == null) {
@@ -56,6 +55,28 @@ public class MemberService {
 	}
 
 	public void regist(MemberVO member) throws MyException {
+
+		// 아이디 중복 검사
+		MemberVO selMember = selectOne(member);
+		if(selMember != null) {
+			throw new MyException("회원 등록 실패.");
+		}
+		
+		// 비밀번호 유효성 검사
+		String pwReg = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~!@#$%^&*_-])[A-Za-z0-9~!@#$%^&*_-]{8,16}$";
+		if(!Pattern.matches(pwReg, member.getPassword())) {
+			throw new MyException("회원 등록 실패.");
+		}
+		
+		if(member.getName().equals("")) {
+			throw new MyException("회원 등록 실패.");
+		}
+		
+		String emailReg = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
+		if(!Pattern.matches(emailReg, member.getEmail())) {
+			throw new MyException("회원 등록 실패.");
+		}
+		
 		try {
 			//회원가입 시 입력한 비밀번호를 암호화 하기 위해 렌덤해시값인 salt를 UUID.randomUUID()을 통해서 생성합니다.
 			String salt = UUID.randomUUID().toString();
@@ -64,7 +85,6 @@ public class MemberService {
 			String hashPassword = OpenCrypt.getSHA256(member.getPassword(), salt);
 			member.setPassword(hashPassword);
 			byte[]  secKey = OpenCrypt.generateKey("AES", 128);
-			System.out.println("secKey : " + new String(secKey));
 			
 			memberDAO.regist(member);
 			
@@ -73,6 +93,7 @@ public class MemberService {
 		} catch (Exception e) {
 			throw new MyException("회원 등록 실패.");
 		}
+		
 	}
 
 }

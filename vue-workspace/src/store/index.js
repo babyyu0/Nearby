@@ -9,6 +9,7 @@ export default new Vuex.Store({
       logged: false,
       id: "",
       name: "",
+      profileImg: "",
     }
   },
   getters: {
@@ -23,6 +24,10 @@ export default new Vuex.Store({
       state.member.logged = false;
       state.member.id = "";
       state.member.name = "";
+      state.member.profileImg = "";
+    },
+    setProfile(state, profileImg) {
+      state.member.profileImg = profileImg;
     }
   },
   actions: {

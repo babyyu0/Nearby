@@ -1,6 +1,11 @@
 package com.ssafy.trip.model.service;
 
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import java.io.File;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +63,7 @@ public class MemberService {
 
 		// 아이디 중복 검사
 		MemberVO selMember = selectOne(member);
-		if(selMember != null) {
-			throw new MyException("회원 등록 실패.");
-		}
+		if(selMember != null) throw new MyException("회원 등록 실패.");
 		
 		// 비밀번호 유효성 검사
 		String pwReg = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~!@#$%^&*_-])[A-Za-z0-9~!@#$%^&*_-]{8,16}$";
@@ -94,6 +97,10 @@ public class MemberService {
 			throw new MyException("회원 등록 실패.");
 		}
 		
+	}
+	
+	public void setProfileImg(String id, File profileFile) {
+		memberDAO.insertProfileImg(id, "http://localhost:9999/static/img/userProfile/" + profileFile.getName());
 	}
 
 }

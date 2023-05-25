@@ -7,6 +7,7 @@ public class MemberVO {
 	private String email;
 	private int sidoCode;
 	private int gugunCode;
+	private String profileImg;
 	
 	private SidoVO sidoVO;
 	private GugunVO gugunVO;
@@ -19,6 +20,7 @@ public class MemberVO {
 		setEmail(email);
 		setSidoCode(sidoCode);
 		setGugunCode(gugunCode);
+		setProfileImg("");
 	}
 
 	public String getId() {
@@ -26,7 +28,7 @@ public class MemberVO {
 	}
 
 	public void setId(String id) {
-		if(id != null || !id.trim().equals("")) this.id = id;
+		if(id != null && !id.trim().equals("")) this.id = id;
 	}
 
 	public String getPassword() {
@@ -42,7 +44,7 @@ public class MemberVO {
 	}
 
 	public void setName(String name) {
-		if(name != null || !name.trim().equals("")) this.name = name;
+		if(name != null && !name.trim().equals("")) this.name = name;
 	}
 
 	public String getEmail() {
@@ -50,7 +52,7 @@ public class MemberVO {
 	}
 
 	public void setEmail(String email) {
-		if(email != null || !email.trim().equals("")) this.email = email;
+		if(email != null && !email.trim().equals("")) this.email = email;
 	}
 
 
@@ -84,6 +86,15 @@ public class MemberVO {
 
 	public void setGugunVO(GugunVO gugunVO) {
 		this.gugunVO = gugunVO;
+	}
+	
+
+	public String getProfileImg() {
+		return profileImg;
+	}
+
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
 	}
 
 	@Override

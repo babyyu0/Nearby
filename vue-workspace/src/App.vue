@@ -23,6 +23,7 @@ export default {
           this.$store.commit('logout');
         } else {
           this.$store.commit('login', { id: response.data.id, name: response.data.name });
+          this.$store.commit("setProfile", response.data.profileImg);
         }
       });
     },

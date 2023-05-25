@@ -1,5 +1,8 @@
 package com.ssafy.trip.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -14,8 +17,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.trip.model.service.MemberService;
 import com.ssafy.trip.model.service.TripService;
@@ -83,44 +88,52 @@ public class MemberProcessController {
 			member.setSidoVO(tripService.getOneSido(member.getSidoCode()));
 			member.setGugunVO(tripService.getOneGugunBySidoCode(member.getGugunCode(), member.getSidoCode()));
 			
-			System.out.println(member);
 			return new ResponseEntity<>(member, HttpStatus.OK);
 		}
 
-		return null;
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
+	
+	@PostMapping("upload-profile")
+	public ResponseEntity<?> uploadProfile(HttpServletRequest request, @RequestBody MultipartFile profileImg) {
 
-	public void csrfIn(HttpServletResponse response, HttpServletRequest request) {
-		String uuid = UUID.randomUUID().toString();
-		response.addCookie(new Cookie("CSRF", uuid));
 		HttpSession session = request.getSession(false);
-
-		if (session != null) {
-			session.setAttribute("CSRF", uuid);
+		
+		if(session != null) {
+			try {
+				String contentType = profileImg.getContentType();
+				String originalFileExtension;
+				if(contentType == null || contentType.trim().equals("")) {
+					throw new MyException("파일 업로드 실패");
+		        }
+		        else {  // 확장자가 jpeg, png인 파일들만 받아서 처리
+		            if(contentType.contains("image/jpeg"))
+		                originalFileExtension = ".jpg";
+		            else if(contentType.contains("image/png"))
+		                originalFileExtension = ".png";
+		            else  // 다른 확장자일 경우 처리 x
+		            	throw new MyException("파일 업로드 실패");
+		        }
+				// 파일 이름
+				String new_file_name = System.nanoTime() + originalFileExtension;
+				File profileFile = new File("D:/SSAFY/01_workspace/04_PJT/spring-workspace/Pair01_ParkSeungSoo_YouYoung/src/main/resources/static/img/userProfile" + File.separator + new_file_name);
+				profileImg.transferTo(profileFile);
+	
+				profileFile.setExecutable(false);
+				
+				memberService.setProfileImg((String) session.getAttribute("id"), profileFile);
+				
+				return new ResponseEntity<>("http://localhost:9999/static/img/userProfile/" + profileFile.getName()	, HttpStatus.OK);
+			} catch (IllegalStateException e) {
+				return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			} catch (IOException e) {
+				return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			} catch(MyException e) {
+				return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			}
 		}
-
+		return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+		
 	}
 
-	public void csrfOut(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.getAttribute("CSRF").equals("");
-			Cookie[] cookie = request.getCookies();
-
-			boolean isAccept = false;
-
-			for (int idx = 0; idx < cookie.length; idx++) {
-				if (cookie[idx].getName().equals("CSRF")) {
-					isAccept = true;
-					break;
-				}
-			}
-
-			if (isAccept) {
-				System.out.println("작업 고고");
-			} else {
-				System.out.println("비정상적인 요청");
-			}
-		}
-	}
 }

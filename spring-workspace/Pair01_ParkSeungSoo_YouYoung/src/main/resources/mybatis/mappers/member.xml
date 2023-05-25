@@ -10,20 +10,17 @@
  	</select>
  	
  	<select id="selectOne" parameterType="MemberVO" resultType="MemberVO">
- 		SELECT id, name, email, password, sido_code AS sidoCode, gugun_code AS gugunCode  
+ 		SELECT id, name, email, password, sido_code AS sidoCode, gugun_code AS gugunCode, profile_img AS profileImg
  		FROM member   
-		WHERE id=#{id} 
- 	</select>
- 	<select id="selectOne2" parameterType="MemberVO" resultType="MemberVO">
- 		SELECT *, sido_name AS sido, gugun_name AS gugun 
- 		FROM member 
-		JOIN sido ON member.sido_code = sido.sido_code  
-		JOIN gugun ON member.gugun_code = gugun.gugun_code AND member.sido_code = gugun.sido_code 
 		WHERE id=#{id} 
  	</select>
  	
  	<insert id="regist" parameterType="MemberVO">
- 		INSERT INTO member VALUES (#{id}, #{password}, #{name}, #{email}, #{sidoCode}, #{gugunCode}, NOW())
+ 		INSERT INTO member(id, password, name, email, sido_code, gugun_code, profile_img, created_at) VALUES (#{id}, #{password}, #{name}, #{email}, #{sidoCode}, #{gugunCode}, "", NOW())
+ 	</insert>
+ 	
+ 	<insert id="insertProfileImg" parameterType="String">
+ 		UPDATE member SET profile_img=#{profileImgPath} WHERE id=#{id}
  	</insert>
  	
  </mapper>

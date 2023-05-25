@@ -1,5 +1,6 @@
 package com.ssafy.trip.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -127,6 +128,11 @@ public class BoardProcessController {
 			}
 		}
 		return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
+	}
+	
+	public void fileUpload(String filename) {
+	     File file = new File(filename);
+	     file.setExecutable(false);
 	}
 
 }

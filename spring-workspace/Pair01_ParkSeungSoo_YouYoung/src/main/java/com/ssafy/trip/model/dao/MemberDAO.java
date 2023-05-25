@@ -17,5 +17,7 @@ public interface MemberDAO {
 	public MemberVO selectOne(MemberVO member) throws DataAccessException;
 
 	public void regist(MemberVO member) throws DataAccessException;
+
+	public void insertProfileImg(String id, String profileImgPath) throws DataAccessException;
 	
 }

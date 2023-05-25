@@ -29,19 +29,19 @@ public class BoardVO {
 		return title;
 	}
 	public void setTitle(String title) {
-		if(title != null || !title.trim().equals("")) this.title = title;
+		if(title != null && !title.trim().equals("")) this.title = title;
 	}
 	public String getContents() {
 		return contents;
 	}
 	public void setContents(String contents) {
-		if(contents != null || !contents.trim().equals("")) this.contents = contents;
+		if(contents != null && !contents.trim().equals("")) this.contents = contents;
 	}
 	public String getWriterId() {
 		return writerId;
 	}
 	public void setWriterId(String writerId) {
-		if(writerId != null || !writerId.trim().equals("")) this.writerId = writerId;
+		if(writerId != null && !writerId.trim().equals("")) this.writerId = writerId;
 	}
 	public String getType() {
 		return type;

@@ -15,7 +15,7 @@
 		          	* cos( radians( longitude ) - radians(#{longitude}) )
 		          	+ sin ( radians(#{latitude}) ) * sin( radians( latitude ) )
 		       		)
-		   		) &lt; 5000
+		   		) &lt; 20
 			</if>
 		</where>
  		ORDER BY created_at DESC

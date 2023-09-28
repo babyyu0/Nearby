@@ -88,4 +88,5 @@
   background-color: var(--light-color);
   border: none;
   border-radius: 5px;
+  cursor: pointer;
 }

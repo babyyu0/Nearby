@@ -8,6 +8,8 @@ function LoginComponent(props) {
   const password = props.password;
   const setPassword = props.setPassword;
 
+  const doLogin = props.doLogin;
+
   return (
     <>
       <div className={login.contents}>
@@ -23,7 +25,7 @@ function LoginComponent(props) {
           <NavLink className={login.find} to="/find">
             아이디 혹은 비밀번호를 잊으셨나요?
           </NavLink>
-          <button className={login.confirm}> 로그인 </button>
+          <button className={login.confirm} onClick={doLogin}> 로그인 </button>
         </div>
       </div>
     </>

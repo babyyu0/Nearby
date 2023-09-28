@@ -6,8 +6,7 @@
 }
 
 :root {
-	--extra-bold-color : #053B50;
-    --bold-color: #176B87;
-    --light-color: #64CCC5;
-    --extra-light-color: #EEEEEE;
+    --bold-color: #1B44BF;
+    --light-color: #99BFF2;
+    --extra-light-color: #F2F2F2;
 }

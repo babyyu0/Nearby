@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Container
 import IndexContainer from "./container/IndexContainer";
+import LoginContainer from "./container/user/LoginContainer";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<IndexContainer />} />
         <Route path="/trip" element={<IndexContainer />} />
+        <Route path="/login" element={<LoginContainer />} />
       </Routes>
     </BrowserRouter>
   );

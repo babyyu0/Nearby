@@ -1,9 +1,13 @@
 // Modules
 import { NavLink } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useAtom } from "jotai";
 
 // Services
 import { existId, getCity } from "../../services/member/MemberService";
+
+//jotai
+import { sidoAtom, gugunAtom } from "../../jotai/city";
 
 // Components
 import RegisterComponent from "../../components/member/RegisterComponent";
@@ -18,10 +22,12 @@ function RegisterContainer() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [name, setName] = useState("");
-  const [sido, setSido] = useState("");
+  const [sido, setSido] = useState(0);
+  const [gugun, setGugun] = useState(0);
 
-  const [sidoList, setSidoList] = useState(null);
-  const [gugunList, SetGugunList] = useState(null);
+  const [sidoList, setSidoList] = useAtom(sidoAtom);
+  const [gugunList, setGugunList] = useAtom(gugunAtom);
+  const [tmpGugunList, setTmpGugunList] = useState([]);
 
   const isExistId = async () => {
     if (!id) {
@@ -51,6 +57,12 @@ function RegisterContainer() {
   const getCities = async () => {
     const data = await getCity();
     console.log(data);
+    setSidoList(data.sidoList);
+    data.gugunList.forEach((e) => {
+      if (!tmpGugunList[e.sidoCode]) tmpGugunList[e.sidoCode] = [];
+      tmpGugunList[e.sidoCode].push({'gugunCode': e.gugunCode, 'gugunName': e.gugunName});
+    });
+    setGugunList(tmpGugunList);
   };
 
   useEffect(() => {
@@ -73,6 +85,8 @@ function RegisterContainer() {
           password={password} setPassword={setPassword} passwordConfirm={passwordConfirm} setPasswordConfirm={setPasswordConfirm}
           name={name} setName={setName}
           sido={sido} setSido={setSido}
+          gugun={gugun} setGugun={setGugun}
+          sidoList={sidoList} gugunList={gugunList}
         />
       </div>
     </>

@@ -1,6 +1,4 @@
 // Style
-import { NavLink } from "react-router-dom";
-
 function LoginComponent(props) {
   const registerStyle = props.registerStyle;
 
@@ -20,6 +18,11 @@ function LoginComponent(props) {
   const setName = props.setName;
   const sido = props.sido;
   const setSido = props.setSido;
+  const gugun = props.gugun;
+  const setGugun = props.setGugun;
+
+  const sidoList = props.sidoList;
+  const gugunList = props.gugunList;
 
   const doLogin = props.doLogin;
 
@@ -64,14 +67,28 @@ function LoginComponent(props) {
         <div className={registerStyle.box}>
           <label className={registerStyle.inputLabel} htmlFor={sido}>지역</label>
           <div>
-            <select className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={sido} onChange={(e) => { setSido(e.target.value); }}>
+            <select className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={sido} onChange={(e) => { setGugun(0);  setSido(e.target.value); }}>
+              <option value="0" disabled>시 · 도</option>
+              {
+                sidoList?
+                  sidoList.map((sido, index) => (
+                    <option value={sido.sidoCode} key={index}>{sido.sidoName}</option>
+                    )) : null
+              }
             </select>
-            <select className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={sido} onChange={(e) => { setSido(e.target.value); }}>
+            <select className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={gugun} onChange={(e) => { setGugun(e.target.value); }}>
+              <option value="0" disabled>구 · 군</option>
+              {
+                gugunList[sido] && sido?
+                  gugunList[sido].map((gugun, index) => (
+                    <option value={gugun.gugunCode} key={index}>{gugun.gugunName}</option>
+                    )) : null
+              }
             </select>
           </div>
         </div>
         <div className={`${registerStyle.box} ${registerStyle.confirmBox}`}>
-          <button className={registerStyle.confirm} onClick={doLogin}> 로그인 </button>
+          <button className={registerStyle.confirm} onClick={doLogin}> 회원가입 </button>
         </div>
       </div>
     </>

@@ -1,18 +1,8 @@
 package com.ssafy.trip.model.vo;
 
-public class MemberVO {
-	private String id;
-	private String password;
-	private String name;
-	private String email;
-	private int sidoCode;
-	private int gugunCode;
-	private String profileImg;
-	
-	private SidoVO sidoVO;
-	private GugunVO gugunVO;
+public class Member {
 
-	public MemberVO(String id, String password, String name, String email, int sidoCode, int gugunCode) {
+	public Member(String id, String password, String name, String email, int sidoCode, int gugunCode) {
 		super();
 		setId(id);
 		setPassword(password);
@@ -22,6 +12,16 @@ public class MemberVO {
 		setGugunCode(gugunCode);
 		setProfileImg("");
 	}
+	private String id;
+	private String password;
+	private String name;
+	private String email;
+	private int sidoCode;
+	private int gugunCode;
+	private String profileImg;
+	
+	private Sido sido;
+	private Gugun gugun;
 
 	public String getId() {
 		return id;
@@ -72,20 +72,20 @@ public class MemberVO {
 		this.gugunCode = gugunCode;
 	}
 
-	public SidoVO getSidoVO() {
-		return sidoVO;
+	public Sido getSido() {
+		return sido;
 	}
 
-	public void setSidoVO(SidoVO sidoVO) {
-		this.sidoVO = sidoVO;
+	public void setSido(Sido sido) {
+		this.sido = sido;
 	}
 
-	public GugunVO getGugunVO() {
-		return gugunVO;
+	public Gugun getGugun() {
+		return gugun;
 	}
 
-	public void setGugunVO(GugunVO gugunVO) {
-		this.gugunVO = gugunVO;
+	public void setGugun(Gugun gugun) {
+		this.gugun = gugun;
 	}
 	
 

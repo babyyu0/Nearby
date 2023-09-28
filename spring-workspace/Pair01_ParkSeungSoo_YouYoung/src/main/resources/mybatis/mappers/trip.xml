@@ -4,10 +4,10 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
  <mapper namespace="com.ssafy.trip.model.dao.TripDAO">
-	<select id="SidoselectAll" resultType="SidoVO">
+	<select id="SidoselectAll" resultType="Sido">
 		SELECT sido_code AS sidoCode, sido_name AS sidoName FROM sido
 	</select>
- 	<select id="selectOneSido" parameterType="int" resultType="SidoVO">
+ 	<select id="selectOneSido" parameterType="int" resultType="Sido">
  		SELECT sido_code AS sidoCode, sido_name AS sidoName FROM sido WHERE sido_code = #{sidoCode}
  	</select>
  
@@ -15,11 +15,11 @@
  		SELECT content_code AS contentCode, content_name AS contentName FROM trip_type
  	</select>
  
- 	<select id="selectAllGugunBySidoCode" parameterType="int" resultType="GugunVO">
+ 	<select id="selectAllGugunBySidoCode" parameterType="int" resultType="Gugun">
  		SELECT gugun_code AS gugunCode, gugun_name AS gugunName FROM gugun WHERE sido_code = #{sidoCode}
  	</select>
  	
- 	<select id="selectOneGugunBySidoCode" parameterType="int" resultType="GugunVO">
+ 	<select id="selectOneGugunBySidoCode" parameterType="int" resultType="Gugun">
  		SELECT gugun_code AS gugunCode, gugun_name AS gugunName FROM gugun WHERE sido_code = #{sidoCode} AND gugun_code = #{gugunCode}
  	</select>
  

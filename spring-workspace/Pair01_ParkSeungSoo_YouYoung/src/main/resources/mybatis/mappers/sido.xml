@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
  <mapper namespace="com.ssafy.trip.model.dao.SidoDao">
-	<select id="selectAll" resultType="SidoVO">
+	<select id="selectAll" resultType="Sido">
 		SELECT sido_code AS sidoCode, sido_name AS sidoName FROM sido
 	</select>
  </mapper>

@@ -1,14 +1,14 @@
 package com.ssafy.trip.model.vo;
 
-public class SidoVO {
+public class Sido {
 	private int sidoCode;
 	private String sidoName;
 	
-	public SidoVO() {
+	public Sido() {
 		super();
 	}
 
-	public SidoVO(int sidoCode, String sidoName) {
+	public Sido(int sidoCode, String sidoName) {
 		setSidoCode(sidoCode);
 		setSidoName(sidoName);
 	}
@@ -31,7 +31,7 @@ public class SidoVO {
 
 	@Override
 	public String toString() {
-		return "SidoVO [sidoCode=" + sidoCode + ", sidoName=" + sidoName + "]";
+		return "Sido [sidoCode=" + sidoCode + ", sidoName=" + sidoName + "]";
 	}
 	
 }

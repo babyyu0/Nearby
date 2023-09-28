@@ -6,7 +6,7 @@ import java.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import com.ssafy.trip.dto.command.ValidIdCommand;
+import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +33,9 @@ public class MemberController {
 	}
 
 	@GetMapping("exist/{memberId}")
-	public ResponseEntity<?> isValidId(@PathVariable("memberId") String memberId) {
+	public ResponseEntity<?> isExistId(@PathVariable("memberId") String memberId) {
 		try {
-			return ResponseEntity.ok(memberService.isValidId(new ValidIdCommand().toValidCommand(memberId)));
+			return ResponseEntity.ok(memberService.isExistId(new ValidIdCommand().toValidCommand(memberId)));
 		} catch(MyException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
@@ -60,15 +60,6 @@ public class MemberController {
 		HttpSession session = request.getSession(false);
 		session.invalidate();
 
-		return null;
-	}
-
-	@PostMapping("duplicate-check")
-	public String duplicateCheck(@RequestBody MemberVO member) throws MyException {
-		MemberVO selMember = memberService.selectOne(member);
-
-		if (selMember == null)
-			return "ok";
 		return null;
 	}
 

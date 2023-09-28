@@ -2,54 +2,57 @@ package com.ssafy.trip.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.UUID;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
+import com.ssafy.trip.dto.command.ValidIdCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.trip.model.service.MemberService;
 import com.ssafy.trip.model.service.TripService;
 import com.ssafy.trip.model.vo.MemberVO;
-import com.ssafy.trip.util.MyException;
-import com.ssafy.trip.util.SessionListener;
+import com.ssafy.trip.util.exception.MyException;
 
 @RestController
 @RequestMapping("/member")
 @CrossOrigin
-public class MemberProcessController {
+public class MemberController {
+
+	private final MemberService memberService;
+	private final TripService tripService;
 
 	@Autowired
-	private MemberService memberService;
+	public MemberController(MemberService memberService, TripService tripService) {
+		this.memberService = memberService;
+		this.tripService = tripService;
+	}
 
-	@Autowired
-	private TripService tripService;
+	@GetMapping("exist/{memberId}")
+	public ResponseEntity<?> isValidId(@PathVariable("memberId") String memberId) {
+		try {
+			return ResponseEntity.ok(memberService.isValidId(new ValidIdCommand().toValidCommand(memberId)));
+		} catch(MyException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+		}
+	}
+
+	@PostMapping("register")
+	public ResponseEntity<?> register(@RequestBody MemberVO member) {
+		try {
+			return ResponseEntity.ok(memberService.register(member));
+		} catch(MyException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+		}
+	}
 
 	@PostMapping("login")
-	public synchronized ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @RequestBody MemberVO member) throws MyException {
-       String name = memberService.login(member);
-       HttpSession session = request.getSession();
-       session.setAttribute("id", member.getId());
-       //세션에 유저정보를 넣어놓음
-       //TODO 이후에 세션 탙취당했을경우 or 환경이 바뀔경우 재 로그인 받아야함.
-       session.setAttribute("userCheck",(request.getHeader("user-agent")));
-       
-       
-       return new ResponseEntity<>(name, HttpStatus.OK);
+	public synchronized ResponseEntity<?> login(@RequestBody MemberVO member) throws MyException {
+		return ResponseEntity.ok(memberService.login(member));
 	}
 
 	@PostMapping("logout")
@@ -67,16 +70,6 @@ public class MemberProcessController {
 		if (selMember == null)
 			return "ok";
 		return null;
-	}
-
-	@PostMapping("regist")
-	public ResponseEntity<?> regist(@RequestBody MemberVO member) {
-		try {
-			memberService.regist(member);
-			return new ResponseEntity<>("ok", HttpStatus.OK);
-		} catch(MyException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-		}
 	}
 
 	@PostMapping("get-logged-member")
@@ -104,7 +97,7 @@ public class MemberProcessController {
 				String contentType = profileImg.getContentType();
 				String originalFileExtension;
 				if(contentType == null || contentType.trim().equals("")) {
-					throw new MyException("파일 업로드 실패");
+					throw new RuntimeException("파일 업로드 실패");
 		        }
 		        else {  // 확장자가 jpeg, png인 파일들만 받아서 처리
 		            if(contentType.contains("image/jpeg"))
@@ -112,7 +105,7 @@ public class MemberProcessController {
 		            else if(contentType.contains("image/png"))
 		                originalFileExtension = ".png";
 		            else  // 다른 확장자일 경우 처리 x
-		            	throw new MyException("파일 업로드 실패");
+		            	throw new RuntimeException("파일 업로드 실패");
 		        }
 				// 파일 이름
 				String new_file_name = System.nanoTime() + originalFileExtension;
@@ -128,7 +121,7 @@ public class MemberProcessController {
 				return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 			} catch (IOException e) {
 				return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-			} catch(MyException e) {
+			} catch(Exception e) {
 				return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 			}
 		}

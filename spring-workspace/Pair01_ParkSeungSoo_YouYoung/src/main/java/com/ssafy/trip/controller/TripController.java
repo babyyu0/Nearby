@@ -1,32 +1,24 @@
 package com.ssafy.trip.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.ssafy.trip.util.exception.MyException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.trip.model.service.TripService;
-import com.ssafy.trip.model.vo.GugunVO;
-import com.ssafy.trip.model.vo.SidoVO;
-import com.ssafy.trip.model.vo.TripTypeVO;
-import com.ssafy.trip.model.vo.TripVO;
 
 @RestController
 @RequestMapping("/trip")
 @CrossOrigin
 public class TripController {
 
-	@Autowired
-	private TripService tripService;
+	private final TripService tripService;
+
+	public TripController(TripService tripService) {
+		this.tripService = tripService;
+	}
 
 	@GetMapping("city")
-	public ResponseEntity<?> getCity() {
+	public ResponseEntity<?> getCity() {  // 모든 지역 반환
 		try {
 			return ResponseEntity.ok(tripService.getCity());
 		} catch (MyException e) {

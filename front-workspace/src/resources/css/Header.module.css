@@ -1,0 +1,42 @@
+.container {
+    height: 10vh;
+    width: 100%;
+
+    background-color: var(--extra-light-color);
+}
+
+.contents {
+    display: flex;
+    justify-content: space-between;
+
+    margin: 0 10vw auto;
+
+    height: 100%;
+    min-width: 400px;
+}
+
+.leftContents, .rightContents {
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+}
+
+.logoBox {
+    margin-right: 10%;
+
+    height: 60%;
+}
+.logoBox > img {
+    height: 100%;
+}
+
+.leftMenu, .rightMenu {
+
+    margin-left: 10%;
+
+    text-decoration: none;
+    color: black;
+    font-size: 1.2rem;
+    white-space: nowrap;
+}

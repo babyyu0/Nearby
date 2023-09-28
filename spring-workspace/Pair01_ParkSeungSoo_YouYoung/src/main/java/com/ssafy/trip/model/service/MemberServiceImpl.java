@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import java.io.File;
 import java.util.UUID;
 
-import com.ssafy.trip.dto.command.ValidIdCommand;
+import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean isValidId(ValidIdCommand validIdCommand) throws MyException {
+	public boolean isExistId(ValidIdCommand validIdCommand) throws MyException {
 		try {
 			return (memberDAO.findById(validIdCommand.getMemberId()) != null);
 		} catch(RuntimeException e) {

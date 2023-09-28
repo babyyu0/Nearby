@@ -30,9 +30,9 @@ public class TripController {
 
 /*
 	@PostMapping("get-gugun")
-	public List<GugunVO> getGugun(@RequestBody HashMap<String, ?> map) {
+	public List<Gugun> getGugun(@RequestBody HashMap<String, ?> map) {
 		int sidoCode = (int) map.get("sidoCode");
-		List<GugunVO> guguns = tripService.getAllGugunBySidoCode(sidoCode);
+		List<Gugun> guguns = tripService.getAllGugunBySidoCode(sidoCode);
 		
 		return guguns;
 	}
@@ -60,7 +60,7 @@ public class TripController {
 		final int thumbCnt = 3;
 		HashMap<String, Object> thumb = new HashMap<>();
 		
-		List<SidoVO> sidos = tripService.getAllSido();
+		List<Sido> sidos = tripService.getAllSido();
 		boolean[] visited = new boolean[sidos.size()];
 		
 		for(int i = 0; i < thumbCnt; i++) {

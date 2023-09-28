@@ -54,9 +54,6 @@
 }
 
 .confirmBox {
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: flex-end;
   padding-top: 2vh;
 }
 
@@ -64,6 +61,19 @@
   padding-bottom: 1vh;
   width: 100%;
   text-align: left;
+}
+
+.inputImgLabel {
+  height: 15vh;
+  text-align: center;
+}
+
+.inputImgLabel > img {
+  height: 100%;
+}
+
+.inputImg {
+  display: none;
 }
 
 .inputText,

@@ -3,6 +3,10 @@ import { NavLink } from "react-router-dom";
 
 function LoginComponent(props) {
   const registerStyle = props.registerStyle;
+
+  const profile = props.profile;
+  const setProfile = props.setProfile;
+
   const id = props.id;
   const setId = props.setId;
   const isExistId = props.isExistId;
@@ -23,7 +27,15 @@ function LoginComponent(props) {
     <>
       <div className={registerStyle.contents}>
         <div className={registerStyle.box}>
-          <label className={registerStyle.inputLabel} for={id}>
+          <label className={`${registerStyle.inputLabel} ${registerStyle.inputImgLabel}`} htmlFor={profile}>
+            <img src="/image/none_profile.png" alt="profile"/>
+          </label>
+          <div>
+            <input type="file" style={{ display: 'none' }} value={profile} onChange={(e) => { setProfile(e.target.value); }} />
+          </div>
+        </div>
+        <div className={registerStyle.box}>
+          <label className={registerStyle.inputLabel} htmlFor={id}>
             아이디 (이메일)
           </label>
           <div>
@@ -32,25 +44,25 @@ function LoginComponent(props) {
           </div>
         </div>
         <div className={registerStyle.box}>
-          <label className={registerStyle.inputLabel} for={password}>비밀번호</label>
+          <label className={registerStyle.inputLabel} htmlFor={password}>비밀번호</label>
           <div>
             <input type="password" className={registerStyle.inputText} value={password} onChange={(e) => { setPassword(e.target.value); }} />
           </div>
         </div>
         <div className={registerStyle.box}>
-          <label className={registerStyle.inputLabel} for={passwordConfirm}>비밀번호 확인</label>
+          <label className={registerStyle.inputLabel} htmlFor={passwordConfirm}>비밀번호 확인</label>
           <div>
             <input type="password" className={registerStyle.inputText} value={passwordConfirm} onChange={(e) => { setPasswordConfirm(e.target.value); }} />
           </div>
         </div>
         <div className={registerStyle.box}>
-          <label className={registerStyle.inputLabel} for={name}>이름</label>
+          <label className={registerStyle.inputLabel} htmlFor={name}>이름</label>
           <div>
             <input type="text" className={registerStyle.inputText} value={name} onChange={(e) => { setName(e.target.value); }} />
           </div>
         </div>
         <div className={registerStyle.box}>
-          <label className={registerStyle.inputLabel} for={sido}>지역</label>
+          <label className={registerStyle.inputLabel} htmlFor={sido}>지역</label>
           <div>
             <select className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={sido} onChange={(e) => { setSido(e.target.value); }}>
             </select>

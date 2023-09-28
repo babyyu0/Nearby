@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import Swal from "sweetalert2";
 
 // Services
-import { existId, getSido } from "../../services/member/MemberService";
+import { existId, getCity } from "../../services/member/MemberService";
 
 // Components
 import RegisterComponent from "../../components/member/RegisterComponent";
@@ -13,14 +13,15 @@ import registerStyle from "../../resources/css/member/Register.module.css";
 import { useEffect, useState } from "react";
 
 function RegisterContainer() {
+  const [profile, setProfile] = useState("");
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [name, setName] = useState("");
   const [sido, setSido] = useState("");
 
-  const [sidoList, setSidoList] = useState({});
-  const [gugunList, SetGugunList] = useState({});
+  const [sidoList, setSidoList] = useState(null);
+  const [gugunList, SetGugunList] = useState(null);
 
   const isExistId = async () => {
     if (!id) {
@@ -47,17 +48,16 @@ function RegisterContainer() {
     }
   };
 
-  const getSido = async () => {
-    const data = await getSido();
+  const getCities = async () => {
+    const data = await getCity();
     console.log(data);
   };
 
   useEffect(() => {
     if (!sidoList) {
-      const data = getCity();
-      console.log(data);
+      getCities();
     }
-  }, []);
+  });
 
   return (
     <>
@@ -68,17 +68,11 @@ function RegisterContainer() {
         <span className={registerStyle.title}>회원가입</span>
         <RegisterComponent
           registerStyle={registerStyle}
-          id={id}
-          setId={setId}
-          isExistId={isExistId}
-          password={password}
-          setPassword={setPassword}
-          passwordConfirm={passwordConfirm}
-          setPasswordConfirm={setPasswordConfirm}
-          name={name}
-          setName={setName}
-          sido={sido}
-          setSido={setSido}
+          profile={profile} setProfile={setProfile}
+          id={id} setId={setId} isExistId={isExistId}
+          password={password} setPassword={setPassword} passwordConfirm={passwordConfirm} setPasswordConfirm={setPasswordConfirm}
+          name={name} setName={setName}
+          sido={sido} setSido={setSido}
         />
       </div>
     </>

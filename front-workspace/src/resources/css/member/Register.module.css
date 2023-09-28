@@ -1,0 +1,99 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+}
+
+.logoBox {
+  margin: 10vh 0 1vh 0;
+
+  height: 10%;
+}
+.logoBox > img {
+  height: 100%;
+}
+
+.title {
+  margin: 2vh 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.contents {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 2%;
+
+  min-width: 30vw;
+  min-height: 30vh;
+
+  background-color: var(--extra-light-color);
+  border-radius: 10px;
+}
+.box {
+  padding-bottom: 2vh;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin: 0 auto;
+  width: 80%;
+}
+
+.box > div {
+  display: flex;
+  width: 100%;
+}
+
+.confirmBox {
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-top: 2vh;
+}
+
+.inputLabel {
+  padding-bottom: 1vh;
+  width: 100%;
+  text-align: left;
+}
+
+.inputText,
+.inputText:focus {
+  left: auto;
+  margin: 0;
+  padding: 3%;
+  width: 100%;
+
+  border: none;
+}
+
+.halfInputText {
+  margin-right: 1vw;
+}
+
+.find {
+  margin-right: 1vw;
+  min-width: 8rem;
+  font-size: 0.8rem;
+  color: var(--bold-color);
+}
+
+.confirm {
+  padding: 0.6rem 1.4rem;
+
+  min-width: 6rem;
+
+  background-color: var(--light-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

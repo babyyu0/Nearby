@@ -4,9 +4,9 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
  <mapper namespace="com.ssafy.trip.model.dao.TripDAO">
- 	<select id="selectAllSido" resultType="SidoVO">
- 		SELECT sido_code AS sidoCode, sido_name AS sidoName FROM sido
- 	</select>
+	<select id="SidoselectAll" resultType="SidoVO">
+		SELECT sido_code AS sidoCode, sido_name AS sidoName FROM sido
+	</select>
  	<select id="selectOneSido" parameterType="int" resultType="SidoVO">
  		SELECT sido_code AS sidoCode, sido_name AS sidoName FROM sido WHERE sido_code = #{sidoCode}
  	</select>

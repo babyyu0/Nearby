@@ -4,10 +4,23 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
  <mapper namespace="com.ssafy.trip.model.dao.MemberDAO">
- 
- 	<select id="login" parameterType="MemberVO" resultType="String">
- 		SELECT name FROM member WHERE id=#{id} AND password=#{password}
- 	</select>
+
+	<insert id="register" parameterType="MemberVO">
+		INSERT INTO member(id, password, name, email, sido_code, gugun_code, profile_img, created_at) VALUES (#{id}, #{password}, #{name}, #{email}, #{sidoCode}, #{gugunCode}, "", NOW())
+	</insert>
+
+	<select id="login" parameterType="MemberVO" resultType="String">
+		SELECT name FROM member WHERE id=#{id} AND password=#{password}
+	</select>
+
+
+	<select id="findById" parameterType="String" resultType="MemberVO">
+		SELECT name FROM member WHERE id=#{id}
+	</select>
+
+	<select id="findByIdAndPassword" parameterType="MemberVO" resultType="MemberVO">
+		SELECT name FROM member WHERE id=#{id} AND password=#{password}
+	</select>
  	
  	<select id="selectOne" parameterType="MemberVO" resultType="MemberVO">
  		SELECT id, name, email, password, sido_code AS sidoCode, gugun_code AS gugunCode, profile_img AS profileImg

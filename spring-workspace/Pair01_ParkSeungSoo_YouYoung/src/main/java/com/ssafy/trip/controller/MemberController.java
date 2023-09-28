@@ -36,11 +36,13 @@ public class MemberController {
 	public ResponseEntity<?> isExistId(@PathVariable("memberId") String memberId) {
 		try {
 			return ResponseEntity.ok(memberService.isExistId(new ExistIdCommand().toValidCommand(memberId)));
-		} catch(MyException e) {
+		} catch (MyException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
 	}
 
+}
+/*
 	@PostMapping("register")
 	public ResponseEntity<?> register(@RequestBody MemberVO member) {
 		try {
@@ -119,5 +121,4 @@ public class MemberController {
 		return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
 		
 	}
-
-}
+*/

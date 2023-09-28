@@ -20,7 +20,7 @@ public class GugunResponse {
 
     public void setGugunCode(int gugunCode) throws CityInvalidException {
         if(gugunCode <= 0) {
-            log.error("시도 번호 오류");
+            log.error("GugunResponse: 구군 코드 받기 실패");
             throw new CityInvalidException();
         }
         this.gugunCode = gugunCode;
@@ -32,7 +32,7 @@ public class GugunResponse {
 
     public void setGugunName(String gugunName) throws CityInvalidException {
         if(gugunName == null || gugunName.trim().equals("")) {
-            log.error("시도 이름 오류");
+            log.error("GugunResponse: 구군 이름 받기 실패");
             throw new CityInvalidException();
         }
         this.gugunName = gugunName;
@@ -43,7 +43,7 @@ public class GugunResponse {
 
     public void setSidoCode(int sidoCode) throws CityInvalidException {
         if(sidoCode <= 0) {
-            log.error("시도 번호 오류");
+            log.error("GugunResponse: 시도 이름 받기 실패");
             throw new CityInvalidException();
         }
         this.sidoCode = sidoCode;

@@ -5,12 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ssafy.trip.util.exception.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.trip.model.service.TripService;
 import com.ssafy.trip.model.vo.GugunVO;
@@ -21,27 +20,23 @@ import com.ssafy.trip.model.vo.TripVO;
 @RestController
 @RequestMapping("/trip")
 @CrossOrigin
-public class TripProcessController {
-	
+public class TripController {
+
 	@Autowired
 	private TripService tripService;
-	
-	@PostMapping("get-region")
-	public Map<String, List<?>> getRegion() {
-		Map<String, List<?>> regions = new HashMap<>();
-		
-		List<SidoVO> sidos = tripService.getAllSido();
-		regions.put("sido", sidos);
-		
-		List<GugunVO> guguns = tripService.getAllGugunBySidoCode(sidos.get(0).getSidoCode());
-		regions.put("gugun", guguns);
-		
-		List<TripTypeVO> tripTypes = tripService.getTripType();
-		regions.put("tripType", tripTypes);
-		
-		return regions;
+
+	@GetMapping("city")
+	public ResponseEntity<?> getCity() {
+		try {
+			return ResponseEntity.ok(tripService.getCity());
+		} catch (MyException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getStatus());
+		}
 	}
-	
+
+}
+
+/*
 	@PostMapping("get-gugun")
 	public List<GugunVO> getGugun(@RequestBody HashMap<String, ?> map) {
 		int sidoCode = (int) map.get("sidoCode");
@@ -102,5 +97,4 @@ public class TripProcessController {
 		
 		return closestTrip;
 	}
-	
-}
+*/

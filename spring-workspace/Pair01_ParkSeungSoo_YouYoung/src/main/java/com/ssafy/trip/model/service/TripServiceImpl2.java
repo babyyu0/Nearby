@@ -13,7 +13,7 @@ import com.ssafy.trip.model.vo.TripTypeVO;
 import com.ssafy.trip.model.vo.TripVO;
 
 @Service
-public class TripService {
+public class TripServiceImpl {
 
 	@Autowired
 	private TripDAO tripDAO;

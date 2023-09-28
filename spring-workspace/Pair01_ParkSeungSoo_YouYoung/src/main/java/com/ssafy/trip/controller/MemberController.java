@@ -3,10 +3,10 @@ package com.ssafy.trip.controller;
 import java.io.File;
 import java.io.IOException;
 
+import com.ssafy.trip.model.dto.command.ExistIdCommand;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class MemberController {
 	@GetMapping("exist/{memberId}")
 	public ResponseEntity<?> isExistId(@PathVariable("memberId") String memberId) {
 		try {
-			return ResponseEntity.ok(memberService.isExistId(new ValidIdCommand().toValidCommand(memberId)));
+			return ResponseEntity.ok(memberService.isExistId(new ExistIdCommand().toValidCommand(memberId)));
 		} catch(MyException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}

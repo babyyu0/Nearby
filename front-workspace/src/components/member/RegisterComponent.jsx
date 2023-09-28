@@ -7,22 +7,58 @@ function LoginComponent(props) {
   const setId = props.setId;
   const isExistId = props.isExistId;
 
+  const password = props.password;
+  const setPassword = props.setPassword;
+  const passwordConfirm = props.passwordConfirm;
+  const setPasswordConfirm = props.setPasswordConfirm;
+
+  const name = props.name;
+  const setName = props.setName;
+  const sido = props.sido;
+  const setSido = props.setSido;
+
   const doLogin = props.doLogin;
 
   return (
     <>
       <div className={registerStyle.contents}>
         <div className={registerStyle.box}>
-          <label className={registerStyle.inputLabel}>아이디 (이메일)</label>
+          <label className={registerStyle.inputLabel} for={id}>
+            아이디 (이메일)
+          </label>
           <div>
-            <input type="text" className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={id} onChange={(e) => { setId(e.target.value)}} />
-            <button className={registerStyle.confirm} onClick={isExistId}> 중복확인 </button>
+            <input type="text" className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={id} onChange={(e) => { setId(e.target.value); }} />
+            <button className={registerStyle.confirm} onClick={isExistId}>중복확인</button>
+          </div>
+        </div>
+        <div className={registerStyle.box}>
+          <label className={registerStyle.inputLabel} for={password}>비밀번호</label>
+          <div>
+            <input type="password" className={registerStyle.inputText} value={password} onChange={(e) => { setPassword(e.target.value); }} />
+          </div>
+        </div>
+        <div className={registerStyle.box}>
+          <label className={registerStyle.inputLabel} for={passwordConfirm}>비밀번호 확인</label>
+          <div>
+            <input type="password" className={registerStyle.inputText} value={passwordConfirm} onChange={(e) => { setPasswordConfirm(e.target.value); }} />
+          </div>
+        </div>
+        <div className={registerStyle.box}>
+          <label className={registerStyle.inputLabel} for={name}>이름</label>
+          <div>
+            <input type="text" className={registerStyle.inputText} value={name} onChange={(e) => { setName(e.target.value); }} />
+          </div>
+        </div>
+        <div className={registerStyle.box}>
+          <label className={registerStyle.inputLabel} for={sido}>지역</label>
+          <div>
+            <select className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={sido} onChange={(e) => { setSido(e.target.value); }}>
+            </select>
+            <select className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={sido} onChange={(e) => { setSido(e.target.value); }}>
+            </select>
           </div>
         </div>
         <div className={`${registerStyle.box} ${registerStyle.confirmBox}`}>
-          <NavLink className={registerStyle.find} to="/find">
-            아이디 혹은 비밀번호를 잊으셨나요?
-          </NavLink>
           <button className={registerStyle.confirm} onClick={doLogin}> 로그인 </button>
         </div>
       </div>

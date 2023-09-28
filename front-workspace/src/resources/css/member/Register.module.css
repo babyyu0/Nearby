@@ -4,13 +4,12 @@
   align-items: center;
 
   width: 100vw;
-  height: 100vh;
 }
 
 .logoBox {
-  margin: 10vh 0 1vh 0;
+  margin: 5vh 0 0.5vh 0;
 
-  height: 10%;
+  height: 15vh;
 }
 .logoBox > img {
   height: 100%;
@@ -27,7 +26,8 @@
   flex-direction: column;
   justify-content: center;
 
-  padding: 2%;
+  padding: 5vh;
+  margin-bottom: 5vh;
 
   min-width: 30vw;
   min-height: 30vh;
@@ -76,8 +76,14 @@
   border: none;
 }
 
-.halfInputText {
+.halfInputText,
+.halfInputText:focus {
   margin-right: 1vw;
+}
+
+.halfInputText:last-child,
+.halfInputText:last-child:focus {
+  margin-right: 0;
 }
 
 .find {

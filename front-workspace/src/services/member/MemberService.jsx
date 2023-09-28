@@ -1,4 +1,5 @@
 import { api } from "../common/ApiSevice";
+import Swal from "sweetalert2";
 
 const login = (data) => {
     const response = api.post(`/login`, JSON.stringify(data));
@@ -7,9 +8,18 @@ const login = (data) => {
 }
 
 const existId = async (data) => {
-    const response = await api.get(`/member/exist/${data.id}`);
+    const response = await api.get(
+        `/member/exist/${data.id}`
+    ).catch((error) => {
+        Swal.fire({
+            icon: 'error',
+            title: error.respononse.data
+        });
+        
+        return;
+    });
 
-    return response;
+    if(response.status === 200) return response.data;
 }
 
 export { login, existId };

@@ -6,27 +6,28 @@ import { login } from "../../services/member/MemberService";
 import LoginComponent from "../../components/member/LoginComponent";
 
 // Style
-import login from "../../resources/css/Login.module.css";
+import loginStyle from "../../resources/css/member/Login.module.css";
 import { useState } from "react";
 
 function LoginContainer() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
-  const doLogin = () => {
+  const doLogin = async () => {
     const request = {id, password};
-    const data = login(request);
+    const data = await login(request);
+
     console.log(data);
   }
 
   return (
     <>
-      <div className={login.container}>
-        <NavLink to="/" className={login.logoBox}>
-          <img className={login.logo} src="/image/logo.png" alt="logo" />
+      <div className={loginStyle.style.container}>
+        <NavLink to="/" className={loginStyle.logoBox}>
+          <img className={loginStyle.logo} src="/image/logo.png" alt="logo" />
         </NavLink>
-        <span className={login.title}>로그인</span>
-        <LoginComponent id={id} setId={setId} password={password} setPassword={setPassword} doLogin={doLogin} />
+        <span className={loginStyle.title}>로그인</span>
+        <LoginComponent loginStyle={loginStyle} id={id} setId={setId} password={password} setPassword={setPassword} doLogin={doLogin} />
       </div>
     </>
   );

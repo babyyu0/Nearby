@@ -1,8 +1,8 @@
 // Style
 import { NavLink } from "react-router-dom";
-import login from "../../resources/css/Login.module.css";
 
 function LoginComponent(props) {
+  const loginStyle = props.loginStyle;
   const id = props.id;
   const setId = props.setId;
   const password = props.password;
@@ -12,20 +12,20 @@ function LoginComponent(props) {
 
   return (
     <>
-      <div className={login.contents}>
-        <div className={login.idBox}>
-          <label className={login.inputLabel}>아이디 (이메일)</label>
-          <input type="text" className={login.inputText} value={id} onChange={(e) => { setId(e.target.value)}} />
+      <div className={loginStyle.contents}>
+        <div className={loginStyle.idBox}>
+          <label className={loginStyle.inputLabel}>아이디 (이메일)</label>
+          <input type="text" className={loginStyle.inputText} value={id} onChange={(e) => { setId(e.target.value)}} />
         </div>
-        <div className={login.passwordBox}>
-          <label className={login.inputLabel}>비밀번호</label>
-          <input className={login.inputText} value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div className={loginStyle.passwordBox}>
+          <label className={loginStyle.inputLabel}>비밀번호</label>
+          <input className={loginStyle.inputText} value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-        <div className={login.confirmBox}>
-          <NavLink className={login.find} to="/find">
+        <div className={loginStyle.confirmBox}>
+          <NavLink className={loginStyle.find} to="/find">
             아이디 혹은 비밀번호를 잊으셨나요?
           </NavLink>
-          <button className={login.confirm} onClick={doLogin}> 로그인 </button>
+          <button className={loginStyle.confirm} onClick={doLogin}> 로그인 </button>
         </div>
       </div>
     </>

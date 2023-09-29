@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.UUID;
 
 import com.ssafy.trip.model.dto.command.ExistIdCommand;
+import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.ssafy.trip.model.dao.MemberDAO;
 import com.ssafy.trip.model.dao.MemberSecDAO;
 import com.ssafy.trip.model.vo.MemberSecVO;
-import com.ssafy.trip.model.vo.MemberVO;
+import com.ssafy.trip.model.vo.Member;
 import com.ssafy.trip.util.exception.MyException;
 import com.ssafy.trip.util.OpenCrypt;
 
@@ -33,22 +34,25 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean register(MemberVO memberVO) throws MyException {
-
-		return false;
-	}
-
-	@Override
 	public boolean isExistId(ExistIdCommand existIdCommand) throws MyException {
 		try {
 			return (memberDAO.findById(existIdCommand.getMemberId()) != null);
-		} catch(RuntimeException e) {
+		} catch (RuntimeException e) {
 			log.error(e.getMessage());
 			throw new MemberInvalidException();
 		}
 	}
 
-	public String login(MemberVO member) throws MyException {
+	@Override
+	public boolean register(MemberCreateCommand memberCreateCommand) throws MyException {
+		log.info(memberCreateCommand.toString());
+
+		return false;
+	}
+
+}
+/*
+	public String login(Member member) throws MyException {
 		try {
 			MemberSecVO loggedMemberSec = memberSecDAO.login(member);
 			if(loggedMemberSec == null) {
@@ -76,14 +80,14 @@ public class MemberServiceImpl implements MemberService {
 		return null;
 	}
 
-	public MemberVO selectOne(MemberVO member) {
+	public Member selectOne(Member member) {
 		return memberDAO.selectOne(member);
 	}
 
-	public void regist(MemberVO member) throws MyException {
+	public void regist(Member member) throws MyException {
 
 		// 아이디 중복 검사
-		MemberVO selMember = selectOne(member);
+		Member selMember = selectOne(member);
 		if(selMember != null) throw new RuntimeException("회원 등록 실패.");
 		
 		// 비밀번호 유효성 검사
@@ -125,3 +129,5 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 }
+
+ */

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import com.ssafy.trip.model.dto.command.ExistIdCommand;
+import com.ssafy.trip.model.dto.command.MemberCreateCommand;
+import com.ssafy.trip.model.dto.request.MemberCreateRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -15,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.trip.model.service.MemberService;
 import com.ssafy.trip.model.service.TripService;
-import com.ssafy.trip.model.vo.MemberVO;
+import com.ssafy.trip.model.vo.Member;
 import com.ssafy.trip.util.exception.MyException;
 
 @RestController
@@ -24,18 +26,25 @@ import com.ssafy.trip.util.exception.MyException;
 public class MemberController {
 
 	private final MemberService memberService;
-	private final TripService tripService;
 
 	@Autowired
-	public MemberController(MemberService memberService, TripService tripService) {
+	public MemberController(MemberService memberService) {
 		this.memberService = memberService;
-		this.tripService = tripService;
 	}
 
 	@GetMapping("exist/{memberId}")
 	public ResponseEntity<?> isExistId(@PathVariable("memberId") String memberId) {
 		try {
-			return ResponseEntity.ok(memberService.isExistId(new ExistIdCommand().toValidCommand(memberId)));
+			return ResponseEntity.ok(memberService.isExistId(new ExistIdCommand(memberId)));
+		} catch (MyException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+		}
+	}
+
+	@PostMapping("register")
+	public ResponseEntity<?> register(@RequestPart("member")MemberCreateRequest memberCreateRequest, @RequestPart MultipartFile profile) {
+		try {
+			return ResponseEntity.ok(memberService.register(new MemberCreateCommand(memberCreateRequest)));
 		} catch (MyException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
@@ -44,7 +53,7 @@ public class MemberController {
 }
 /*
 	@PostMapping("register")
-	public ResponseEntity<?> register(@RequestBody MemberVO member) {
+	public ResponseEntity<?> register(@RequestBody Member member) {
 		try {
 			return ResponseEntity.ok(memberService.register(member));
 		} catch(MyException e) {
@@ -53,7 +62,7 @@ public class MemberController {
 	}
 
 	@PostMapping("login")
-	public synchronized ResponseEntity<?> login(@RequestBody MemberVO member) throws MyException {
+	public synchronized ResponseEntity<?> login(@RequestBody Member member) throws MyException {
 		return ResponseEntity.ok(memberService.login(member));
 	}
 
@@ -70,9 +79,9 @@ public class MemberController {
 		HttpSession session = request.getSession(false);
 		
 		if(session != null) {
-			MemberVO member = memberService.selectOne(new MemberVO((String) session.getAttribute("id"), null, null, null, 0, 0));
-			member.setSidoVO(tripService.getOneSido(member.getSidoCode()));
-			member.setGugunVO(tripService.getOneGugunBySidoCode(member.getGugunCode(), member.getSidoCode()));
+			Member member = memberService.selectOne(new Member((String) session.getAttribute("id"), null, null, null, 0, 0));
+			member.setSido(tripService.getOneSido(member.getSidoCode()));
+			member.setGugun(tripService.getOneGugunBySidoCode(member.getGugunCode(), member.getSidoCode()));
 			
 			return new ResponseEntity<>(member, HttpStatus.OK);
 		}

@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useAtom } from "jotai";
 
 // Services
-import { existId, getCity } from "../../services/member/MemberService";
+import { existId, getCity, register } from "../../services/member/MemberService";
 
 //jotai
 import { sidoAtom, gugunAtom } from "../../jotai/city";
@@ -15,10 +15,12 @@ import RegisterComponent from "../../components/member/RegisterComponent";
 // Styles
 import registerStyle from "../../resources/css/member/Register.module.css";
 import { useEffect, useState } from "react";
+import { type } from "@testing-library/user-event/dist/type";
 
 function RegisterContainer() {
   const [profile, setProfile] = useState("image/none_profile.png");
   const [id, setId] = useState("");
+  const [idConfirm, setIdConfirm] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [name, setName] = useState("");
@@ -36,17 +38,24 @@ function RegisterContainer() {
         title: "아이디가 입력되지 않았습니다!",
       });
       return;
+    } else if (!new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$').test(id)) {
+      Swal.fire({
+        icon: "info",
+        title: "이메일 형식으로 아이디를 입력해 주세요.",
+      });
+      return;
     }
 
-    const request = { id };
-    const data = await existId(request);
+    const data = await existId({id});
     if (data === true) {
+      setIdConfirm(false);
       Swal.fire({
         icon: "error",
         title: "중복된 아이디입니다.",
       });
       return;
     } else if (data === false) {
+      setIdConfirm(true);
       Swal.fire({
         icon: "success",
         title: "사용 가능한 아이디입니다.",
@@ -65,6 +74,46 @@ function RegisterContainer() {
     setGugunList(tmpGugunList);
   };
 
+  const doRegister = async () => {
+    // const exist = await existId({id});
+    if (!idConfirm) {
+      Swal.fire({
+        icon: "error",
+        title: "아이디 중복확인을 해 주세요.",
+      });
+      return;
+    } else if (!id || !new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$').test(id)) {
+      Swal.fire({
+        icon: "error",
+        title: "아이디를 확인해 주세요.",
+      });
+      return;
+    } else if (!password || !new RegExp('^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,20}$').test(password)) {
+      Swal.fire({
+        icon: "error",
+        title: "비밀번호를 확인해 주세요.",
+      });
+    } else if (password !== passwordConfirm) {
+      Swal.fire({
+        icon: "error",
+        title: "비밀번호가 일치하지 않습니다.",
+      });
+    } else if (!name) {
+      Swal.fire({
+        icon: "error",
+        title: "이름을 확인해 주세요.",
+      });
+    } else if (!sido || !gugun) {
+      Swal.fire({
+        icon: "error",
+        title: "지역을 확인해 주세요.",
+      });
+    } else {
+      const data = await register(new Blob([JSON.stringify({ "memberId": id, password, name, "sidoCode": sido, "gugunCode": gugun })], { type: "application/json" }), profile);
+      console.log(data);
+    }
+  };
+
   useEffect(() => {
     if (!sidoList) {
       getCities();
@@ -81,12 +130,13 @@ function RegisterContainer() {
         <RegisterComponent
           registerStyle={registerStyle}
           profile={profile} setProfile={setProfile}
-          id={id} setId={setId} isExistId={isExistId}
+          id={id} setId={setId} isExistId={isExistId} setIdConfirm={setIdConfirm}
           password={password} setPassword={setPassword} passwordConfirm={passwordConfirm} setPasswordConfirm={setPasswordConfirm}
           name={name} setName={setName}
           sido={sido} setSido={setSido}
           gugun={gugun} setGugun={setGugun}
           sidoList={sidoList} gugunList={gugunList}
+          doRegister = {doRegister}
         />
       </div>
     </>

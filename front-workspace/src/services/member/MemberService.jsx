@@ -2,7 +2,18 @@ import { api } from "../common/ApiSevice";
 import Swal from "sweetalert2";
 
 const login = (data) => {
-    const response = api.post(`/login`, JSON.stringify(data));
+    const response = api.post(`/member/login`, JSON.stringify(data));
+
+    return response;
+}
+
+const register = (data, profile) => {
+    const response = api.post(
+        `/member/register`,
+        { "member" : data, profile },
+        {headers : {
+            "Content-Type": `multipart/form-data`
+        }});
 
     return response;
 }
@@ -37,4 +48,4 @@ const getCity = async () => {
     return response.data;
 }
 
-export { login, existId, getCity };
+export { login, register, existId, getCity };

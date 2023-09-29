@@ -11,6 +11,7 @@ function LoginComponent(props) {
   const id = props.id;
   const setId = props.setId;
   const isExistId = props.isExistId;
+  const setIdConfirm = props.setIdConfirm;
 
   const password = props.password;
   const setPassword = props.setPassword;
@@ -27,7 +28,7 @@ function LoginComponent(props) {
   const sidoList = props.sidoList;
   const gugunList = props.gugunList;
 
-  const doLogin = props.doLogin;
+  const doRegister = props.doRegister;
 
   useEffect(() => {
     document.addEventListener('change', (e) => {
@@ -55,7 +56,7 @@ function LoginComponent(props) {
             아이디 (이메일)
           </label>
           <div>
-            <input type="text" className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={id} onChange={(e) => { setId(e.target.value); }} />
+            <input type="text" className={`${registerStyle.inputText} ${registerStyle.halfInputText}`} value={id} onChange={(e) => { setIdConfirm(false); setId(e.target.value); }} />
             <button className={registerStyle.confirm} onClick={isExistId}>중복확인</button>
           </div>
         </div>
@@ -101,7 +102,7 @@ function LoginComponent(props) {
           </div>
         </div>
         <div className={`${registerStyle.box} ${registerStyle.confirmBox}`}>
-          <button className={registerStyle.confirm} onClick={doLogin}> 회원가입 </button>
+          <button className={registerStyle.confirm} onClick={doRegister}> 회원가입 </button>
         </div>
       </div>
     </>

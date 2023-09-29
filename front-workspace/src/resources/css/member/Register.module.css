@@ -64,12 +64,15 @@
 }
 
 .inputImgLabel {
-  height: 15vh;
+  height: 20vh;
+  width: 20vh;
   text-align: center;
 }
 
 .inputImgLabel > img {
   height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 .inputImg {

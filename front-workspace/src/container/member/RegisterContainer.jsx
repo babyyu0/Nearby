@@ -17,7 +17,7 @@ import registerStyle from "../../resources/css/member/Register.module.css";
 import { useEffect, useState } from "react";
 
 function RegisterContainer() {
-  const [profile, setProfile] = useState("");
+  const [profile, setProfile] = useState("image/none_profile.png");
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -27,7 +27,7 @@ function RegisterContainer() {
 
   const [sidoList, setSidoList] = useAtom(sidoAtom);
   const [gugunList, setGugunList] = useAtom(gugunAtom);
-  const [tmpGugunList, setTmpGugunList] = useState([]);
+  const [tmpGugunList] = useState([]);
 
   const isExistId = async () => {
     if (!id) {
@@ -69,7 +69,7 @@ function RegisterContainer() {
     if (!sidoList) {
       getCities();
     }
-  });
+  }, []);
 
   return (
     <>

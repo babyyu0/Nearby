@@ -1,9 +1,12 @@
+import { useEffect, useRef } from "react";
+
 // Style
 function LoginComponent(props) {
   const registerStyle = props.registerStyle;
 
   const profile = props.profile;
   const setProfile = props.setProfile;
+  const fileDOM = useRef();
 
   const id = props.id;
   const setId = props.setId;
@@ -26,15 +29,25 @@ function LoginComponent(props) {
 
   const doLogin = props.doLogin;
 
+  useEffect(() => {
+    document.addEventListener('change', (e) => {
+      if (e.target !== fileDOM.current) return;
+      const imageSrc = URL.createObjectURL(fileDOM.current.files[0]);
+      setProfile(imageSrc);
+    });
+
+    return URL.revokeObjectURL(fileDOM.current.files[0]);
+  }, []);
+
   return (
     <>
       <div className={registerStyle.contents}>
         <div className={registerStyle.box}>
-          <label className={`${registerStyle.inputLabel} ${registerStyle.inputImgLabel}`} htmlFor={profile}>
-            <img src="/image/none_profile.png" alt="profile"/>
+          <label className={`${registerStyle.inputLabel} ${registerStyle.inputImgLabel}`} htmlFor="profile">
+            <img src={profile} alt="profile"/>
           </label>
           <div>
-            <input type="file" style={{ display: 'none' }} value={profile} onChange={(e) => { setProfile(e.target.value); }} />
+            <input type="file" id="profile" accept="image/*" style={{ display: 'none' }} ref={fileDOM} onChange={(e) => { setProfile(e.target.value); }} />
           </div>
         </div>
         <div className={registerStyle.box}>

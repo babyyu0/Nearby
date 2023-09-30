@@ -1,5 +1,10 @@
-# Vue 관통 프로젝트
+<div align="center">
+  <img src=https://github.com/babyyu0/UploadImage/assets/58788576/99d962f7-dc99-4329-85f7-87ccc4fb8a3d width=100vw>
+  <h1 style="display:'inline-block'">근처 : 관광지 정보 제공 웹사이트</h1>
+</div>
 
+'근처'는 관광지의 정보를 제공하고 지도에 노출해주는 웹사이트 입니다.<br>
+사용자들은 저희 사이트를 통해 시군구별 관광지의 위치를 확인하고, 본인의 위치와 관광지의 위치가 얼마나 차이 나는지 열람할 수 있습니다.
 # Member
 
 |     팀명      |            유모차           |

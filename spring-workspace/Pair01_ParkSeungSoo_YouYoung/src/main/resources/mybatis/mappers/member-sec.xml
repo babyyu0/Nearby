@@ -4,7 +4,11 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.ssafy.trip.model.dao.MemberSecDAO">
-	<select id="login" parameterType="MemberVO" resultType="MemberSecVO">
+	<select id="findByMemberId" parameterType="Member" resultType="MemberSec">
+		SELECT id, member_id AS memberId, salt, sec_key AS secKey FROM member_sec WHERE member_id=#{memberId}
+	</select>
+
+	<select id="login" parameterType="Member" resultType="MemberSecVO">
 		SELECT * FROM memberSec WHERE id=#{id}
 	</select>
  	

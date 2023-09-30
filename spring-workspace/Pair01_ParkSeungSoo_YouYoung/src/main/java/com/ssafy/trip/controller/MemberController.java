@@ -3,7 +3,7 @@ package com.ssafy.trip.controller;
 import java.io.File;
 import java.io.IOException;
 
-import com.ssafy.trip.model.dto.command.ExistIdCommand;
+import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.request.MemberCreateRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,9 +33,9 @@ public class MemberController {
 	}
 
 	@GetMapping("exist/{memberId}")
-	public ResponseEntity<?> isExistId(@PathVariable("memberId") String memberId) {
+	public ResponseEntity<?> isValidId(@PathVariable("memberId") String memberId) {
 		try {
-			return ResponseEntity.ok(memberService.isExistId(new ExistIdCommand(memberId)));
+			return ResponseEntity.ok(memberService.isValidId(new ValidIdCommand(memberId)));
 		} catch (MyException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
@@ -44,7 +44,7 @@ public class MemberController {
 	@PostMapping("register")
 	public ResponseEntity<?> register(@RequestPart("member")MemberCreateRequest memberCreateRequest, @RequestPart MultipartFile profile) {
 		try {
-			return ResponseEntity.ok(memberService.register(new MemberCreateCommand(memberCreateRequest)));
+			return ResponseEntity.ok(memberService.register(new MemberCreateCommand(memberCreateRequest, profile)));
 		} catch (MyException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}

@@ -1,6 +1,10 @@
 package com.ssafy.trip.model.dto.command;
 
-public class ExistIdCommand {
+public class ValidIdCommand {
+
+    public ValidIdCommand(String memberId) {
+        setMemberId(memberId);
+    }
     private String memberId;
 
     public String getMemberId() {
@@ -13,12 +17,5 @@ public class ExistIdCommand {
 
     public void setMemberId(String memberId) {
         this.memberId = memberId;
-    }
-
-    public ExistIdCommand toValidCommand(String memberId) {
-        ExistIdCommand validIdCommand = new ExistIdCommand();
-        validIdCommand.setMemberId(memberId);
-
-        return validIdCommand;
     }
 }

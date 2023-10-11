@@ -1,11 +1,12 @@
 package com.ssafy.trip.model.service;
 
+import com.ssafy.trip.model.entity.Member;
+import com.ssafy.trip.model.repository.MemberRepository;
 import com.ssafy.trip.util.MyPasswordEncoder;
-import com.ssafy.trip.model.dao.MemberSecDao;
 import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.response.ValidIdResponse;
-import com.ssafy.trip.model.vo.Member;
+import com.ssafy.trip.model.vo.MemberVO;
 import com.ssafy.trip.model.vo.MemberSec;
 import com.ssafy.trip.util.data.RegexData;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
@@ -14,22 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.trip.model.dao.MemberDao;
 import com.ssafy.trip.util.exception.MyException;
 
 @Service
 @Slf4j
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberDao memberDao;
-    private final MemberSecDao memberSecDao;
+    private final MemberRepository memberRepository;
 
     private final MyPasswordEncoder myPasswordEncoder;
 
     @Autowired
-    public MemberServiceImpl(MemberDao memberDao, MemberSecDao memberSecDao, MyPasswordEncoder myPasswordEncoder) {
-        this.memberDao = memberDao;
-        this.memberSecDao = memberSecDao;
+    public MemberServiceImpl(MemberRepository memberRepository, MyPasswordEncoder myPasswordEncoder) {
+        this.memberRepository = memberRepository;
         this.myPasswordEncoder = myPasswordEncoder;
     }
 
@@ -40,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
                     || validIdCommand.getMemberId().trim().equals("")
                     || !validIdCommand.getMemberId().trim().matches(RegexData.regex.get("email"))) {
                 return new ValidIdResponse(false, "사용할 수 없는 아이디입니다.");
-            } else if (memberDao.findByMemberId(validIdCommand.getMemberId()) == null) {
+            } else if (memberRepository.findByMemberId(validIdCommand.getMemberId()) == null) {
                 return new ValidIdResponse(false, "중복된 아이디입니다.");
             } else {
                 return new ValidIdResponse(true, "사용 가능한 아이디입니다.");
@@ -85,18 +83,18 @@ public class MemberServiceImpl implements MemberService {
         memberCreateCommand.setPassword(myPasswordEncoder.encode(memberCreateCommand.getPassword(), salt));
         byte[] key = myPasswordEncoder.generateKey();
 
-        Member member = new Member(memberCreateCommand.getMemberId(), memberCreateCommand.getPassword(), memberCreateCommand.getName(), memberCreateCommand.getSidoCode(), memberCreateCommand.getGugunCode(), "tmp.jpg");
-        MemberSec memberSec = new MemberSec(member.getMemberId(), salt, new String(key));
+        Member member = Member.builder().memberId(memberCreateCommand.getMemberId()).password(memberCreateCommand.getPassword()).name(memberCreateCommand.getName()).build();
+        // MemberSec memberSec = new MemberSec(member.getMemberId(), salt, new String(key));
 
-        memberDao.save(member);
-        memberSecDao.save(memberSec);
+        memberRepository.save(member);
+        // memberSecRepository.save(memberSec);
 
         return true;
     }
 
 }
 /*
-	public String login(Member member) throws MyException {
+	public String login(MemberVO member) throws MyException {
 		try {
 			MemberSecVO loggedMemberSec = memberSecDAO.login(member);
 			if(loggedMemberSec == null) {
@@ -108,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
 			String hashPassword = OpenCrypt.getSHA256(member.getPassword(), salt);
 			member.setPassword(hashPassword);
 			
-			String loggedMemberName = memberDao.login(member);
+			String loggedMemberName = memberRepository.login(member);
 			// 아이디 혹은 비밀번호가 일치하지 않을 경우
 			if(loggedMemberName == null) {
 				return null;
@@ -124,15 +122,15 @@ public class MemberServiceImpl implements MemberService {
 		return null;
 	}
 
-	public Member selectOne(Member member) {
-		return memberDao.selectOne(member);
+	public MemberVO selectOne(MemberVO member) {
+		return memberRepository.selectOne(member);
 	}
 
-	public void regist(Member member) throws MyException {
+	public void regist(MemberVO member) throws MyException {
 
 		// 아이디 중복 검사
-		Member selMember = selectOne(member);
-		if(selMember != null) throw new RuntimeException("회원 등록 실패.");
+		MemberVO selMemberVO = selectOne(member);
+		if(selMemberVO != null) throw new RuntimeException("회원 등록 실패.");
 		
 		// 비밀번호 유효성 검사
 		String pwReg = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~!@#$%^&*_-])[A-Za-z0-9~!@#$%^&*_-]{8,16}$";
@@ -158,7 +156,7 @@ public class MemberServiceImpl implements MemberService {
 			member.setPassword(hashPassword);
 			byte[]  secKey = OpenCrypt.generateKey("AES", 128);
 			
-			memberDao.regist(member);
+			memberRepository.regist(member);
 			
 			// 암호화한 아이디를 저장합니다.
 			memberSecDAO.registSec(new MemberSecVO(member.getId(), salt, new String(secKey)));
@@ -169,7 +167,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	public void setProfileImg(String id, File profileFile) {
-		memberDao.insertProfileImg(id, "http://localhost:9999/static/img/userProfile/" + profileFile.getName());
+		memberRepository.insertProfileImg(id, "http://localhost:9999/static/img/userProfile/" + profileFile.getName());
 	}
 
 }

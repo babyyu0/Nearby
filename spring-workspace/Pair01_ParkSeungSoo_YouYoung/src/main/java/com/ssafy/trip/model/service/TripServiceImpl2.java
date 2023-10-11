@@ -6,15 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.trip.model.dao.TripDAO;
 import com.ssafy.trip.model.vo.GugunVO;
 import com.ssafy.trip.model.vo.SidoVO;
 import com.ssafy.trip.model.vo.TripTypeVO;
 import com.ssafy.trip.model.vo.TripVO;
 
 @Service
-public class TripServiceImpl {
-
+public class TripServiceImpl2 {
+/*
 	@Autowired
 	private TripDAO tripDAO;
 
@@ -52,4 +51,6 @@ public class TripServiceImpl {
 		return tripDAO.selectOneTripByContentId(contentId);
 	}
 
+
+ */
 }

@@ -1,16 +1,10 @@
 package com.ssafy.trip.model.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.ssafy.trip.model.dao.BoardDAO;
-import com.ssafy.trip.model.vo.BoardVO;
 
 @Service
 public class BoardService {
-
+/*
 	@Autowired
 	BoardDAO boardDAO;
 	
@@ -33,5 +27,7 @@ public class BoardService {
 	public int delete(BoardVO boardVO) {
 		return boardDAO.delete(boardVO);
 	}
-	
+
+
+ */
 }

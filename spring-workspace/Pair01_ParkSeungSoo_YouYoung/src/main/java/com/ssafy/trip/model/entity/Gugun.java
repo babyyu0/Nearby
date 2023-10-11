@@ -1,5 +1,6 @@
 package com.ssafy.trip.model.entity;
 
+import com.ssafy.trip.model.data.GugunPk;
 import com.ssafy.trip.util.exception.common.CityInvalidException;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -9,10 +10,11 @@ import org.hibernate.annotations.Comment;
 
 @Entity
 @NoArgsConstructor
+@IdClass(GugunPk.class)
 @Slf4j
 public class Gugun {
 	@Builder
-	public Gugun(int gugunCode, String gugunName, Sido sido) throws CityInvalidException {
+	public Gugun(long gugunCode, String gugunName, Sido sido) throws CityInvalidException {
 		setGugunCode(gugunCode);
 		setGugunName(gugunName);
 		setSido(sido);
@@ -20,21 +22,22 @@ public class Gugun {
 
 	@Id
 	@Comment("코드")
-	private int gugunCode;
+	private long gugunCode;
 
 	@Column(name = "gugun_name", nullable = false, columnDefinition = "VARCHAR(20) CHARACTER SET UTF8")
 	@Comment("이름")
 	private String gugunName;
 
+	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="sido_id", nullable = false)
 	private Sido sido;
 
-	public int getGugunCode() {
+	public long getGugunCode() {
 		return gugunCode;
 	}
 
-	public void setGugunCode(int gugunCode) throws CityInvalidException {
+	public void setGugunCode(long gugunCode) throws CityInvalidException {
 		if(gugunCode <= 0) {
 			log.error("Gugun: 구군 코드 받기 실패");
 			throw new CityInvalidException();

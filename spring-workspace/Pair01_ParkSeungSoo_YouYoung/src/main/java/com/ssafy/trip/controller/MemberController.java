@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.trip.model.service.MemberService;
 import com.ssafy.trip.model.service.TripService;
-import com.ssafy.trip.model.vo.Member;
+import com.ssafy.trip.model.vo.MemberVO;
 import com.ssafy.trip.util.exception.MyException;
 
 @RestController
@@ -53,7 +53,7 @@ public class MemberController {
 }
 /*
 	@PostMapping("register")
-	public ResponseEntity<?> register(@RequestBody Member member) {
+	public ResponseEntity<?> register(@RequestBody MemberVO member) {
 		try {
 			return ResponseEntity.ok(memberService.register(member));
 		} catch(MyException e) {
@@ -62,7 +62,7 @@ public class MemberController {
 	}
 
 	@PostMapping("login")
-	public synchronized ResponseEntity<?> login(@RequestBody Member member) throws MyException {
+	public synchronized ResponseEntity<?> login(@RequestBody MemberVO member) throws MyException {
 		return ResponseEntity.ok(memberService.login(member));
 	}
 
@@ -75,11 +75,11 @@ public class MemberController {
 	}
 
 	@PostMapping("get-logged-member")
-	public ResponseEntity<?> getLoggedMember(HttpServletRequest request) throws MyException {
+	public ResponseEntity<?> getLoggedMemberVO(HttpServletRequest request) throws MyException {
 		HttpSession session = request.getSession(false);
 		
 		if(session != null) {
-			Member member = memberService.selectOne(new Member((String) session.getAttribute("id"), null, null, null, 0, 0));
+			MemberVO member = memberService.selectOne(new MemberVO((String) session.getAttribute("id"), null, null, null, 0, 0));
 			member.setSido(tripService.getOneSido(member.getSidoCode()));
 			member.setGugun(tripService.getOneGugunBySidoCode(member.getGugunCode(), member.getSidoCode()));
 			

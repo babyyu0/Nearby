@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ import com.ssafy.trip.model.vo.BoardVO;
 @RequestMapping("/board")
 @CrossOrigin
 public class BoardProcessController {
-
+/*
 	@Autowired
 	BoardService boardService;
 
@@ -135,4 +135,6 @@ public class BoardProcessController {
 	     file.setExecutable(false);
 	}
 
+
+ */
 }

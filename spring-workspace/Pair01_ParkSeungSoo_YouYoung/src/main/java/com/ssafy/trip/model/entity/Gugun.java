@@ -34,7 +34,7 @@ public class Gugun {
 
 	public GugunBuilder gugunCode(long gugunCode) throws CityInvalidException {
 		if(gugunCode <= 0) {
-			log.error("Gugun: 구군 코드 입력 실패");
+			log.error("Gugun: 구군 코드 입력 실패 " + gugunCode);
 			throw new CityInvalidException();
 		}
 		return innerBuilder().gugunCode(gugunCode);
@@ -42,7 +42,7 @@ public class Gugun {
 
 	public GugunBuilder gugunName(String gugunName) throws CityInvalidException {
 		if(gugunName == null || gugunName.trim().equals("")) {
-			log.error("Gugun: 지역 (구, 군) 이름 입력 실패");
+			log.error("Gugun: 지역 (구, 군) 이름 입력 실패 " + gugunName);
 			throw new CityInvalidException();
 		}
 		return innerBuilder().gugunName(gugunName);

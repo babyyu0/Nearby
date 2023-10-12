@@ -30,7 +30,11 @@ public class Sido {
         return Sido.innerBuilder();
     }
 
-    public SidoBuilder sidoCode(long sidoCode) {
+    public SidoBuilder sidoCode(long sidoCode) throws CityInvalidException {
+        if(sidoCode <= 0) {
+            log.error("Sido: 지역 (시, 도) 번호 입력 실패 " + sidoCode);
+            throw new CityInvalidException();
+        }
         return innerBuilder().sidoCode(sidoCode);
     }
     public SidoBuilder sidoName(String sidoName) throws CityInvalidException {

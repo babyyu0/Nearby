@@ -1,14 +1,17 @@
 package com.ssafy.trip.model.service;
 
+import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Member;
+import com.ssafy.trip.model.entity.Sido;
+import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.MemberRepository;
+import com.ssafy.trip.model.repository.SidoRepository;
 import com.ssafy.trip.util.MyPasswordEncoder;
 import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.response.ValidIdResponse;
-import com.ssafy.trip.model.vo.MemberVO;
-import com.ssafy.trip.model.vo.MemberSec;
 import com.ssafy.trip.util.data.RegexData;
+import com.ssafy.trip.util.exception.member.MemberCreateException;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +25,16 @@ import com.ssafy.trip.util.exception.MyException;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final SidoRepository sidoRepository;
+    private final GugunRepository gugunRepository;
 
     private final MyPasswordEncoder myPasswordEncoder;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository, MyPasswordEncoder myPasswordEncoder) {
+    public MemberServiceImpl(MemberRepository memberRepository, SidoRepository sidoRepository, GugunRepository gugunRepository, MyPasswordEncoder myPasswordEncoder) {
         this.memberRepository = memberRepository;
+        this.sidoRepository = sidoRepository;
+        this.gugunRepository = gugunRepository;
         this.myPasswordEncoder = myPasswordEncoder;
     }
 
@@ -38,14 +45,14 @@ public class MemberServiceImpl implements MemberService {
                     || validIdCommand.getMemberId().trim().equals("")
                     || !validIdCommand.getMemberId().trim().matches(RegexData.regex.get("email"))) {
                 return new ValidIdResponse(false, "사용할 수 없는 아이디입니다.");
-            } else if (memberRepository.findByMemberId(validIdCommand.getMemberId()) == null) {
+            } else if (memberRepository.findByMemberId(validIdCommand.getMemberId()).isPresent()) {
                 return new ValidIdResponse(false, "중복된 아이디입니다.");
             } else {
                 return new ValidIdResponse(true, "사용 가능한 아이디입니다.");
             }
         } catch (RuntimeException e) {
             log.error(e.getMessage());
-            throw new MemberInvalidException();
+            throw new MemberCreateException();
         }
     }
 
@@ -55,38 +62,54 @@ public class MemberServiceImpl implements MemberService {
                 || memberCreateCommand.getMemberId().trim().equals("")
                 || !memberCreateCommand.getMemberId().trim().matches(RegexData.regex.get("email"))) {
             log.error("MemberService: 아이디 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
         if (!isValidId(new ValidIdCommand(memberCreateCommand.getMemberId())).isValid()) {  // 아이디 중복 검사
             log.error("MemberService: 아이디 중복");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
         if (memberCreateCommand.getPassword() == null
                 || memberCreateCommand.getPassword().trim().equals("")
                 || !memberCreateCommand.getPassword().trim().matches(RegexData.regex.get("password"))) {
             log.error("MemberService: 비밀번호 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
 		if(memberCreateCommand.getName() == null
 				|| memberCreateCommand.getName().trim().equals("")
 				|| 20 < memberCreateCommand.getName().length() ) {
 			log.error("MemberService: 이름 입력 실패");
-			throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+			throw new MemberInvalidException();
 		}
 		if(memberCreateCommand.getSidoCode() <= 0 || memberCreateCommand.getGugunCode() <= 0) {
 			log.error("MemberService: 지역 입력 실패");
-			throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+			throw new MemberInvalidException();
 		}
 
 		String salt = myPasswordEncoder.getRandomSalt();  // 비밀번호 및 토큰 암호화 로직
 		log.info(memberCreateCommand.getMemberId() + " 회원 salt 생성 : " + salt);
-        memberCreateCommand.setPassword(myPasswordEncoder.encode(memberCreateCommand.getPassword(), salt));
+        String encryptedPassword = myPasswordEncoder.encode(memberCreateCommand.getPassword(), salt);
         byte[] key = myPasswordEncoder.generateKey();
 
-        Member member = Member.builder().memberId(memberCreateCommand.getMemberId()).password(memberCreateCommand.getPassword()).name(memberCreateCommand.getName()).build();
-        // MemberSec memberSec = new MemberSec(member.getMemberId(), salt, new String(key));
+        Sido sido = sidoRepository.findById(memberCreateCommand.getSidoCode()).orElseThrow(() -> {
+            log.error("MemberService: 지역 (시, 도) 찾기 실패");
+            return new MemberInvalidException();
+        });
+        Gugun gugun = gugunRepository.findByGugunCodeAndSido(memberCreateCommand.getGugunCode(), sido).orElseThrow(() -> {
+            log.error("MemberService: 지역 (구, 군) 찾기 실패");
+            return new MemberInvalidException();
+        });
 
-        memberRepository.save(member);
+        Member member = Member.builder()
+                .memberId(memberCreateCommand.getMemberId())
+                .password(encryptedPassword)
+                .name(memberCreateCommand.getName())
+                .sido(sido)
+                .gugun(gugun)
+                .build();
+
+        System.out.println(member);
+
+        memberRepository.saveAndFlush(member);
         // memberSecRepository.save(memberSec);
 
         return true;

@@ -1,21 +1,29 @@
 package com.ssafy.trip.model.entity;
 
-import com.ssafy.trip.model.entity.Gugun;
-import com.ssafy.trip.model.entity.Sido;
 import com.ssafy.trip.util.data.RegexData;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
-import org.springframework.http.HttpStatus;
 
 @Entity
-@NoArgsConstructor
+@Builder
 @Slf4j
+@ToString
 public class Member {
-	@Builder
+	public Member(long id, String memberId, String password, String name, Sido sido, Gugun gugun, String profileImg) throws MemberInvalidException {
+		setId(id);
+		setMemberId(memberId);
+		setPassword(password);
+		setName(name);
+		setSido(sido);
+		setGugun(gugun);
+		setProfileImg(profileImg);
+	}
 	public Member(String memberId, String password, String name, Sido sido, Gugun gugun, String profileImg) throws MemberInvalidException {
 		setMemberId(memberId);
 		setPassword(password);
@@ -24,34 +32,48 @@ public class Member {
 		setGugun(gugun);
 		setProfileImg(profileImg);
 	}
-	@Builder
-	public Member(String memberId, String password, String name, String email, Sido sido, Gugun gugun) throws MemberInvalidException {
+
+	public Member(String memberId, String password, String name, Sido sido, Gugun gugun) throws MemberInvalidException {
 		super();
 		setMemberId(memberId);
 		setPassword(password);
 		setName(name);
-		setEmail(email);
 		setSido(sido);
 		setGugun(gugun);
-		setProfileImg("");
+		setProfileImg("tmp.jpg");
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Comment("고유번호")
 	private long id;
+
+	@Column(name = "member_id", nullable = false, columnDefinition = "VARCHAR(20) CHARACTER SET UTF8")
+	@Comment("회원 아이디")
 	private String memberId;
+
+	@Column(name = "password", nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
+	@Comment("비밀번호")
 	private String password;
+
+	@Column(name = "name", nullable = false, columnDefinition = "VARCHAR(20) CHARACTER SET UTF8")
+	@Comment("이름")
 	private String name;
-	private String email;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="sido_id", nullable = false)
+	@JoinColumn(name="sido_code", nullable = false)
+	@Comment("시도 코드")
 	private Sido sido;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="gugun_id", nullable = false)
+	@JoinColumn(name="gugun_code", referencedColumnName = "gugun_code", nullable = false)
+	@Comment("구군 코드")
 	private Gugun gugun;
+
+	@Column(name = "profile_img", columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")
+	@Comment("프로필 이미지")
 	private String profileImg;
+
 
 	public long getId() {
 		return id;
@@ -66,7 +88,7 @@ public class Member {
 	public void setMemberId(String memberId) throws MemberInvalidException {
 		if(memberId == null || memberId.trim().equals("") || !memberId.trim().matches(RegexData.regex.get("email"))) {
 			log.error("MemberCreateCommand: 아이디 입력 실패 " + memberId);
-			throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+			throw new MemberInvalidException();
 		}
 		this.memberId = memberId;
 	}
@@ -85,14 +107,6 @@ public class Member {
 
 	public void setName(String name) {
 		if(name != null && !name.trim().equals("")) this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		if(email != null && !email.trim().equals("")) this.email = email;
 	}
 
 	public Sido getSido() {

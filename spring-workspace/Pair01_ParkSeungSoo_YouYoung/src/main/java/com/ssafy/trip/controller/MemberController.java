@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.request.MemberCreateRequest;
+import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -17,13 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.trip.model.service.MemberService;
-import com.ssafy.trip.model.service.TripService;
-import com.ssafy.trip.model.vo.MemberVO;
 import com.ssafy.trip.util.exception.MyException;
 
 @RestController
 @RequestMapping("/member")
-@CrossOrigin
 public class MemberController {
 
 	private final MemberService memberService;
@@ -34,21 +32,13 @@ public class MemberController {
 	}
 
 	@GetMapping("exist/{memberId}")
-	public ResponseEntity<?> isValidId(@PathVariable("memberId") String memberId) {
-		try {
-			return ResponseEntity.ok(memberService.isValidId(new ValidIdCommand(memberId)));
-		} catch (MyException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-		}
+	public ResponseEntity<?> isValidId(@PathVariable("memberId") String memberId) throws MyException {
+		return ResponseEntity.ok(memberService.isValidId(new ValidIdCommand(memberId)));
 	}
 
 	@PostMapping(value = "register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<?> register(@RequestPart(value = "member")MemberCreateRequest memberCreateRequest, @RequestPart(value = "profile") MultipartFile profile) {
-		try {
+	public ResponseEntity<?> register(@RequestPart(value = "member")MemberCreateRequest memberCreateRequest, @RequestPart(value = "profile") MultipartFile profile) throws MyException {
 			return ResponseEntity.ok(memberService.register(new MemberCreateCommand(memberCreateRequest, profile)));
-		} catch (MyException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-		}
 	}
 
 }

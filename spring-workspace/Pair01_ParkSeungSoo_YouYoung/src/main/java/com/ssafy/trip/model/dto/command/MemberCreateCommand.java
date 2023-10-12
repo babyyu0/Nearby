@@ -39,7 +39,7 @@ public class MemberCreateCommand implements RegexData {
     public void setMemberId(String memberId) throws MemberInvalidException {
         if(memberId == null || memberId.trim().equals("") || !memberId.trim().matches(RegexData.regex.get("email"))) {
             log.error("MemberCreateCommand: 아이디 입력 실패 " + memberId);
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
 
         this.memberId = memberId;
@@ -52,7 +52,7 @@ public class MemberCreateCommand implements RegexData {
     public void setPassword(String password) throws MemberInvalidException {
         if(password == null || password.trim().equals("") || !password.trim().matches(RegexData.regex.get("password"))) {
             log.error("MemberCreateCommand: 비밀번호 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
 
         this.password = password;
@@ -65,7 +65,7 @@ public class MemberCreateCommand implements RegexData {
     public void setName(String name) throws MemberInvalidException {
         if(name == null || name.trim().equals("") || 20 < name.length() ) {
             log.error("MemberCreateCommand: 이름 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
 
         this.name = name;
@@ -78,7 +78,7 @@ public class MemberCreateCommand implements RegexData {
     public void setSidoCode(int sidoCode) throws MemberInvalidException {
         if(sidoCode <= 0) {
             log.error("MemberCreateCommand: 지역 (시, 도) 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
         this.sidoCode = sidoCode;
     }
@@ -90,7 +90,7 @@ public class MemberCreateCommand implements RegexData {
     public void setGugunCode(int gugunCode) throws MemberInvalidException {
         if(gugunCode <= 0) {
             log.error("MemberCreateCommand: 지역 (구, 군) 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
         this.gugunCode = gugunCode;
     }
@@ -102,13 +102,13 @@ public class MemberCreateCommand implements RegexData {
     public void setProfile(MultipartFile profile) throws MemberInvalidException {
         if(profile.isEmpty()) {
             log.error("MemberCreateCommand: 프로필 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
 
         String contentType = profile.getContentType();
         if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
             log.error("MemberCreateCommand: 프로필 확장명 변환 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
 
         this.profile = profile;

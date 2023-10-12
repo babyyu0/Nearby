@@ -31,7 +31,7 @@ public class MemberCreateRequest implements RegexData {
     public void setMemberId(String memberId) throws MemberInvalidException {
         if(memberId == null || memberId.trim().equals("") || !memberId.trim().matches(RegexData.regex.get("email"))) {
             log.error("MemberCreateRequest: 아이디 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
         this.memberId = memberId;
     }
@@ -43,7 +43,7 @@ public class MemberCreateRequest implements RegexData {
     public void setPassword(String password) throws MemberInvalidException {
         if(password == null || password.trim().equals("") || !password.trim().matches(RegexData.regex.get("password"))) {
             log.error("MemberCreateRequest: 비밀번호 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
 
         this.password = password;
@@ -56,7 +56,7 @@ public class MemberCreateRequest implements RegexData {
     public void setName(String name) throws MemberInvalidException {
         if(name == null || name.trim().equals("") || 20 < name.length() ) {
             log.error("MemberCreateRequest: 닉네임 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
 
         this.name = name;
@@ -70,7 +70,7 @@ public class MemberCreateRequest implements RegexData {
         if(sidoCode <= 0) {
             System.out.println(sidoCode);
             log.error("MemberCreateRequest: 지역 (시, 도) 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
         this.sidoCode = sidoCode;
     }
@@ -82,7 +82,7 @@ public class MemberCreateRequest implements RegexData {
     public void setGugunCode(int gugunCode) throws MemberInvalidException {
         if(gugunCode <= 0) {
             log.error("MemberCreateRequest: 지역 (구, 군) 입력 실패");
-            throw new MemberInvalidException(HttpStatus.BAD_REQUEST);
+            throw new MemberInvalidException();
         }
         this.gugunCode = gugunCode;
     }

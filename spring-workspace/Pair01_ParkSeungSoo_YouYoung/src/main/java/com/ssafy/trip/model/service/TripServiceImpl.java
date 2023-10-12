@@ -39,7 +39,12 @@ public class TripServiceImpl implements TripService {
         List<GugunResponse> gugunResponseList = new ArrayList<>();
 
         if(sidoList.isEmpty()) {
-            tripApiService.getCityCode();
+            tripApiService.getSidoCode();
+            sidoList = sidoRepository.findAll();
+        }
+        if(gugunList.isEmpty()) {
+            tripApiService.getGugunCode(sidoList);
+            gugunList = gugunRepository.findAll();
         }
         for (Sido sido : sidoList) {
             sidoResponseList.add(new SidoResponse(sido.getSidoCode(), sido.getSidoName()));

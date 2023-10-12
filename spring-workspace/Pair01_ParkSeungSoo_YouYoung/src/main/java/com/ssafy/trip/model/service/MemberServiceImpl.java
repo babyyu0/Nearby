@@ -3,38 +3,51 @@ package com.ssafy.trip.model.service;
 import com.ssafy.trip.model.data.GugunPk;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Member;
+import com.ssafy.trip.model.entity.MemberSec;
 import com.ssafy.trip.model.entity.Sido;
 import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.MemberRepository;
+import com.ssafy.trip.model.repository.MemberSecRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
 import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.response.ValidIdResponse;
 import com.ssafy.trip.provider.MyPasswordEncoder;
 import com.ssafy.trip.util.data.RegexData;
+import com.ssafy.trip.util.exception.common.FileNotFoundException;
 import com.ssafy.trip.util.exception.member.MemberCreateException;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.trip.util.exception.MyException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 
 @Service
 @Slf4j
 public class MemberServiceImpl implements MemberService {
     private final MyPasswordEncoder myPasswordEncoder;
     private final MemberRepository memberRepository;
+    private final MemberSecRepository memberSecRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
+    private final String MEMBER_PROFILE_IMG_URI;
 
 
     @Autowired
-    public MemberServiceImpl(MyPasswordEncoder myPasswordEncoder, MemberRepository memberRepository, SidoRepository sidoRepository, GugunRepository gugunRepository) {
+    public MemberServiceImpl(MyPasswordEncoder myPasswordEncoder, MemberRepository memberRepository, MemberSecRepository memberSecRepository, SidoRepository sidoRepository, GugunRepository gugunRepository, @Value("${member.profile.img.url}") String baseImgUri) {
         this.myPasswordEncoder = myPasswordEncoder;
         this.memberRepository = memberRepository;
+        this.memberSecRepository = memberSecRepository;
         this.sidoRepository = sidoRepository;
         this.gugunRepository = gugunRepository;
+        MEMBER_PROFILE_IMG_URI = baseImgUri;
     }
 
     @Override
@@ -56,6 +69,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public boolean register(MemberCreateCommand memberCreateCommand) throws MyException {
         if (memberCreateCommand.getMemberId() == null
                 || memberCreateCommand.getMemberId().trim().equals("")
@@ -97,22 +111,50 @@ public class MemberServiceImpl implements MemberService {
             log.error("MemberService: 지역 (구, 군) 찾기 실패");
             return new MemberInvalidException();
         });
-        System.out.println(sido);
-        System.out.println(gugun);
+
+        String contentType = null;
+        try {
+            contentType = memberCreateCommand.getProfile().getContentType();  // 이미지 확장자명 찾기
+        } catch(Exception e) {
+            log.error(e.getMessage());
+            throw new FileNotFoundException();
+        }
+        String originalFileExtension;
+
+        if (contentType == null || contentType.trim().equals("")) {
+            throw new FileNotFoundException();
+        }
+
+        if (contentType.contains("image/jpeg")) originalFileExtension = ".jpg";
+        else if (contentType.contains("image/png")) originalFileExtension = ".png";
+        else throw new FileNotFoundException();
+
+        String imgName = new Date() + originalFileExtension;
+        File imgFile = new File(MEMBER_PROFILE_IMG_URI + File.separator + imgName);
+        log.info("파일 URL: " + imgFile.getAbsolutePath());
+        boolean flag = imgFile.setExecutable(false);  // 실행 권한 없애기
+        try {
+            memberCreateCommand.getProfile().transferTo(imgFile);  // 이미지 저장
+        } catch (IOException e) {
+            throw new FileNotFoundException();
+        }
 
         Member member = Member.builder()
                 .memberId(memberCreateCommand.getMemberId())
                 .password(encryptedPassword)
                 .name(memberCreateCommand.getName())
-                //.sido(sido)
+                // .sido(sido)
                 .gugun(gugun)
-                .profileImg("")
+                .profileImg(imgName)
+                .build();
+        MemberSec memberSec = MemberSec.builder()
+                .memberId(member.getMemberId())
+                .salt(salt)
+                .secKey(new String(key))
                 .build();
 
-        System.out.println(member);
-
-        memberRepository.save(member);
-        // memberSecRepository.save(memberSec);
+        member = memberRepository.save(member);
+        memberSecRepository.save(memberSec);
 
         return true;
     }

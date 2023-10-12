@@ -7,12 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 
-@Embeddable
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(builderMethodName = "InnerBuilder")
 @Slf4j
-@ToString
 public class GugunPk implements Serializable {
     private long gugunCode;
     private Sido sido;

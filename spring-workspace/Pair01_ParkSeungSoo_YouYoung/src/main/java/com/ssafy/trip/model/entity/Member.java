@@ -35,10 +35,9 @@ public class Member {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({
-			@JoinColumn(name = "gugun_code", nullable = false, columnDefinition = "COMMENT '구군 코드'"),
-			@JoinColumn(name = "sido_code", nullable = false, columnDefinition = "COMMENT '시도 코드'")
+			@JoinColumn(name = "gugun_code", nullable = false, columnDefinition = "BIGINT COMMENT '구군 코드'"),
+			@JoinColumn(name = "sido_code", nullable = false, columnDefinition = "BIGINT COMMENT '시도 코드'"),
 	})
-	@Comment("구군 코드")
 	private Gugun gugun;
 
 	@Column(name = "profile_img", columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")

@@ -1,5 +1,6 @@
 package com.ssafy.trip.model.entity;
 
+import com.ssafy.trip.model.data.GugunPk;
 import com.ssafy.trip.util.exception.trip.CityInvalidException;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(builderMethodName = "innerBuilder")
+@IdClass(GugunPk.class)
 @Getter
 @Slf4j
 public class Gugun {

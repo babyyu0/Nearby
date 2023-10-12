@@ -1,9 +1,10 @@
-package com.ssafy.trip.util;
+package com.ssafy.trip.provider;
 
-import com.ssafy.trip.model.dao.MemberSecDao;
-import com.ssafy.trip.model.vo.MemberSec;
+import com.ssafy.trip.model.entity.MemberSec;
+import com.ssafy.trip.model.repository.MemberSecRepository;
 import com.ssafy.trip.util.OpenCrypt;
 import com.ssafy.trip.util.exception.common.PasswordEncodeException;
+import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,20 +12,20 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @Slf4j
-@Component
 public class MyPasswordEncoder implements PasswordEncoder {
-
-    private final MemberSecDao memberSecDao;
     private final String BASE_SALT;
-
     @Autowired
-    public MyPasswordEncoder(MemberSecDao memberSecDao) {
-        this.memberSecDao = memberSecDao;
+    private MemberSecRepository memberSecRepository;
+
+    // @Autowired
+    public MyPasswordEncoder(/*MemberSecRepository memberSecRepository*/) {
         BASE_SALT = UUID.randomUUID().toString();
+        //this.memberSecRepository = memberSecRepository;
     }
 
     @Override
@@ -76,8 +77,9 @@ public class MyPasswordEncoder implements PasswordEncoder {
     public String getRandomSalt() {
         return UUID.randomUUID().toString();
     }
-    public String getSalt(String memberId) {
-        MemberSec memberSec = memberSecDao.findByMemberId(memberId);
+
+    public String getSalt(String memberId) throws MemberInvalidException {
+        MemberSec memberSec = memberSecRepository.findById(memberId).orElseThrow(MemberInvalidException::new);
         return memberSec.getSalt();
     }
 
@@ -91,5 +93,14 @@ public class MyPasswordEncoder implements PasswordEncoder {
             log.error(e.getMessage());
             throw new PasswordEncodeException();
         }
+    }
+    public SecretKey getKey(String memberId) throws PasswordEncodeException {
+        MemberSec memberSec = memberSecRepository.findById(memberId).orElse(null);
+        if (memberSec == null) {
+            log.error("MyPasswordEncoder: Member Sec 미존재");
+            throw new PasswordEncodeException();
+        }
+        byte[] encryptedKey = memberSec.getSecKey().getBytes();
+        return new SecretKeySpec(encryptedKey, 0, encryptedKey.length, "AES");
     }
 }

@@ -15,7 +15,6 @@ import RegisterComponent from "../../components/member/RegisterComponent";
 // Styles
 import registerStyle from "../../resources/css/member/Register.module.css";
 import { useEffect, useState } from "react";
-import { type } from "@testing-library/user-event/dist/type";
 
 function RegisterContainer() {
   const [profile, setProfile] = useState("image/none_profile.png");
@@ -29,7 +28,7 @@ function RegisterContainer() {
 
   const [sidoList, setSidoList] = useAtom(sidoAtom);
   const [gugunList, setGugunList] = useAtom(gugunAtom);
-  const [tmpGugunList] = useState([]);
+  let tmpGugunList = [];
 
   const isExistId = async () => {
     if (!id) {
@@ -46,15 +45,15 @@ function RegisterContainer() {
       return;
     }
 
-    const data = await existId({id});
-    if (data === true) {
+    const data = await existId({ id });
+    if (data.valid === false) {
       setIdConfirm(false);
       Swal.fire({
         icon: "error",
         title: "중복된 아이디입니다.",
       });
       return;
-    } else if (data === false) {
+    } else if (data.valid === true) {
       setIdConfirm(true);
       Swal.fire({
         icon: "success",
@@ -65,17 +64,24 @@ function RegisterContainer() {
 
   const getCities = async () => {
     const data = await getCity();
-    console.log(data);
-    setSidoList(data.sidoList);
-    data.gugunList.forEach((e) => {
-      if (!tmpGugunList[e.sidoCode]) tmpGugunList[e.sidoCode] = [];
-      tmpGugunList[e.sidoCode].push({'gugunCode': e.gugunCode, 'gugunName': e.gugunName});
-    });
-    setGugunList(tmpGugunList);
+
+    // 시도 리스트 세팅
+    if (!sidoList) {
+      setSidoList(data.sidoList);
+    }
+
+    tmpGugunList = [];
+      data.gugunList.forEach((e) => {
+        if (!tmpGugunList[e.sidoCode]) {
+          tmpGugunList[e.sidoCode] = [];
+        }
+        tmpGugunList[e.sidoCode].push({ 'gugunCode': e.gugunCode, 'gugunName': e.gugunName });
+      });
+
+      setGugunList([...tmpGugunList]);
   };
 
   const doRegister = async () => {
-    // const exist = await existId({id});
     if (!idConfirm) {
       Swal.fire({
         icon: "error",
@@ -109,16 +115,16 @@ function RegisterContainer() {
         title: "지역을 확인해 주세요.",
       });
     } else {
-      const data = await register(new Blob([JSON.stringify({ "memberId": id, password, name, "sidoCode": sido, "gugunCode": gugun })], { type: "application/json" }), profile);
+      const data = await register(new Blob([JSON.stringify({ "memberId": id, password, name, "sidoCode": sido, "gugunCode": gugun })], { type: "application/json" }), document.getElementById('profile').files[0]);
       console.log(data);
     }
   };
 
   useEffect(() => {
-    if (!sidoList) {
+    if (!gugunList || gugunList.length == 0) {
       getCities();
     }
-  }, []);
+  }, [gugunList]);
 
   return (
     <>
@@ -136,7 +142,7 @@ function RegisterContainer() {
           sido={sido} setSido={setSido}
           gugun={gugun} setGugun={setGugun}
           sidoList={sidoList} gugunList={gugunList}
-          doRegister = {doRegister}
+          doRegister={doRegister}
         />
       </div>
     </>

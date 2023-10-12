@@ -1,26 +1,8 @@
 package com.ssafy.trip.controller;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.ssafy.trip.model.service.BoardService;
-import com.ssafy.trip.model.vo.BoardVO;
 
 @RestController
 @RequestMapping("/board")

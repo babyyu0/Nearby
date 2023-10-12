@@ -47,13 +47,13 @@ public class TripServiceImpl implements TripService {
             gugunList = gugunRepository.findAll();
         }
         for (Sido sido : sidoList) {
-            sidoResponseList.add(new SidoResponse(sido.getSidoCode(), sido.getSidoName()));
+            sidoResponseList.add(SidoResponse.builder().sidoCode(sido.getSidoCode()).sidoName(sido.getSidoName()).build());
         }
 
         for (Gugun gugun : gugunList) {
-            gugunResponseList.add(new GugunResponse(gugun.getGugunCode(), gugun.getGugunName(), gugun.getSido().getSidoCode()));
+            gugunResponseList.add(GugunResponse.builder().gugunCode(gugun.getGugunCode()).gugunName(gugun.getGugunName()).sidoCode(gugun.getSido().getSidoCode()).build());
         }
 
-        return new CityResponse(sidoResponseList, gugunResponseList);
+        return CityResponse.builder().sidoList(sidoResponseList).gugunList(gugunResponseList).build();
     }
 }

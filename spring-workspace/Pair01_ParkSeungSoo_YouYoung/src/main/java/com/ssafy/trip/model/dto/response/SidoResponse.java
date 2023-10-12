@@ -1,40 +1,35 @@
 package com.ssafy.trip.model.dto.response;
 
-import com.ssafy.trip.util.exception.common.CityInvalidException;
+import com.ssafy.trip.model.entity.Sido;
+import com.ssafy.trip.util.exception.trip.CityInvalidException;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(builderMethodName = "innerBuilder")
+@Getter
 @Slf4j
 public class SidoResponse {
-
-    public SidoResponse(long sidoCode, String sidoName) throws CityInvalidException {
-        setSidoCode(sidoCode);
-        setSidoName(sidoName);
-    }
-
     private long sidoCode;
     private String sidoName;
 
-    public long getSidoCode() {
-        return sidoCode;
+    public static SidoResponseBuilder builder() {
+        return SidoResponse.innerBuilder();
     }
 
-    public void setSidoCode(long sidoCode) throws CityInvalidException {
+    public SidoResponseBuilder sidoCode(long sidoCode) throws CityInvalidException {
         if(sidoCode <= 0) {
-            log.error("시도 번호 오류");
+            log.error("SidoResponse: 지역 (시, 도) 번호 입력 실패 " + sidoCode);
             throw new CityInvalidException();
         }
-        this.sidoCode = sidoCode;
+        return innerBuilder().sidoCode(sidoCode);
     }
-
-    public String getSidoName() {
-        return sidoName;
-    }
-
-    public void setSidoName(String sidoName) throws CityInvalidException {
+    public SidoResponseBuilder sidoName(String sidoName) throws CityInvalidException {
         if(sidoName == null || sidoName.trim().equals("")) {
-            log.error("시도 이름 오류");
+            log.error("SidoResponse: 지역 (시, 도) 이름 입력 실패 " + sidoName);
             throw new CityInvalidException();
         }
-        this.sidoName = sidoName;
+        return innerBuilder().sidoName(sidoName);
     }
 }

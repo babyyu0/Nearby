@@ -1,24 +1,18 @@
 package com.ssafy.trip.model.entity;
 
-import com.ssafy.trip.model.data.GugunPk;
-import com.ssafy.trip.util.exception.common.CityInvalidException;
+import com.ssafy.trip.util.exception.trip.CityInvalidException;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@NoArgsConstructor
-@IdClass(GugunPk.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(builderMethodName = "innerBuilder")
+@Getter
 @Slf4j
 public class Gugun {
-	@Builder
-	public Gugun(long gugunCode, String gugunName, Sido sido) throws CityInvalidException {
-		setGugunCode(gugunCode);
-		setGugunName(gugunName);
-		setSido(sido);
-	}
 
 	@Id
 	@Column(name = "gugun_code")
@@ -34,35 +28,29 @@ public class Gugun {
 	@JoinColumn(name = "sido_code")
 	private Sido sido;
 
-	public long getGugunCode() {
-		return gugunCode;
+	public static GugunBuilder builder() {
+		return Gugun.innerBuilder();
 	}
 
-	public void setGugunCode(long gugunCode) throws CityInvalidException {
+	public GugunBuilder gugunCode(long gugunCode) throws CityInvalidException {
 		if(gugunCode <= 0) {
-			log.error("Gugun: 구군 코드 받기 실패");
+			log.error("Gugun: 구군 코드 입력 실패");
 			throw new CityInvalidException();
 		}
-		this.gugunCode = gugunCode;
+		return innerBuilder().gugunCode(gugunCode);
 	}
 
-	public String getGugunName() {
-		return gugunName;
-	}
-
-	public void setGugunName(String gugunName) throws CityInvalidException {
+	public GugunBuilder gugunName(String gugunName) throws CityInvalidException {
 		if(gugunName == null || gugunName.trim().equals("")) {
-			log.error("Gugun: 구군 이름 받기 실패");
+			log.error("Gugun: 지역 (구, 군) 이름 입력 실패");
 			throw new CityInvalidException();
 		}
-		this.gugunName = gugunName;
+		return innerBuilder().gugunName(gugunName);
 	}
 
-	public Sido getSido() {
-		return sido;
-	}
-
-	public void setSido(Sido sido) {
+	public GugunBuilder sido(Sido sido) {
 		this.sido = sido;
+		return innerBuilder().sido(sido);
 	}
+
 }

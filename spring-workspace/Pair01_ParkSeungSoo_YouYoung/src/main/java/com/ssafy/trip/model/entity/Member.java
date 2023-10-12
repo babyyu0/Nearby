@@ -1,47 +1,20 @@
 package com.ssafy.trip.model.entity;
 
 import com.ssafy.trip.util.data.RegexData;
+import com.ssafy.trip.util.exception.MyException;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(builderMethodName = "innerBuilder")
+@Getter
 @Slf4j
-@ToString
 public class Member {
-	public Member(long id, String memberId, String password, String name, Sido sido, Gugun gugun, String profileImg) throws MemberInvalidException {
-		setId(id);
-		setMemberId(memberId);
-		setPassword(password);
-		setName(name);
-		setSido(sido);
-		setGugun(gugun);
-		setProfileImg(profileImg);
-	}
-	public Member(String memberId, String password, String name, Sido sido, Gugun gugun, String profileImg) throws MemberInvalidException {
-		setMemberId(memberId);
-		setPassword(password);
-		setName(name);
-		setSido(sido);
-		setGugun(gugun);
-		setProfileImg(profileImg);
-	}
-
-	public Member(String memberId, String password, String name, Sido sido, Gugun gugun) throws MemberInvalidException {
-		super();
-		setMemberId(memberId);
-		setPassword(password);
-		setName(name);
-		setSido(sido);
-		setGugun(gugun);
-		setProfileImg("tmp.jpg");
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,12 +34,10 @@ public class Member {
 	private String name;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="sido_code", nullable = false)
-	@Comment("시도 코드")
-	private Sido sido;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="gugun_code", referencedColumnName = "gugun_code", nullable = false)
+	@JoinColumns({
+			@JoinColumn(name = "gugun_code", nullable = false, columnDefinition = "COMMENT '구군 코드'"),
+			@JoinColumn(name = "sido_code", nullable = false, columnDefinition = "COMMENT '시도 코드'")
+	})
 	@Comment("구군 코드")
 	private Gugun gugun;
 
@@ -74,63 +45,36 @@ public class Member {
 	@Comment("프로필 이미지")
 	private String profileImg;
 
-
-	public long getId() {
-		return id;
+	public static MemberBuilder builder() {
+		return Member.innerBuilder();
 	}
-	public void setId(long id) {
-		this.id = id;
+	public MemberBuilder id(long id) {
+		return innerBuilder().id(id);
 	}
-
-	public String getMemberId() {
-		return memberId;
-	}
-	public void setMemberId(String memberId) throws MemberInvalidException {
+	public MemberBuilder memberId(String memberId) throws MemberInvalidException {
 		if(memberId == null || memberId.trim().equals("") || !memberId.trim().matches(RegexData.regex.get("email"))) {
-			log.error("MemberCreateCommand: 아이디 입력 실패 " + memberId);
+			log.error("Member: 아이디 입력 실패 " + memberId);
 			throw new MemberInvalidException();
 		}
-		this.memberId = memberId;
+		return innerBuilder().memberId(memberId);
+	}
+	public MemberBuilder password(String password) throws MemberInvalidException {
+		return innerBuilder().password(password);
 	}
 
-	public String getPassword() {
-		return password;
+	public MemberBuilder name(String name) throws MemberInvalidException {
+		if(name == null || name.trim().equals("") || 20 < name.length()) {
+			log.error("Member: 이름 입력 실패 " + name);
+			throw new MemberInvalidException();
+		}
+		return innerBuilder().name(name);
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public MemberBuilder gugun(Gugun gugun) {
+		return innerBuilder().gugun(gugun);
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		if(name != null && !name.trim().equals("")) this.name = name;
-	}
-
-	public Sido getSido() {
-		return sido;
-	}
-
-	public void setSido(Sido sido) {
-		this.sido = sido;
-	}
-
-	public Gugun getGugun() {
-		return gugun;
-	}
-
-	public void setGugun(Gugun gugun) {
-		this.gugun = gugun;
-	}
-	
-
-	public String getProfileImg() {
-		return profileImg;
-	}
-
-	public void setProfileImg(String profileImg) {
-		this.profileImg = profileImg;
+	public MemberBuilder profileImg(String profileImg) {
+		return innerBuilder().profileImg(profileImg);
 	}
 }

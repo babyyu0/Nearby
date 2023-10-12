@@ -1,14 +1,21 @@
 package com.ssafy.trip.model.entity;
 
+import com.ssafy.trip.util.data.RegexData;
+import com.ssafy.trip.util.exception.member.MemberInvalidException;
+import com.ssafy.trip.util.exception.trip.CityInvalidException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(builderMethodName = "innerBuilder")
+@Getter
+@Slf4j
 public class Sido {
     @Id
     @Column(name = "sido_code")
@@ -19,26 +26,18 @@ public class Sido {
     @Comment("이름")
     private String sidoName;
 
-    @Builder
-    public Sido(long sidoCode, String sidoName) {
-        setSidoCode(sidoCode);
-        setSidoName(sidoName);
+    public static SidoBuilder builder() {
+        return Sido.innerBuilder();
     }
 
-    public long getSidoCode() {
-        return sidoCode;
+    public SidoBuilder sidoCode(long sidoCode) {
+        return innerBuilder().sidoCode(sidoCode);
     }
-
-    public void setSidoCode(long sidoCode) {
-        this.sidoCode = sidoCode;
+    public SidoBuilder sidoName(String sidoName) throws CityInvalidException {
+        if(sidoName == null || sidoName.trim().equals("")) {
+            log.error("Sido: 지역 (시, 도) 입력 실패 " + sidoName);
+            throw new CityInvalidException();
+        }
+        return innerBuilder().sidoName(sidoName);
     }
-
-    public String getSidoName() {
-        return sidoName;
-    }
-
-    public void setSidoName(String sidoName) {
-        this.sidoName = sidoName;
-    }
-
 }

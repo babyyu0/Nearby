@@ -9,9 +9,4 @@ public class MemberCreateException extends MyException {
     public MemberCreateException() {
         super("회원 생성에 실패 했습니다.");
     }
-
-    @Override
-    public HttpStatus getStatus() {
-        return status;
-    }
 }

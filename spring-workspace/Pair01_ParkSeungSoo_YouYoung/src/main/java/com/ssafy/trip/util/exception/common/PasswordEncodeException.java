@@ -9,8 +9,4 @@ public class PasswordEncodeException extends MyException {
     public PasswordEncodeException() {
         super("비밀번호 암호화에 실패 했습니다.");
     }
-
-    public HttpStatus getStatus() {
-        return status;
-    }
 }

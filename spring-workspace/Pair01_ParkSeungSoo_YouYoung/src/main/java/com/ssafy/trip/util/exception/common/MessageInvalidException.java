@@ -9,8 +9,4 @@ public class MessageInvalidException extends MyException {
     public MessageInvalidException() {
         super("메시지가 유효하지 않습니다.");
     }
-
-    public HttpStatus getStatus() {
-        return status;
-    }
 }

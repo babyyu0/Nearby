@@ -9,9 +9,4 @@ public class MemberInvalidException extends MyException {
     public MemberInvalidException() {
         super("잘못된 회원정보가 입력되었습니다.");
     }
-
-    @Override
-    public HttpStatus getStatus() {
-        return status;
-    }
 }

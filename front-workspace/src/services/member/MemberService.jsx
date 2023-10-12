@@ -13,9 +13,16 @@ const register = (data, profile) => {
         { "member" : data, profile },
         {headers : {
             "Content-Type": `multipart/form-data`
-        }});
-
-    return response;
+        }}).catch((error) => {
+            Swal.fire({
+                icon: 'error',
+                title: error.response.data
+            });
+            
+            return;
+        });
+    
+        return response;
 }
 
 const existId = async (data) => {

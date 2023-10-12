@@ -21,6 +21,7 @@ public class Gugun {
 	}
 
 	@Id
+	@Column(name = "gugun_code")
 	@Comment("코드")
 	private long gugunCode;
 
@@ -28,9 +29,9 @@ public class Gugun {
 	@Comment("이름")
 	private String gugunName;
 
-	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="sido_id", nullable = false)
+	@PrimaryKeyJoinColumn
+	@JoinColumn(name = "sido_code")
 	private Sido sido;
 
 	public long getGugunCode() {

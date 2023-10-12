@@ -1,21 +1,21 @@
 package com.ssafy.trip.model.service;
 
+import com.ssafy.trip.model.data.GugunPk;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Member;
 import com.ssafy.trip.model.entity.Sido;
 import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.MemberRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
-import com.ssafy.trip.util.MyPasswordEncoder;
 import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.response.ValidIdResponse;
+import com.ssafy.trip.provider.MyPasswordEncoder;
 import com.ssafy.trip.util.data.RegexData;
 import com.ssafy.trip.util.exception.member.MemberCreateException;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.trip.util.exception.MyException;
@@ -23,19 +23,18 @@ import com.ssafy.trip.util.exception.MyException;
 @Service
 @Slf4j
 public class MemberServiceImpl implements MemberService {
-
+    private final MyPasswordEncoder myPasswordEncoder;
     private final MemberRepository memberRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
 
-    private final MyPasswordEncoder myPasswordEncoder;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository, SidoRepository sidoRepository, GugunRepository gugunRepository, MyPasswordEncoder myPasswordEncoder) {
+    public MemberServiceImpl(MyPasswordEncoder myPasswordEncoder, MemberRepository memberRepository, SidoRepository sidoRepository, GugunRepository gugunRepository) {
+        this.myPasswordEncoder = myPasswordEncoder;
         this.memberRepository = memberRepository;
         this.sidoRepository = sidoRepository;
         this.gugunRepository = gugunRepository;
-        this.myPasswordEncoder = myPasswordEncoder;
     }
 
     @Override
@@ -94,22 +93,25 @@ public class MemberServiceImpl implements MemberService {
             log.error("MemberService: 지역 (시, 도) 찾기 실패");
             return new MemberInvalidException();
         });
-        Gugun gugun = gugunRepository.findByGugunCodeAndSido(memberCreateCommand.getGugunCode(), sido).orElseThrow(() -> {
+        Gugun gugun = gugunRepository.findById(GugunPk.builder().gugunCode(memberCreateCommand.getGugunCode()).sido(sido).build()).orElseThrow(() -> {
             log.error("MemberService: 지역 (구, 군) 찾기 실패");
             return new MemberInvalidException();
         });
+        System.out.println(sido);
+        System.out.println(gugun);
 
         Member member = Member.builder()
                 .memberId(memberCreateCommand.getMemberId())
                 .password(encryptedPassword)
                 .name(memberCreateCommand.getName())
-                .sido(sido)
+                //.sido(sido)
                 .gugun(gugun)
+                .profileImg("")
                 .build();
 
         System.out.println(member);
 
-        memberRepository.saveAndFlush(member);
+        memberRepository.save(member);
         // memberSecRepository.save(memberSec);
 
         return true;

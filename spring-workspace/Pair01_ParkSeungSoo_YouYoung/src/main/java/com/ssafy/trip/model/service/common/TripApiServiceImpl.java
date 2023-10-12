@@ -9,7 +9,7 @@ import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
 import com.ssafy.trip.util.data.ApiData;
 import com.ssafy.trip.util.exception.MyException;
-import com.ssafy.trip.util.exception.common.CityInvalidException;
+import com.ssafy.trip.util.exception.trip.CityInvalidException;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

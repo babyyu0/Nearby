@@ -72,11 +72,11 @@ public class TripApiServiceImpl implements TripApiService {
     }
     public void getGugunCode(List<Sido> sidoList) throws MyException {
         HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest getRequest = null;
+        HttpRequest getRequest;
         HttpResponse<String> response;
-        for (int sido = 0; sido < sidoList.size(); sido++) {
+        for (Sido value : sidoList) {
             getRequest = HttpRequest.newBuilder()
-                    .uri(URI.create(ApiData.apiUrl.get("city") + "?serviceKey=" + URLEncoder.encode(API_KEY) + "&areaCode=" + sidoList.get(sido).getSidoCode() + "&MobileOS=ETC&MobileApp=App&_type=json"))
+                    .uri(URI.create(ApiData.apiUrl.get("city") + "?serviceKey=" + URLEncoder.encode(API_KEY) + "&areaCode=" + value.getSidoCode() + "&numOfRows=" + 50 + "&MobileOS=ETC&MobileApp=App&_type=json"))
                     .GET().build();
 
             try {
@@ -98,7 +98,7 @@ public class TripApiServiceImpl implements TripApiService {
                 JsonNode curJsonNode;
                 for (int i = 0; i < jsonNode.size(); i++) {
                     curJsonNode = jsonNode.get(i);
-                    gugunRepository.save(Gugun.builder().gugunCode(curJsonNode.get("code").asInt()).gugunName(curJsonNode.get("name").asText()).sido(sidoList.get(sido)).build());
+                    gugunRepository.save(Gugun.builder().gugunCode(curJsonNode.get("code").asInt()).gugunName(curJsonNode.get("name").asText()).sido(value).build());
                 }
             } catch (JsonProcessingException e) {
                 log.error(e.getMessage());

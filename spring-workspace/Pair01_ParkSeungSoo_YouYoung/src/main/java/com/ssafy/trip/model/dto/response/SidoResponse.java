@@ -6,19 +6,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SidoResponse {
 
-    public SidoResponse(int sidoCode, String sidoName) throws CityInvalidException {
+    public SidoResponse(long sidoCode, String sidoName) throws CityInvalidException {
         setSidoCode(sidoCode);
         setSidoName(sidoName);
     }
 
-    private int sidoCode;
+    private long sidoCode;
     private String sidoName;
 
-    public int getSidoCode() {
+    public long getSidoCode() {
         return sidoCode;
     }
 
-    public void setSidoCode(int sidoCode) throws CityInvalidException {
+    public void setSidoCode(long sidoCode) throws CityInvalidException {
         if(sidoCode <= 0) {
             log.error("시도 번호 오류");
             throw new CityInvalidException();

@@ -5,20 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GugunResponse {
-    public GugunResponse(int gugunCode, String gugunName, int sidoCode) throws CityInvalidException {
+    public GugunResponse(long gugunCode, String gugunName, long sidoCode) throws CityInvalidException {
         setGugunCode(gugunCode);
         setGugunName(gugunName);
         setSidoCode(sidoCode);
     }
-    private int gugunCode;
+    private long gugunCode;
     private String gugunName;
-    private int sidoCode;
+    private long sidoCode;
 
-    public int getGugunCode() {
+    public long getGugunCode() {
         return gugunCode;
     }
 
-    public void setGugunCode(int gugunCode) throws CityInvalidException {
+    public void setGugunCode(long gugunCode) throws CityInvalidException {
         if(gugunCode <= 0) {
             log.error("GugunResponse: 구군 코드 받기 실패");
             throw new CityInvalidException();
@@ -37,11 +37,11 @@ public class GugunResponse {
         }
         this.gugunName = gugunName;
     }
-    public int getSidoCode() {
+    public long getSidoCode() {
         return sidoCode;
     }
 
-    public void setSidoCode(int sidoCode) throws CityInvalidException {
+    public void setSidoCode(long sidoCode) throws CityInvalidException {
         if(sidoCode <= 0) {
             log.error("GugunResponse: 시도 이름 받기 실패");
             throw new CityInvalidException();

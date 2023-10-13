@@ -131,7 +131,7 @@ function RegisterContainer() {
   };
 
   useEffect(() => {
-    if (!gugunList || gugunList.length == 0) {
+    if (!gugunList || gugunList.length === 0) {
       getCities();
     }
   }, [gugunList]);

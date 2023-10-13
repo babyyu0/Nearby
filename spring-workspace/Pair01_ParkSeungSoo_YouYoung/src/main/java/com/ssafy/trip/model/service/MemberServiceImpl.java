@@ -129,7 +129,7 @@ public class MemberServiceImpl implements MemberService {
         else if (contentType.contains("image/png")) originalFileExtension = ".png";
         else throw new FileNotFoundException();
 
-        String imgName = new Date() + originalFileExtension;
+        String imgName = new Date().getTime() + originalFileExtension;
         File imgFile = new File(MEMBER_PROFILE_IMG_URI + File.separator + imgName);
         log.info("파일 URL: " + imgFile.getAbsolutePath());
         boolean flag = imgFile.setExecutable(false);  // 실행 권한 없애기

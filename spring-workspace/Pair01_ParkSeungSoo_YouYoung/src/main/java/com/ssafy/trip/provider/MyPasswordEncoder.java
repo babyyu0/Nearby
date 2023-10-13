@@ -79,7 +79,7 @@ public class MyPasswordEncoder implements PasswordEncoder {
     }
 
     public String getSalt(String memberId) throws MemberInvalidException {
-        MemberSec memberSec = memberSecRepository.findById(memberId).orElseThrow(MemberInvalidException::new);
+        MemberSec memberSec = memberSecRepository.findByMemberId(memberId).orElseThrow(MemberInvalidException::new);
         return memberSec.getSalt();
     }
 
@@ -95,7 +95,7 @@ public class MyPasswordEncoder implements PasswordEncoder {
         }
     }
     public SecretKey getKey(String memberId) throws PasswordEncodeException {
-        MemberSec memberSec = memberSecRepository.findById(memberId).orElse(null);
+        MemberSec memberSec = memberSecRepository.findByMemberId(memberId).orElse(null);
         if (memberSec == null) {
             log.error("MyPasswordEncoder: Member Sec 미존재");
             throw new PasswordEncodeException();

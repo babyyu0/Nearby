@@ -18,11 +18,12 @@
 # 기능
 
 ### API
-|대분류|기능|URL|
-|:-:|:-:|:-:|
-|회원|아이디 중복 확인|<p align='left'>/member/exist/{id}</a>|
-|회원|회원가입|<p align='left'>/member/register|
-|관광지|모든 지역구 리스트 조회|<p align='left'>/trip/city|
+|대분류|기능|Method|URL|
+|:-:|:-:|:-:|:-:|
+|회원|아이디 중복 확인|`GET`|<p align='left'>/member/exist/{id}</p>|
+|회원|회원가입|`POST`|<p align='left'>/member/register</p>|
+|회원|로그인|`POST`|<p align='left'>/member/login</p>|
+|관광지|모든 지역구 리스트 조회|`GET`|<p align='left'>/trip/city</p>|
 
 ### URL
 |대분류|화면|URL|

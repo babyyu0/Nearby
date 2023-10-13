@@ -1,6 +1,8 @@
 package com.ssafy.trip.model.service;
 
 import com.ssafy.trip.model.data.GugunPk;
+import com.ssafy.trip.model.dto.command.MemberLoginCommand;
+import com.ssafy.trip.model.dto.response.MemberGetResponse;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Member;
 import com.ssafy.trip.model.entity.MemberSec;
@@ -12,11 +14,13 @@ import com.ssafy.trip.model.repository.SidoRepository;
 import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.response.ValidIdResponse;
+import com.ssafy.trip.model.service.common.ImageService;
 import com.ssafy.trip.provider.MyPasswordEncoder;
 import com.ssafy.trip.util.data.RegexData;
 import com.ssafy.trip.util.exception.common.FileNotFoundException;
 import com.ssafy.trip.util.exception.member.MemberCreateException;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
+import com.ssafy.trip.util.exception.member.MemberNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,7 @@ import java.util.Date;
 @Slf4j
 public class MemberServiceImpl implements MemberService {
     private final MyPasswordEncoder myPasswordEncoder;
+    private final ImageService imageService;
     private final MemberRepository memberRepository;
     private final MemberSecRepository memberSecRepository;
     private final SidoRepository sidoRepository;
@@ -41,8 +46,9 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Autowired
-    public MemberServiceImpl(MyPasswordEncoder myPasswordEncoder, MemberRepository memberRepository, MemberSecRepository memberSecRepository, SidoRepository sidoRepository, GugunRepository gugunRepository, @Value("${member.profile.img.url}") String baseImgUri) {
+    public MemberServiceImpl(MyPasswordEncoder myPasswordEncoder, ImageService imageService, MemberRepository memberRepository, MemberSecRepository memberSecRepository, SidoRepository sidoRepository, GugunRepository gugunRepository, @Value("${member.profile.img.url}") String baseImgUri) {
         this.myPasswordEncoder = myPasswordEncoder;
+        this.imageService = imageService;
         this.memberRepository = memberRepository;
         this.memberSecRepository = memberSecRepository;
         this.sidoRepository = sidoRepository;
@@ -87,19 +93,19 @@ public class MemberServiceImpl implements MemberService {
             log.error("MemberService: 비밀번호 입력 실패");
             throw new MemberInvalidException();
         }
-		if(memberCreateCommand.getName() == null
-				|| memberCreateCommand.getName().trim().equals("")
-				|| 20 < memberCreateCommand.getName().length() ) {
-			log.error("MemberService: 이름 입력 실패");
-			throw new MemberInvalidException();
-		}
-		if(memberCreateCommand.getSidoCode() <= 0 || memberCreateCommand.getGugunCode() <= 0) {
-			log.error("MemberService: 지역 입력 실패");
-			throw new MemberInvalidException();
-		}
+        if (memberCreateCommand.getName() == null
+                || memberCreateCommand.getName().trim().equals("")
+                || 20 < memberCreateCommand.getName().length()) {
+            log.error("MemberService: 이름 입력 실패");
+            throw new MemberInvalidException();
+        }
+        if (memberCreateCommand.getSidoCode() <= 0 || memberCreateCommand.getGugunCode() <= 0) {
+            log.error("MemberService: 지역 입력 실패");
+            throw new MemberInvalidException();
+        }
 
-		String salt = myPasswordEncoder.getRandomSalt();  // 비밀번호 및 토큰 암호화 로직
-		log.info(memberCreateCommand.getMemberId() + " 회원 salt 생성 : " + salt);
+        String salt = myPasswordEncoder.getRandomSalt();  // 비밀번호 및 토큰 암호화 로직
+        log.info(memberCreateCommand.getMemberId() + " 회원 salt 생성 : " + salt);
         String encryptedPassword = myPasswordEncoder.encode(memberCreateCommand.getPassword(), salt);
         byte[] key = myPasswordEncoder.generateKey();
 
@@ -115,7 +121,7 @@ public class MemberServiceImpl implements MemberService {
         String contentType = null;
         try {
             contentType = memberCreateCommand.getProfile().getContentType();  // 이미지 확장자명 찾기
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             throw new FileNotFoundException();
         }
@@ -147,16 +153,37 @@ public class MemberServiceImpl implements MemberService {
                 .gugun(gugun)
                 .profileImg(imgName)
                 .build();
+
         MemberSec memberSec = MemberSec.builder()
                 .memberId(member.getMemberId())
                 .salt(salt)
                 .secKey(new String(key))
                 .build();
 
-        member = memberRepository.save(member);
+        memberRepository.save(member);
         memberSecRepository.save(memberSec);
 
         return true;
+    }
+
+    public MemberGetResponse login(MemberLoginCommand memberLoginCommand) throws MyException {
+        Member member = memberRepository.findByMemberId(memberLoginCommand.getMemberId()).orElseThrow(() -> {
+            log.error("MemberService: 회원 아이디 찾기 실패 (Member) " + memberLoginCommand.getMemberId());
+            return new MemberNotFoundException();
+        });
+        MemberSec memberSec = memberSecRepository.findByMemberId(memberLoginCommand.getMemberId()).orElseThrow(() -> {
+            log.error("MemberService: 회원 아이디 찾기 실패 (MemberSec) " + memberLoginCommand.getMemberId());
+            return new MemberNotFoundException();
+        });
+        if (!myPasswordEncoder.matches(memberLoginCommand.getPassword(), member.getPassword(), memberSec.getSalt())) {
+            log.error("MemberService: 비밀번호 비교 실패 " + memberLoginCommand.getPassword());
+            throw new MemberNotFoundException();
+        }
+
+        return MemberGetResponse.builder()
+                .name(member.getName())
+                .profile(imageService.imgToByteArray(MEMBER_PROFILE_IMG_URI, member.getProfileImg()))
+                .build();
     }
 
 }

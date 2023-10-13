@@ -16,6 +16,10 @@ import org.hibernate.annotations.Comment;
 @Slf4j
 public class MemberSec {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Comment("고유번호")
+	private long id;
+	
 	@Column(name = "member_id", columnDefinition = "VARCHAR(20) CHARACTER SET UTF8")
 	@Comment("회원 아이디")
 	private String memberId;
@@ -32,6 +36,9 @@ public class MemberSec {
 		return MemberSec.innerBuilder();
 	}
 
+	public MemberSecBuilder id(long id) {
+		return innerBuilder().id(id);
+	}
 	public MemberSecBuilder memberId(String memberId) {
 		return innerBuilder().memberId(memberId);
 	}

@@ -2,7 +2,7 @@ package com.ssafy.trip.model.service;
 
 import com.ssafy.trip.model.data.GugunPk;
 import com.ssafy.trip.model.dto.command.MemberLoginCommand;
-import com.ssafy.trip.model.dto.response.MemberGetResponse;
+import com.ssafy.trip.model.dto.response.MemberLoginResponse;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Member;
 import com.ssafy.trip.model.entity.MemberSec;
@@ -166,7 +166,7 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-    public MemberGetResponse login(MemberLoginCommand memberLoginCommand) throws MyException {
+    public MemberLoginResponse login(MemberLoginCommand memberLoginCommand) throws MyException {
         Member member = memberRepository.findByMemberId(memberLoginCommand.getMemberId()).orElseThrow(() -> {
             log.error("MemberService: 회원 아이디 찾기 실패 (Member) " + memberLoginCommand.getMemberId());
             return new MemberNotFoundException();
@@ -180,7 +180,7 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberNotFoundException();
         }
 
-        return MemberGetResponse.builder()
+        return MemberLoginResponse.builder()
                 .name(member.getName())
                 .profile(imageService.imgToByteArray(MEMBER_PROFILE_IMG_URI, member.getProfileImg()))
                 .build();

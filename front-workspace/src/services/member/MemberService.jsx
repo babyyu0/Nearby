@@ -3,6 +3,9 @@ import Swal from "sweetalert2";
 
 const login = (data) => {
     const response = api.post(`/member/login`, JSON.stringify(data));
+    if(response.status === 200) {
+        localStorage.setItem('member', response.data);
+    }
 
     return response;
 }

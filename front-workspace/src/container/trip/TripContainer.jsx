@@ -1,24 +1,17 @@
-// Modules
-import { NavLink } from "react-router-dom";
-
-// Services
-import { login } from "../../services/member/MemberService";
-
-// Atoms
-import { memberAtom } from "../../jotai/member";
-
 // Components
-import LoginComponent from "../../components/member/LoginComponent";
+import HeaderComponent from "../../components/common/HeaderComponent";
+import TripComponent from "../../components/trip/TripComponent";
 
 // Style
-import loginStyle from "../../resources/css/member/Login.module.css";
+import tripStyle from "../../resources/css/trip/Trip.module.css";
 
 function TripContainer() {
 
   return (
     <>
       <HeaderComponent />
-      <div className={loginStyle.container}>
+      <div className={tripStyle.container}>
+        <TripComponent />
       </div>
     </>
   );

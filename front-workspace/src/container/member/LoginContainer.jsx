@@ -1,28 +1,48 @@
 // Modules
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { useAtom } from "jotai";
+
+// Services
 import { login } from "../../services/member/MemberService";
+
+// Atoms
+import { memberAtom } from "../../jotai/member";
 
 // Components
 import LoginComponent from "../../components/member/LoginComponent";
 
 // Style
 import loginStyle from "../../resources/css/member/Login.module.css";
-import { useState } from "react";
 
 function LoginContainer() {
+  const navigate = useNavigate();
+  
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [member, setMember] = useAtom(memberAtom);
 
   const doLogin = async () => {
-    const request = {id, password};
-    const data = await login(request);
+    const request = {"memberId": id, password};
+    const response = await login(request);
 
-    console.log(data);
+    if(response.data) {
+      setMember(response.data);
+      Swal.fire({
+        icon: "success",
+        title: "로그인을 성공 했습니다.",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/");
+        }
+      });
+    }
   }
 
   return (
     <>
-      <div className={loginStyle.style.container}>
+      <div className={loginStyle.container}>
         <NavLink to="/" className={loginStyle.logoBox}>
           <img className={loginStyle.logo} src="/image/logo.png" alt="logo" />
         </NavLink>

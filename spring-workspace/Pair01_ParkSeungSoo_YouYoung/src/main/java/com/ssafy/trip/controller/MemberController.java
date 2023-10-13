@@ -1,45 +1,50 @@
 package com.ssafy.trip.controller;
 
-import java.io.File;
-import java.io.IOException;
-
-import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
+import com.ssafy.trip.model.dto.command.MemberLoginCommand;
+import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.request.MemberCreateRequest;
-import com.ssafy.trip.util.exception.member.MemberInvalidException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-
+import com.ssafy.trip.model.dto.request.MemberLoginRequest;
+import com.ssafy.trip.model.service.MemberService;
+import com.ssafy.trip.util.exception.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.trip.model.service.MemberService;
-import com.ssafy.trip.util.exception.MyException;
-
 @RestController
 @RequestMapping("/member")
 public class MemberController {
 
-	private final MemberService memberService;
+    private final MemberService memberService;
 
-	@Autowired
-	public MemberController(MemberService memberService) {
-		this.memberService = memberService;
-	}
+    @Autowired
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
-	@GetMapping("exist/{memberId}")
-	public ResponseEntity<?> isValidId(@PathVariable("memberId") String memberId) throws MyException {
-		return ResponseEntity.ok(memberService.isValidId(new ValidIdCommand(memberId)));
-	}
+    @GetMapping("exist/{memberId}")
+    public ResponseEntity<?> isValidId(@PathVariable("memberId") String memberId) throws MyException {
+        return ResponseEntity.ok(memberService.isValidId(new ValidIdCommand(memberId)));
+    }
 
-	@PostMapping(value = "register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<?> register(@RequestPart(value = "member")MemberCreateRequest memberCreateRequest, @RequestPart(value = "profile") MultipartFile profile) throws MyException {
-			return ResponseEntity.ok(memberService.register(new MemberCreateCommand(memberCreateRequest, profile)));
-	}
+    @PostMapping(value = "register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> register(@RequestPart(value = "member") MemberCreateRequest memberCreateRequest, @RequestPart(value = "profile") MultipartFile profile) throws MyException {
+        return ResponseEntity.ok(memberService.register(MemberCreateCommand.builder()
+                .memberId(memberCreateRequest.getMemberId())
+                .password(memberCreateRequest.getPassword())
+                .name(memberCreateRequest.getName())
+                .sidoCode(memberCreateRequest.getSidoCode())
+                .gugunCode(memberCreateRequest.getGugunCode())
+                .profile(profile)
+                .build()));
+    }
+
+    @PostMapping(value = "login")
+    public ResponseEntity<?> login(@RequestBody MemberLoginRequest memberLoginRequest) throws MyException {
+        return ResponseEntity.ok(memberService.login(MemberLoginCommand.builder().memberId(memberLoginRequest.getMemberId()).password(memberLoginRequest.getPassword()).build()));
+    }
 
 }
 /*

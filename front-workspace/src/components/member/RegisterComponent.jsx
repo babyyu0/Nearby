@@ -1,6 +1,6 @@
+// Modules
 import { useEffect, useRef } from "react";
 
-// Style
 function LoginComponent(props) {
   const registerStyle = props.registerStyle;
 

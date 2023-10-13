@@ -1,4 +1,4 @@
-// Style
+// Modules
 import { NavLink } from "react-router-dom";
 
 function LoginComponent(props) {

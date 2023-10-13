@@ -1,5 +1,5 @@
 // Modules
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAtom } from "jotai";
 
@@ -17,6 +17,7 @@ import registerStyle from "../../resources/css/member/Register.module.css";
 import { useEffect, useState } from "react";
 
 function RegisterContainer() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState("image/none_profile.png");
   const [id, setId] = useState("");
   const [idConfirm, setIdConfirm] = useState(false);
@@ -71,14 +72,14 @@ function RegisterContainer() {
     }
 
     tmpGugunList = [];
-      data.gugunList.forEach((e) => {
-        if (!tmpGugunList[e.sidoCode]) {
-          tmpGugunList[e.sidoCode] = [];
-        }
-        tmpGugunList[e.sidoCode].push({ 'gugunCode': e.gugunCode, 'gugunName': e.gugunName });
-      });
+    data.gugunList.forEach((e) => {
+      if (!tmpGugunList[e.sidoCode]) {
+        tmpGugunList[e.sidoCode] = [];
+      }
+      tmpGugunList[e.sidoCode].push({ 'gugunCode': e.gugunCode, 'gugunName': e.gugunName });
+    });
 
-      setGugunList([...tmpGugunList]);
+    setGugunList([...tmpGugunList]);
   };
 
   const doRegister = async () => {
@@ -116,7 +117,22 @@ function RegisterContainer() {
       });
     } else {
       const data = await register(new Blob([JSON.stringify({ "memberId": id, password, name, "sidoCode": sido, "gugunCode": gugun })], { type: "application/json" }), document.getElementById('profile').files[0]);
-      console.log(data);
+      if (data.data === false) {
+        Swal.fire({
+          icon: "error",
+          title: "회원가입을 실패 했습니다.",
+        });
+        return;
+      } else if (data.data === true) {
+        Swal.fire({
+          icon: "success",
+          title: "회원가입을 성공 했습니다.",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/")
+          }
+        });
+      }
     }
   };
 

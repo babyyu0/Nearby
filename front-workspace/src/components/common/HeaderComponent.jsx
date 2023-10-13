@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
 import header from "../../resources/css/common/Header.module.css";
+import { useAtom } from "jotai";
+import { memberAtom } from "../../jotai/member";
 
 function HeaderComponent() {
+  const [member, setMember] = useAtom(memberAtom);
+  console.log(member);
   return (
     <div className={header.container}>
       <div className={header.contents}>
@@ -16,11 +20,22 @@ function HeaderComponent() {
             여행게시판
           </NavLink>
         </div>
-        <div className={header.rightContents}>
-					<NavLink to="/my" className={header.rightMenu}>마이페이지</NavLink>
-					<NavLink to="/login" className={header.rightMenu}>로그인</NavLink>
-					<NavLink to="/register" className={header.rightMenu}>회원가입</NavLink>
-        </div>
+        {(member.name) ?
+          (
+
+            <div className={header.rightContents}>
+              <NavLink to="/my" className={header.rightMenu}>마이페이지</NavLink>
+              <img src=""/>
+              <div>{member.name}</div>
+            </div>
+          ) :
+          (
+            <div className={header.rightContents}>
+              <NavLink to="/login" className={header.rightMenu}>로그인</NavLink>
+              <NavLink to="/register" className={header.rightMenu}>회원가입</NavLink>
+            </div>
+          )
+        }
       </div>
     </div>
   );

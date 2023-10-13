@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 // Services
 import { existId, getCity, register } from "../../services/member/MemberService";
 
-//jotai
+// Atoms
 import { sidoAtom, gugunAtom } from "../../jotai/city";
 
 // Components
@@ -116,14 +116,8 @@ function RegisterContainer() {
         title: "지역을 확인해 주세요.",
       });
     } else {
-      const data = await register(new Blob([JSON.stringify({ "memberId": id, password, name, "sidoCode": sido, "gugunCode": gugun })], { type: "application/json" }), document.getElementById('profile').files[0]);
-      if (data.data === false) {
-        Swal.fire({
-          icon: "error",
-          title: "회원가입을 실패 했습니다.",
-        });
-        return;
-      } else if (data.data === true) {
+      const response = await register(new Blob([JSON.stringify({ "memberId": id, password, name, "sidoCode": sido, "gugunCode": gugun })], { type: "application/json" }), document.getElementById('profile').files[0]);
+      if (response.status === 200 && response.data === true) {
         Swal.fire({
           icon: "success",
           title: "회원가입을 성공 했습니다.",

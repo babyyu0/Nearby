@@ -47,7 +47,11 @@ public class Member {
 	public static MemberBuilder builder() {
 		return Member.innerBuilder();
 	}
-	public MemberBuilder id(long id) {
+	public MemberBuilder id(long id) throws MemberInvalidException {
+		if(id < 0) {
+			log.error("Member: 고유번호 입력 실패 " + id);
+			throw new MemberInvalidException();
+		}
 		return innerBuilder().id(id);
 	}
 	public MemberBuilder memberId(String memberId) throws MemberInvalidException {

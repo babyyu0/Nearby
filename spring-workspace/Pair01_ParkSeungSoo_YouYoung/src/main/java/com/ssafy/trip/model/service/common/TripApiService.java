@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TripApiService {
     void getSidoCode() throws MyException;
-    void getGugunCode(List<Sido> sidoList) throws MyException;
+    void getGugunCode() throws MyException;
 }

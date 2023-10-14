@@ -70,7 +70,8 @@ public class TripApiServiceImpl implements TripApiService {
             throw new CityInvalidException();
         }
     }
-    public void getGugunCode(List<Sido> sidoList) throws MyException {
+    public void getGugunCode() throws MyException {
+        List<Sido> sidoList = sidoRepository.findAll();
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest getRequest;
         HttpResponse<String> response;

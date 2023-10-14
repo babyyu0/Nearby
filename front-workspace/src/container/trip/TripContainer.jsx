@@ -11,7 +11,7 @@ function TripContainer() {
     <>
       <HeaderComponent />
       <div className={tripStyle.container}>
-        <TripComponent />
+        <TripComponent tripStyle={tripStyle} />
       </div>
     </>
   );

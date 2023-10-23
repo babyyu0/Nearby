@@ -1,4 +1,4 @@
-package com.ssafy.trip.provider;
+package com.ssafy.trip.util;
 
 import com.ssafy.trip.util.exception.MyException;
 import com.ssafy.trip.util.exception.common.TokenInvalidException;

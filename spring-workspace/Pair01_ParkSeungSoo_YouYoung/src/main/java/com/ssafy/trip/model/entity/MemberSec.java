@@ -24,10 +24,6 @@ public class MemberSec {
 	@Comment("회원 아이디")
 	private String memberId;
 
-	@Column(name = "salt", nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
-	@Comment("랜덤 salt")
-	private String salt;
-
 	@Column(name = "sec_key", nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
 	@Comment("key")
 	private String secKey;
@@ -41,9 +37,6 @@ public class MemberSec {
 	}
 	public MemberSecBuilder memberId(String memberId) {
 		return innerBuilder().memberId(memberId);
-	}
-	public MemberSecBuilder salt(String salt) {
-		return innerBuilder().salt(salt);
 	}
 	public MemberSecBuilder secKey(String secKey) {
 		return innerBuilder().secKey(secKey);

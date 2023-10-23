@@ -15,7 +15,6 @@ import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.response.ValidIdResponse;
 import com.ssafy.trip.model.service.common.ImageService;
-import com.ssafy.trip.provider.MyPasswordEncoder;
 import com.ssafy.trip.util.data.RegexData;
 import com.ssafy.trip.util.exception.common.FileNotFoundException;
 import com.ssafy.trip.util.exception.member.MemberCreateException;
@@ -25,6 +24,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.trip.util.exception.MyException;
@@ -36,7 +36,7 @@ import java.util.Date;
 @Service
 @Slf4j
 public class MemberServiceImpl implements MemberService {
-    private final MyPasswordEncoder myPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
     private final MemberRepository memberRepository;
     private final MemberSecRepository memberSecRepository;
@@ -46,8 +46,8 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Autowired
-    public MemberServiceImpl(MyPasswordEncoder myPasswordEncoder, ImageService imageService, MemberRepository memberRepository, MemberSecRepository memberSecRepository, SidoRepository sidoRepository, GugunRepository gugunRepository, @Value("${member.profile.img.url}") String baseImgUri) {
-        this.myPasswordEncoder = myPasswordEncoder;
+    public MemberServiceImpl(PasswordEncoder passwordEncoder, ImageService imageService, MemberRepository memberRepository, MemberSecRepository memberSecRepository, SidoRepository sidoRepository, GugunRepository gugunRepository, @Value("${member.profile.img.url}") String baseImgUri) {
+        this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
         this.memberRepository = memberRepository;
         this.memberSecRepository = memberSecRepository;
@@ -104,11 +104,6 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberInvalidException();
         }
 
-        String salt = myPasswordEncoder.getRandomSalt();  // 비밀번호 및 토큰 암호화 로직
-        log.info(memberCreateCommand.getMemberId() + " 회원 salt 생성 : " + salt);
-        String encryptedPassword = myPasswordEncoder.encode(memberCreateCommand.getPassword(), salt);
-        byte[] key = myPasswordEncoder.generateKey();
-
         Sido sido = sidoRepository.findById(memberCreateCommand.getSidoCode()).orElseThrow(() -> {
             log.error("MemberService: 지역 (시, 도) 찾기 실패");
             return new MemberInvalidException();
@@ -147,21 +142,14 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = Member.builder()
                 .memberId(memberCreateCommand.getMemberId())
-                .password(encryptedPassword)
+                .password(passwordEncoder.encode(memberCreateCommand.getPassword()))
                 .name(memberCreateCommand.getName())
                 // .sido(sido)
                 .gugun(gugun)
                 .profileImg(imgName)
                 .build();
 
-        MemberSec memberSec = MemberSec.builder()
-                .memberId(member.getMemberId())
-                .salt(salt)
-                .secKey(new String(key))
-                .build();
-
         memberRepository.save(member);
-        memberSecRepository.save(memberSec);
 
         return true;
     }
@@ -171,11 +159,8 @@ public class MemberServiceImpl implements MemberService {
             log.error("MemberService: 회원 아이디 찾기 실패 (Member) " + memberLoginCommand.getMemberId());
             return new MemberNotFoundException();
         });
-        MemberSec memberSec = memberSecRepository.findByMemberId(memberLoginCommand.getMemberId()).orElseThrow(() -> {
-            log.error("MemberService: 회원 아이디 찾기 실패 (MemberSec) " + memberLoginCommand.getMemberId());
-            return new MemberNotFoundException();
-        });
-        if (!myPasswordEncoder.matches(memberLoginCommand.getPassword(), member.getPassword(), memberSec.getSalt())) {
+
+        if (!passwordEncoder.matches(memberLoginCommand.getPassword(), member.getPassword())) {
             log.error("MemberService: 비밀번호 비교 실패 " + memberLoginCommand.getPassword());
             throw new MemberNotFoundException();
         }

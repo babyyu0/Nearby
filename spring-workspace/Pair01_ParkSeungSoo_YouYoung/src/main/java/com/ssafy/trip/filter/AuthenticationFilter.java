@@ -1,8 +1,7 @@
 package com.ssafy.trip.filter;
 
-import com.ssafy.trip.model.repository.MemberSecRepository;
-import com.ssafy.trip.provider.MyPasswordEncoder;
-import com.ssafy.trip.provider.TokenProvider;
+import com.ssafy.trip.util.MyPasswordEncoder;
+import com.ssafy.trip.util.TokenProvider;
 import com.ssafy.trip.util.exception.MyException;
 import com.ssafy.trip.util.exception.common.CookieInvalidException;
 import com.ssafy.trip.util.exception.common.PasswordEncodeException;
@@ -13,7 +12,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

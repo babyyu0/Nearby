@@ -1,16 +1,13 @@
 package com.ssafy.trip.model.service;
 
-import com.ssafy.trip.model.dto.response.CityResponse;
-import com.ssafy.trip.model.dto.response.GugunResponse;
-import com.ssafy.trip.model.dto.response.SidoGetResponse;
-import com.ssafy.trip.model.dto.response.SidoResponse;
+import com.ssafy.trip.model.dto.response.*;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Sido;
 import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
+import com.ssafy.trip.util.ValidateUtil;
 import com.ssafy.trip.util.exception.ErrorMessage;
 import com.ssafy.trip.util.exception.MyException;
-import com.ssafy.trip.util.exception.trip.CityInvalidException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +28,8 @@ public class TripServiceImpl implements TripService {
         this.gugunRepository = gugunRepository;
     }
 
-    public SidoGetResponse getSido() throws MyException {
+    @Override
+    public List<SidoGetResponse> getSido() throws MyException {
         List<Sido> sidoList = sidoRepository.findAll();
 
         if(sidoList.isEmpty()) {
@@ -39,32 +37,32 @@ public class TripServiceImpl implements TripService {
         }
 
         List<SidoGetResponse> sidoResponseList = new ArrayList<>();
+
+        SidoGetResponse sidoGetResponse;
         for (Sido sido : sidoList) {
-            sidoResponseList.add(SidoGetResponse);
+            sidoGetResponse = (SidoGetResponse) ValidateUtil.validate(SidoGetResponse.from(sido));
+            sidoResponseList.add(sidoGetResponse);
         }
+
+        return sidoResponseList;
     }
 
-    public CityResponse getCity() throws MyException {
-        List<Sido> sidoList = sidoRepository.findAll();
+    @Override
+    public List<GugunGetResponse> getGugun() throws MyException {
         List<Gugun> gugunList = gugunRepository.findAll();
 
-        List<SidoResponse> sidoResponseList = new ArrayList<>();
-        List<GugunResponse> gugunResponseList = new ArrayList<>();
-
-        if(sidoList.isEmpty()) {
-            throw new CityInvalidException();
-        }
         if(gugunList.isEmpty()) {
-            throw new CityInvalidException();
-        }
-        for (Sido sido : sidoList) {
-            sidoResponseList.add(SidoResponse.builder().sidoCode(sido.getSidoCode()).sidoName(sido.getSidoName()).build());
+            throw new MyException(ErrorMessage.GUGUN_INVALID);
         }
 
+        List<GugunGetResponse> gugunResponseList = new ArrayList<>();
+
+        GugunGetResponse gugunGetResponse;
         for (Gugun gugun : gugunList) {
-            gugunResponseList.add(GugunResponse.builder().gugunCode(gugun.getGugunCode()).gugunName(gugun.getGugunName()).sidoCode(gugun.getSido().getSidoCode()).build());
+            gugunGetResponse = (GugunGetResponse) ValidateUtil.validate(GugunGetResponse.from(gugun));
+            gugunResponseList.add(gugunGetResponse);
         }
 
-        return CityResponse.builder().sidoList(sidoResponseList).gugunList(gugunResponseList).build();
+        return gugunResponseList;
     }
 }

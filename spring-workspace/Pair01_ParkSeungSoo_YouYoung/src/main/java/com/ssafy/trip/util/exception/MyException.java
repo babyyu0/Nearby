@@ -5,9 +5,13 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class MyException extends Exception{
-	private final HttpStatus code;
+	private final HttpStatus status;
 	public MyException(ErrorMessage errorMessage) {
 		super(errorMessage.getMessage());
-		this.code = errorMessage.getStatus();
+		this.status = errorMessage.getStatus();
+	}
+	public MyException(String message) {
+		super(message);
+		this.status = HttpStatus.INTERNAL_SERVER_ERROR;
 	}
 }

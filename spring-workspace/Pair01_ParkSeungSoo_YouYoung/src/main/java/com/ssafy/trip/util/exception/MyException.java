@@ -1,13 +1,13 @@
 package com.ssafy.trip.util.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public class MyException extends Exception{
-	private HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-	public MyException(String message) {
-		super(message);
+	private final HttpStatus code;
+	public MyException(ErrorMessage errorMessage) {
+		super(errorMessage.getMessage());
+		this.code = errorMessage.getStatus();
 	}
-	public HttpStatus getStatus() {
-		return status;
-	};
 }

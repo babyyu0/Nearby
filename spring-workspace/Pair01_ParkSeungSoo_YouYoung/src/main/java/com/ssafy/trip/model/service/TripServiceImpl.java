@@ -2,11 +2,13 @@ package com.ssafy.trip.model.service;
 
 import com.ssafy.trip.model.dto.response.CityResponse;
 import com.ssafy.trip.model.dto.response.GugunResponse;
+import com.ssafy.trip.model.dto.response.SidoGetResponse;
 import com.ssafy.trip.model.dto.response.SidoResponse;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Sido;
 import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
+import com.ssafy.trip.util.exception.ErrorMessage;
 import com.ssafy.trip.util.exception.MyException;
 import com.ssafy.trip.util.exception.trip.CityInvalidException;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,19 @@ public class TripServiceImpl implements TripService {
     public TripServiceImpl(SidoRepository sidoRepository, GugunRepository gugunRepository) {
         this.sidoRepository = sidoRepository;
         this.gugunRepository = gugunRepository;
+    }
+
+    public SidoGetResponse getSido() throws MyException {
+        List<Sido> sidoList = sidoRepository.findAll();
+
+        if(sidoList.isEmpty()) {
+            throw new MyException(ErrorMessage.SIDO_INVALID);
+        }
+
+        List<SidoGetResponse> sidoResponseList = new ArrayList<>();
+        for (Sido sido : sidoList) {
+            sidoResponseList.add(SidoGetResponse);
+        }
     }
 
     public CityResponse getCity() throws MyException {

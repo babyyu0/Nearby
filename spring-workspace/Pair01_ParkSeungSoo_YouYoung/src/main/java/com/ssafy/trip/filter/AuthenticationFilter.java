@@ -2,6 +2,7 @@ package com.ssafy.trip.filter;
 
 import com.ssafy.trip.util.MyPasswordEncoder;
 import com.ssafy.trip.util.TokenProvider;
+import com.ssafy.trip.util.exception.ErrorMessage;
 import com.ssafy.trip.util.exception.MyException;
 import com.ssafy.trip.util.exception.common.CookieInvalidException;
 import com.ssafy.trip.util.exception.common.PasswordEncodeException;
@@ -37,45 +38,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = tokenProvider.resolveToken(request);
 
-            // permitAll일 경우 거치지 X
-            if (request.getHeader("Authorization") != null){
-                // 아이디 가져오기
-                Cookie[] cookies = request.getCookies();
-                if (cookies == null) {
-                    log.error("doFilterInternal: 쿠키 미존재");
-                    errorResponse(response, new CookieInvalidException());  // 쿠키 미존재 exception 던지기
-                }
-
-                String memberId = null;
-                for (Cookie cookie : cookies) {
-                    if(cookie.getName().equals("memberId")) {
-                        memberId = cookie.getValue();
-                        break;
-                    }
-                }
-                if (memberId == null) {
-                    log.error("doFilterInternal: 쿠키 내 member id 미존재");
-                    errorResponse(response, new CookieInvalidException());
-                }
-
-                SecretKey key = null;
-                try {
-                    key = myPasswordEncoder.getKey(memberId);
-                } catch (PasswordEncodeException e) {
-                    log.error("doFilterInternal: key 미존재");
-                    errorResponse(response, new MemberInvalidException());
-                }
-
-                try {
-                if(tokenProvider.validateToken(token, key)) {
-                    Authentication authentication = tokenProvider.getAuthentication(token, key);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-                } catch (MyException e) {
-                    log.error(e.getMessage());
-                    errorResponse(response, e);
-                }
-            }
+        // permitAll일 경우 거치지 X
+        if (!token.isBlank() && tokenProvider.validateToken(token)) {
+            Authentication authentication = tokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
         filterChain.doFilter(request, response);
 
     }

@@ -1,10 +1,16 @@
 package com.ssafy.trip.util;
 
+import com.ssafy.trip.model.repository.MemberSecRepository;
+import com.ssafy.trip.util.exception.ErrorMessage;
 import com.ssafy.trip.util.exception.MyException;
-import com.ssafy.trip.util.exception.common.TokenInvalidException;
+import com.ssafy.trip.util.exception.common.MyException;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -17,15 +23,20 @@ import java.util.UUID;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
-public class TokenProvider {
+public class TokenProvider implements InitializingBean {
+    @Value("${token.validity.access}")
+    private long accessValidity;
+    @Value("${token.validity.refresh}")
+    private long refreshValidity;
+    @Value("${token.secret}")
+    private String secret;
+    private SecretKey key;
 
-    private final long accessValidity;  // token 유효 기간
-    private final long refreshValidity;  // token 유효 기간
-
-    public TokenProvider() {
-        this.accessValidity = 2 * 60 * 60;  // 2시간
-        this.refreshValidity = 14 * 24 * 60 * 60;  // 2주일
+    @Override
+    public void afterPropertiesSet() {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     // 토큰 생성
@@ -33,7 +44,10 @@ public class TokenProvider {
         Claims claims = Jwts.claims().setSubject(memberId);  // 사용하는 클레임 세트
         claims.put("role", role);  // 임의 역할 부여
 
-        return Jwts.builder().setClaims(claims).setIssuedAt(new Date()).setExpiration(new Date(new Date().getTime() + validity))
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + validity))
                 .signWith(key, SignatureAlgorithm.HS512)  // MemberSec에 저장된 Key 값
                 .compact();
     }
@@ -53,30 +67,30 @@ public class TokenProvider {
     }
 
     // 토큰 검증
-    public boolean validateToken(String token, SecretKey key) throws MyException {
+    public boolean validateToken(String token) throws MyException {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.error("TokenProvider: 잘못된 JWT 서명");
-            throw new TokenInvalidException();
+            log.debug("validateToken : {}", "잘못된 JWT 서명");
+            throw new MyException(ErrorMessage.TOKEN_NOT_FOUND);
         } catch (ExpiredJwtException e) {  // Access 토큰이 만료 되었을 때
-            log.error("TokenProvider: JWT 토큰 만료");
-            throw new TokenInvalidException();
+            log.debug("validateToken : {}", "JWT 토큰 만료");
+            throw new MyException(ErrorMessage.TOKEN_EXPIRED);
         } catch (UnsupportedJwtException e) {
-            log.error("TokenProvider: 지원되지 않는 JWT 토큰");
-            throw new TokenInvalidException();
+            log.debug("validateToken : {}", "지원되지 않는 JWT 토큰");
+            throw new MyException(ErrorMessage.TOKEN_NOT_FOUND);
         } catch (IllegalArgumentException e) {
-            log.error("TokenProvider: JWT 토큰 잘못됨");
-            throw new TokenInvalidException();
+            log.debug("validateToken : {}", "JWT 토큰 잘못됨");
+            throw new MyException(ErrorMessage.TOKEN_NOT_FOUND);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new TokenInvalidException();
+            log.debug(e.getMessage());
+            throw new MyException(ErrorMessage.TOKEN_NOT_FOUND);
         }
     }
 
     // 토큰으로부터 받은 정보를 기반으로 Authentication 객체 반환
-    public Authentication getAuthentication(String token, SecretKey key) {
+    public Authentication getAuthentication(String token) {
         return new UsernamePasswordAuthenticationToken(getMemberId(token, key), "", createAuthorityList(getRole(token, key)));
     }
 
@@ -98,4 +112,5 @@ public class TokenProvider {
                 .get("role", String.class);
 
     }
+
 }

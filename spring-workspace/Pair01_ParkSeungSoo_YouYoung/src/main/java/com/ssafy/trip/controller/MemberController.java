@@ -1,11 +1,11 @@
 package com.ssafy.trip.controller;
 
 import com.ssafy.trip.model.dto.command.LoginCommandDto;
-import com.ssafy.trip.model.dto.command.MemberLoginCommand;
+import com.ssafy.trip.model.dto.command.LogoutCommandDto;
 import com.ssafy.trip.model.dto.command.RegisterCommandDto;
 import com.ssafy.trip.model.dto.command.ValidIdCommandDto;
 import com.ssafy.trip.model.dto.request.LoginRequestDto;
-import com.ssafy.trip.model.dto.request.MemberLoginRequest;
+import com.ssafy.trip.model.dto.request.LogoutRequestDto;
 import com.ssafy.trip.model.dto.request.RegisterRequestDto;
 import com.ssafy.trip.model.service.MemberService;
 import com.ssafy.trip.util.exception.MyException;
@@ -46,21 +46,13 @@ public class MemberController {
         return ResponseEntity.ok(memberService.login(LoginCommandDto.from(loginRequestDto)));
     }
 
-}
-/*
-	@PostMapping("register")
-	public ResponseEntity<?> register(@RequestBody MemberVO member) {
-		try {
-			return ResponseEntity.ok(memberService.register(member));
-		} catch(MyException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-		}
-	}
+    @PostMapping(value = "logout")
+    public ResponseEntity<?> logout(@RequestBody LogoutRequestDto loginRequestDto) throws MyException {
+        return ResponseEntity.ok(memberService.logout(LogoutCommandDto.from(loginRequestDto)));
+    }
 
-	@PostMapping("login")
-	public synchronized ResponseEntity<?> login(@RequestBody MemberVO member) throws MyException {
-		return ResponseEntity.ok(memberService.login(member));
-	}
+}
+/*ㅒ
 
 	@PostMapping("logout")
 	public String logout(HttpServletRequest request) throws MyException {

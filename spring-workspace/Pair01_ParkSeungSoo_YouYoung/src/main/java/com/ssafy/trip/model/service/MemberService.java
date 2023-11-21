@@ -1,6 +1,7 @@
 package com.ssafy.trip.model.service;
 
 import com.ssafy.trip.model.dto.command.LoginCommandDto;
+import com.ssafy.trip.model.dto.command.LogoutCommandDto;
 import com.ssafy.trip.model.dto.command.RegisterCommandDto;
 import com.ssafy.trip.model.dto.command.ValidIdCommandDto;
 import com.ssafy.trip.model.dto.response.LoginResponseDto;
@@ -14,4 +15,6 @@ public interface MemberService {
     boolean register(RegisterCommandDto registerCommandDto) throws MyException;
 
     LoginResponseDto login(LoginCommandDto loginCommandDto) throws MyException;
+
+    boolean logout(LogoutCommandDto logoutCommandDto) throws MyException;
 }

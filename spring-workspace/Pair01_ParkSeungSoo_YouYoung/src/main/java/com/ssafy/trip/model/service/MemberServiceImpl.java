@@ -2,6 +2,7 @@ package com.ssafy.trip.model.service;
 
 import com.ssafy.trip.model.data.GugunPk;
 import com.ssafy.trip.model.dto.command.LoginCommandDto;
+import com.ssafy.trip.model.dto.command.LogoutCommandDto;
 import com.ssafy.trip.model.dto.command.RegisterCommandDto;
 import com.ssafy.trip.model.dto.command.ValidIdCommandDto;
 import com.ssafy.trip.model.dto.response.LoginResponseDto;
@@ -94,8 +95,9 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-    public LoginResponseDto login(LoginCommandDto loginCommandDto)
-            throws MyException {
+    @Override
+    @Transactional
+    public LoginResponseDto login(LoginCommandDto loginCommandDto) throws MyException {
         ValidateUtil.clientValidate(loginCommandDto);  // 유효성 검사
         Member member = memberRepository.findByMemberId(loginCommandDto.id())
                 .orElseThrow(() -> new MyException(ErrorMessage.MEMBER_NOT_FOUND));
@@ -105,10 +107,18 @@ public class MemberServiceImpl implements MemberService {
             throw new MyException(ErrorMessage.MEMBER_NOT_FOUND);
         }
 
+
+
         LoginResponseDto loginResponseDto = LoginResponseDto.from(member,
                 ImageUtil.toByteArray(MEMBER_PROFILE_IMG_URI, member.getProfileImg()));
         ValidateUtil.serverValidate(loginResponseDto);  // 유효성 검사
 
         return loginResponseDto;
+    }
+
+    @Override
+    @Transactional
+    public boolean logout(LogoutCommandDto logoutCommandDto) throws MyException {
+        return true;
     }
 }

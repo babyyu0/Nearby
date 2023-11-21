@@ -1,6 +1,7 @@
 package com.ssafy.trip.model.service;
 
-import com.ssafy.trip.model.dto.response.*;
+import com.ssafy.trip.model.dto.response.GugunGetResponseDto;
+import com.ssafy.trip.model.dto.response.SidoGetResponseDto;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Sido;
 import com.ssafy.trip.model.repository.GugunRepository;
@@ -29,42 +30,42 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<SidoGetResponse> getSido() throws MyException {
+    public List<SidoGetResponseDto> getSido() throws MyException {
         List<Sido> sidoList = sidoRepository.findAll();
 
         if(sidoList.isEmpty()) {
             throw new MyException(ErrorMessage.SIDO_INVALID);
         }
 
-        List<SidoGetResponse> sidoResponseList = new ArrayList<>();
+        List<SidoGetResponseDto> sidoResponseDtoList = new ArrayList<>();
 
-        SidoGetResponse sidoGetResponse;
+        SidoGetResponseDto sidoGetResponseDto;
         for (Sido sido : sidoList) {
-            sidoGetResponse = SidoGetResponse.from(sido);
-            ValidateUtil.validate(sidoGetResponse);  // 유효성 검사
-            sidoResponseList.add(sidoGetResponse);
+            sidoGetResponseDto = SidoGetResponseDto.from(sido);
+            ValidateUtil.serverValidate(sidoGetResponseDto);  // 유효성 검사
+            sidoResponseDtoList.add(sidoGetResponseDto);
         }
 
-        return sidoResponseList;
+        return sidoResponseDtoList;
     }
 
     @Override
-    public List<GugunGetResponse> getGugun() throws MyException {
+    public List<GugunGetResponseDto> getGugun() throws MyException {
         List<Gugun> gugunList = gugunRepository.findAll();
 
         if(gugunList.isEmpty()) {
             throw new MyException(ErrorMessage.GUGUN_INVALID);
         }
 
-        List<GugunGetResponse> gugunResponseList = new ArrayList<>();
+        List<GugunGetResponseDto> gugunResponseDtoList = new ArrayList<>();
 
-        GugunGetResponse gugunGetResponse;
+        GugunGetResponseDto gugunGetResponseDto;
         for (Gugun gugun : gugunList) {
-            gugunGetResponse = GugunGetResponse.from(gugun);
-            ValidateUtil.validate(gugunGetResponse);  // 유효성 검사
-            gugunResponseList.add(gugunGetResponse);
+            gugunGetResponseDto = GugunGetResponseDto.from(gugun);
+            ValidateUtil.serverValidate(gugunGetResponseDto);  // 유효성 검사
+            gugunResponseDtoList.add(gugunGetResponseDto);
         }
 
-        return gugunResponseList;
+        return gugunResponseDtoList;
     }
 }

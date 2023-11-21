@@ -20,7 +20,7 @@ public record RegisterRequestDto(
         @Size(min = 2, max = 20, message = "회원명은 최소 2자, 최대 20자여야 합니다.")
         String name,
 
-        @Positive(message = "지역 (시, 도) 코드는 자연수여야 합니다.")
+        @Positive(message = "지역(시, 도) 코드는 자연수여야 합니다.")
         int sidoCode,
         @Positive(message = "지역(구, 군) 코드는 자연수여야 합니다.")
         int gugunCode

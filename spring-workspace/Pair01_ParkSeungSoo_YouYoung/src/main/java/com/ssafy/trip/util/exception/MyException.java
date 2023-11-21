@@ -10,8 +10,8 @@ public class MyException extends Exception{
 		super(errorMessage.getMessage());
 		this.status = errorMessage.getStatus();
 	}
-	public MyException(String message) {
+	public MyException(HttpStatus httpStatus, String message) {
 		super(message);
-		this.status = HttpStatus.INTERNAL_SERVER_ERROR;
+		this.status = httpStatus;
 	}
 }

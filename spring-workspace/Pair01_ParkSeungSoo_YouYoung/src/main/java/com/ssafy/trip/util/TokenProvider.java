@@ -1,9 +1,7 @@
 package com.ssafy.trip.util;
 
-import com.ssafy.trip.model.repository.MemberSecRepository;
 import com.ssafy.trip.util.exception.ErrorMessage;
 import com.ssafy.trip.util.exception.MyException;
-import com.ssafy.trip.util.exception.common.MyException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.UUID;
 
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
@@ -56,6 +53,7 @@ public class TokenProvider implements InitializingBean {
     public String generateAccessToken(String memberId, String role, SecretKey key) throws NoSuchAlgorithmException {
         return generateToken(memberId, role, key, accessValidity);
     }
+
     // 토큰 생성
     public String generateRefreshToken(String memberId, String role, SecretKey key) throws NoSuchAlgorithmException {
         return generateToken(memberId, role, key, refreshValidity);

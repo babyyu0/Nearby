@@ -1,8 +1,11 @@
 package com.ssafy.trip.model.service;
 
 import com.ssafy.trip.model.data.GugunPk;
+import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.command.MemberLoginCommand;
+import com.ssafy.trip.model.dto.command.ValidIdCommand;
 import com.ssafy.trip.model.dto.response.MemberLoginResponse;
+import com.ssafy.trip.model.dto.response.ValidIdResponse;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Member;
 import com.ssafy.trip.model.entity.MemberSec;
@@ -11,71 +14,48 @@ import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.MemberRepository;
 import com.ssafy.trip.model.repository.MemberSecRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
-import com.ssafy.trip.model.dto.command.ValidIdCommand;
-import com.ssafy.trip.model.dto.command.MemberCreateCommand;
-import com.ssafy.trip.model.dto.response.ValidIdResponse;
-import com.ssafy.trip.model.service.common.ImageService;
-import com.ssafy.trip.util.MyPasswordEncoder;
-import com.ssafy.trip.util.data.RegexData;
+import com.ssafy.trip.util.data.RegexPattern;
+import com.ssafy.trip.util.exception.MyException;
 import com.ssafy.trip.util.exception.common.FileNotFoundException;
-import com.ssafy.trip.util.exception.member.MemberCreateException;
 import com.ssafy.trip.util.exception.member.MemberInvalidException;
 import com.ssafy.trip.util.exception.member.MemberNotFoundException;
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.ssafy.trip.util.exception.MyException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class MemberServiceImpl implements MemberService {
-    private final MyPasswordEncoder myPasswordEncoder;
-    private final ImageService imageService;
     private final MemberRepository memberRepository;
     private final MemberSecRepository memberSecRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
-    private final String MEMBER_PROFILE_IMG_URI;
-
-
-    @Autowired
-    public MemberServiceImpl(MyPasswordEncoder myPasswordEncoder, ImageService imageService, MemberRepository memberRepository, MemberSecRepository memberSecRepository, SidoRepository sidoRepository, GugunRepository gugunRepository, @Value("${member.profile.img.url}") String baseImgUri) {
-        this.myPasswordEncoder = myPasswordEncoder;
-        this.imageService = imageService;
-        this.memberRepository = memberRepository;
-        this.memberSecRepository = memberSecRepository;
-        this.sidoRepository = sidoRepository;
-        this.gugunRepository = gugunRepository;
-        MEMBER_PROFILE_IMG_URI = baseImgUri;
-    }
+    @Value("${member.profile.img.url}")
+    private String MEMBER_PROFILE_IMG_URI;
 
     @Override
+    @Transactional(readOnly = true)
     public ValidIdResponse isValidId(ValidIdCommand validIdCommand) throws MyException {
-        try {
-            if (validIdCommand.getMemberId() == null
-                    || validIdCommand.getMemberId().trim().equals("")
-                    || !validIdCommand.getMemberId().trim().matches(RegexData.regex.get("email"))) {
-                return new ValidIdResponse(false, "사용할 수 없는 아이디입니다.");
-            } else if (memberRepository.findByMemberId(validIdCommand.getMemberId()).isPresent()) {
-                return new ValidIdResponse(false, "중복된 아이디입니다.");
-            } else {
-                return new ValidIdResponse(true, "사용 가능한 아이디입니다.");
-            }
-        } catch (RuntimeException e) {
-            log.error(e.getMessage());
-            throw new MemberCreateException();
+        ValidIdResponse validIdResponse = ValidIdResponse.builder().valid(true).message("사용 가능한 아이디 입니다.").build();
+        if (validIdCommand.getMemberId() == null
+                || validIdCommand.getMemberId().trim().equals("")
+                || !validIdCommand.getMemberId().trim().matches(RegexPattern.EMAIL)) {
+            validIdResponse = ValidIdResponse.builder().valid(false).message("아이디 형식이 올바르지 않습니다.").build();
+        } else if (memberRepository.findByMemberId(validIdCommand.getMemberId()).isPresent()) {
+            validIdResponse = ValidIdResponse.builder().valid(false).message("중복된 아이디입니다.").build();
         }
+
+        return validIdResponse;
     }
 
     @Override
-    @Transactional
     public boolean register(MemberCreateCommand memberCreateCommand) throws MyException {
         if (memberCreateCommand.getMemberId() == null
                 || memberCreateCommand.getMemberId().trim().equals("")

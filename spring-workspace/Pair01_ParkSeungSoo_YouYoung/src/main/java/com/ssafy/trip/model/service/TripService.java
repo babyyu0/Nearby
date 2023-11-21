@@ -1,6 +1,5 @@
 package com.ssafy.trip.model.service;
 
-import com.ssafy.trip.model.dto.response.CityResponse;
 import com.ssafy.trip.model.dto.response.GugunGetResponse;
 import com.ssafy.trip.model.dto.response.SidoGetResponse;
 import com.ssafy.trip.util.exception.MyException;

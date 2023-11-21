@@ -40,7 +40,8 @@ public class TripServiceImpl implements TripService {
 
         SidoGetResponse sidoGetResponse;
         for (Sido sido : sidoList) {
-            sidoGetResponse = (SidoGetResponse) ValidateUtil.validate(SidoGetResponse.from(sido));
+            sidoGetResponse = SidoGetResponse.from(sido);
+            ValidateUtil.validate(sidoGetResponse);  // 유효성 검사
             sidoResponseList.add(sidoGetResponse);
         }
 
@@ -59,7 +60,8 @@ public class TripServiceImpl implements TripService {
 
         GugunGetResponse gugunGetResponse;
         for (Gugun gugun : gugunList) {
-            gugunGetResponse = (GugunGetResponse) ValidateUtil.validate(GugunGetResponse.from(gugun));
+            gugunGetResponse = GugunGetResponse.from(gugun);
+            ValidateUtil.validate(gugunGetResponse);  // 유효성 검사
             gugunResponseList.add(gugunGetResponse);
         }
 

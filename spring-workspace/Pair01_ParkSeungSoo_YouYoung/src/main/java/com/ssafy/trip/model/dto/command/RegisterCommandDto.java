@@ -1,10 +1,12 @@
 package com.ssafy.trip.model.dto.command;
 
+import com.ssafy.trip.model.dto.request.RegisterRequestDto;
 import com.ssafy.trip.util.data.RegexPattern;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import org.springframework.web.multipart.MultipartFile;
 
 public record RegisterCommandDto(
@@ -20,8 +22,28 @@ public record RegisterCommandDto(
 
         @Positive(message = "지역 (시, 도) 코드는 자연수여야 합니다.")
         int sidoCode,
-        @Positive(message = "지역 (구, 군) 코드는 자연수여야 합니다.")
+        @Positive(message = "지역(구, 군) 코드는 자연수여야 합니다.")
         int gugunCode,
         MultipartFile profile
 ) {
+        @Builder
+        public RegisterCommandDto(String memberId, String password, String name, int sidoCode, int gugunCode, MultipartFile profile) {
+                this.memberId = memberId;
+                this.password = password;
+                this.name = name;
+                this.sidoCode = sidoCode;
+                this.gugunCode = gugunCode;
+                this.profile = profile;
+        }
+
+        public static RegisterCommandDto from (RegisterRequestDto registerRequestDto, MultipartFile profile) {
+                return RegisterCommandDto.builder()
+                        .memberId(registerRequestDto.memberId())
+                        .password(registerRequestDto.password())
+                        .name(registerRequestDto.name())
+                        .sidoCode(registerRequestDto.sidoCode())
+                        .gugunCode(registerRequestDto.gugunCode())
+                        .profile(profile)
+                        .build();
+        }
 }

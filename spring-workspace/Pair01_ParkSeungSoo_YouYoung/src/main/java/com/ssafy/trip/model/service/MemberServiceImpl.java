@@ -1,148 +1,88 @@
 package com.ssafy.trip.model.service;
 
 import com.ssafy.trip.model.data.GugunPk;
-import com.ssafy.trip.model.dto.command.MemberCreateCommand;
-import com.ssafy.trip.model.dto.command.MemberLoginCommand;
-import com.ssafy.trip.model.dto.command.ValidIdCommand;
-import com.ssafy.trip.model.dto.response.MemberLoginResponse;
-import com.ssafy.trip.model.dto.response.ValidIdResponse;
+import com.ssafy.trip.model.dto.command.RegisterCommandDto;
+import com.ssafy.trip.model.dto.command.ValidIdCommandDto;
+import com.ssafy.trip.model.dto.response.ValidIdResponseDto;
 import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Member;
-import com.ssafy.trip.model.entity.MemberSec;
 import com.ssafy.trip.model.entity.Sido;
 import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.MemberRepository;
-import com.ssafy.trip.model.repository.MemberSecRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
+import com.ssafy.trip.util.ImageUtil;
+import com.ssafy.trip.util.ValidateUtil;
 import com.ssafy.trip.util.data.RegexPattern;
+import com.ssafy.trip.util.exception.ErrorMessage;
 import com.ssafy.trip.util.exception.MyException;
-import com.ssafy.trip.util.exception.common.FileNotFoundException;
-import com.ssafy.trip.util.exception.member.MemberInvalidException;
-import com.ssafy.trip.util.exception.member.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class MemberServiceImpl implements MemberService {
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final MemberSecRepository memberSecRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
-    @Value("${member.profile.img.url}")
-    private String MEMBER_PROFILE_IMG_URI;
 
     @Override
     @Transactional(readOnly = true)
-    public ValidIdResponse isValidId(ValidIdCommand validIdCommand) throws MyException {
-        ValidIdResponse validIdResponse = ValidIdResponse.builder().valid(true).message("사용 가능한 아이디 입니다.").build();
-        if (validIdCommand.getMemberId() == null
-                || validIdCommand.getMemberId().trim().equals("")
-                || !validIdCommand.getMemberId().trim().matches(RegexPattern.EMAIL)) {
-            validIdResponse = ValidIdResponse.builder().valid(false).message("아이디 형식이 올바르지 않습니다.").build();
-        } else if (memberRepository.findByMemberId(validIdCommand.getMemberId()).isPresent()) {
-            validIdResponse = ValidIdResponse.builder().valid(false).message("중복된 아이디입니다.").build();
+    public ValidIdResponseDto isValidId(ValidIdCommandDto validIdCommandDto) throws MyException {
+        ValidIdResponseDto validIdResponseDto = ValidIdResponseDto.builder().valid(true).message("사용 가능한 아이디 입니다.").build();
+        if (validIdCommandDto.memberId() == null
+                || validIdCommandDto.memberId().trim().equals("")
+                || !validIdCommandDto.memberId().trim().matches(RegexPattern.EMAIL)) {
+            validIdResponseDto = ValidIdResponseDto.builder().valid(false).message("아이디 형식이 올바르지 않습니다.").build();
+        } else if (memberRepository.findByMemberId(validIdCommandDto.memberId()).isPresent()) {
+            validIdResponseDto = ValidIdResponseDto.builder().valid(false).message("중복된 아이디입니다.").build();
         }
 
-        return validIdResponse;
+        return validIdResponseDto;
     }
 
     @Override
-    public boolean register(MemberCreateCommand memberCreateCommand) throws MyException {
-        if (memberCreateCommand.getMemberId() == null
-                || memberCreateCommand.getMemberId().trim().equals("")
-                || !memberCreateCommand.getMemberId().trim().matches(RegexData.regex.get("email"))) {
-            log.error("MemberService: 아이디 입력 실패");
-            throw new MemberInvalidException();
-        }
-        if (!isValidId(new ValidIdCommand(memberCreateCommand.getMemberId())).isValid()) {  // 아이디 중복 검사
-            log.error("MemberService: 아이디 중복");
-            throw new MemberInvalidException();
-        }
-        if (memberCreateCommand.getPassword() == null
-                || memberCreateCommand.getPassword().trim().equals("")
-                || !memberCreateCommand.getPassword().trim().matches(RegexData.regex.get("password"))) {
-            log.error("MemberService: 비밀번호 입력 실패");
-            throw new MemberInvalidException();
-        }
-        if (memberCreateCommand.getName() == null
-                || memberCreateCommand.getName().trim().equals("")
-                || 20 < memberCreateCommand.getName().length()) {
-            log.error("MemberService: 이름 입력 실패");
-            throw new MemberInvalidException();
-        }
-        if (memberCreateCommand.getSidoCode() <= 0 || memberCreateCommand.getGugunCode() <= 0) {
-            log.error("MemberService: 지역 입력 실패");
-            throw new MemberInvalidException();
+    @Transactional
+    public boolean register(RegisterCommandDto registerCommandDto) throws MyException {
+        ValidateUtil.clientValidate(registerCommandDto);
+        if (memberRepository.findByMemberId(registerCommandDto.memberId()).isPresent()) {
+            throw new MyException(ErrorMessage.ID_DUPLICATED);
         }
 
-        Sido sido = sidoRepository.findById(memberCreateCommand.getSidoCode()).orElseThrow(() -> {
-            log.error("MemberService: 지역 (시, 도) 찾기 실패");
-            return new MemberInvalidException();
-        });
-        Gugun gugun = gugunRepository.findById(GugunPk.builder().gugunCode(memberCreateCommand.getGugunCode()).sido(sido).build()).orElseThrow(() -> {
-            log.error("MemberService: 지역 (구, 군) 찾기 실패");
-            return new MemberInvalidException();
-        });
-
-        String contentType = null;
-        try {
-            contentType = memberCreateCommand.getProfile().getContentType();  // 이미지 확장자명 찾기
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new FileNotFoundException();
-        }
-        String originalFileExtension;
-
-        if (contentType == null || contentType.trim().equals("")) {
-            throw new FileNotFoundException();
+        String profileName = null;
+        if (!registerCommandDto.profile().isEmpty()) {  // 프로필 사진 존재할 경우
+            ImageUtil.saveMemberProfile(registerCommandDto.profile());
         }
 
-        if (contentType.contains("image/jpeg")) originalFileExtension = ".jpg";
-        else if (contentType.contains("image/png")) originalFileExtension = ".png";
-        else throw new FileNotFoundException();
-
-        String imgName = new Date().getTime() + originalFileExtension;
-        File imgFile = new File(MEMBER_PROFILE_IMG_URI + File.separator + imgName);
-        log.info("파일 URL: " + imgFile.getAbsolutePath());
-        boolean flag = imgFile.setExecutable(false);  // 실행 권한 없애기
-        try {
-            memberCreateCommand.getProfile().transferTo(imgFile);  // 이미지 저장
-        } catch (IOException e) {
-            throw new FileNotFoundException();
-        }
+        Sido sido = sidoRepository.findById(registerCommandDto.sidoCode())
+                .orElseThrow(() -> new MyException(ErrorMessage.SIDO_NOT_FOUND));
+        Gugun gugun = gugunRepository.findById(GugunPk.builder()
+                        .gugunCode(registerCommandDto.gugunCode()).sido(sido).build())
+                .orElseThrow(() -> new MyException(ErrorMessage.GUGUN_NOT_FOUND));
 
         Member member = Member.builder()
-                .memberId(memberCreateCommand.getMemberId())
-                .password(myPasswordEncoder.encode(memberCreateCommand.getPassword()))
-                .name(memberCreateCommand.getName())
+                .memberId(registerCommandDto.memberId())
+                .password(passwordEncoder.encode(registerCommandDto.password()))
+                .name(registerCommandDto.name())
                 // .sido(sido)
                 .gugun(gugun)
-                .profileImg(imgName)
+                .profileImg(profileName)
                 .build();
 
-        MemberSec memberSec = MemberSec.builder()
-                .memberId(member.getMemberId())
-                .secKey(new String(myPasswordEncoder.genKey()))  // JWT 암호화에 사용될 key
-                .build();
-
+        ValidateUtil.serverValidate(member);
         memberRepository.save(member);
-        memberSecRepository.save(memberSec);
 
         return true;
     }
 
+/*
     public MemberLoginResponse login(MemberLoginCommand memberLoginCommand) throws MyException {
-        Member member = memberRepository.findByMemberId(memberLoginCommand.getMemberId()).orElseThrow(() -> {
-            log.error("MemberService: 회원 아이디 찾기 실패 (Member) " + memberLoginCommand.getMemberId());
+        Member member = memberRepository.findByMemberId(memberLoginCommand.memberId()).orElseThrow(() -> {
+            log.error("MemberService: 회원 아이디 찾기 실패 (Member) " + memberLoginCommand.memberId());
             return new MemberNotFoundException();
         });
 
@@ -158,7 +98,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
 }
-/*
 	public String login(MemberVO member) throws MyException {
 		try {
 			MemberSecVO loggedMemberSec = memberSecDAO.login(member);
@@ -235,6 +174,6 @@ public class MemberServiceImpl implements MemberService {
 		memberRepository.insertProfileImg(id, "http://localhost:9999/static/img/userProfile/" + profileFile.getName());
 	}
 
-}
-
  */
+
+}

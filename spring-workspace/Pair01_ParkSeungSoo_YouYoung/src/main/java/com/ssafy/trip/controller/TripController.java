@@ -1,31 +1,26 @@
 package com.ssafy.trip.controller;
 
-import com.ssafy.trip.util.exception.MyException;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.ssafy.trip.model.service.TripService;
+import com.ssafy.trip.util.exception.MyException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/trip")
-@CrossOrigin
+@RequiredArgsConstructor
 public class TripController {
-
 	private final TripService tripService;
-
-	public TripController(TripService tripService) {
-		this.tripService = tripService;
+	@GetMapping("sido")
+	public ResponseEntity<?> getSido() throws MyException {
+		return ResponseEntity.ok(tripService.getSido());
 	}
-
-	@GetMapping("city")
-	public ResponseEntity<?> getCity() {  // 모든 지역 반환
-		try {
-			return ResponseEntity.ok(tripService.getCity());
-		} catch (MyException e) {
-			return new ResponseEntity<>(e.getMessage(), e.getStatus());
-		}
+	@GetMapping("gugun")
+	public ResponseEntity<?> getGugun() throws MyException {
+		return ResponseEntity.ok(tripService.getGugun());
 	}
-
 }
 
 /*

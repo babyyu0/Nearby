@@ -24,13 +24,6 @@ public class TripController {
 }
 
 /*
-	@PostMapping("get-gugun")
-	public List<Gugun> getGugun(@RequestBody HashMap<String, ?> map) {
-		int sidoCode = (int) map.get("sidoCode");
-		List<Gugun> guguns = tripService.getAllGugunBySidoCode(sidoCode);
-		
-		return guguns;
-	}
 	
 	@PostMapping("list")
 	public List<TripVO> getList(@RequestBody TripVO trip) {

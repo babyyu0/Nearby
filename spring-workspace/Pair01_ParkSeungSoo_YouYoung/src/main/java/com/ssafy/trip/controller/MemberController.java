@@ -1,12 +1,13 @@
 package com.ssafy.trip.controller;
 
-import com.ssafy.trip.model.dto.command.MemberCreateCommand;
 import com.ssafy.trip.model.dto.command.MemberLoginCommand;
-import com.ssafy.trip.model.dto.command.ValidIdCommand;
-import com.ssafy.trip.model.dto.request.MemberCreateRequest;
+import com.ssafy.trip.model.dto.command.RegisterCommandDto;
+import com.ssafy.trip.model.dto.command.ValidIdCommandDto;
 import com.ssafy.trip.model.dto.request.MemberLoginRequest;
+import com.ssafy.trip.model.dto.request.RegisterRequestDto;
 import com.ssafy.trip.model.service.MemberService;
 import com.ssafy.trip.util.exception.MyException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +27,16 @@ public class MemberController {
 
     @GetMapping("exist/{memberId}")
     public ResponseEntity<?> isValidId(@PathVariable("memberId") String memberId) throws MyException {
-        return ResponseEntity.ok(memberService.isValidId(new ValidIdCommand(memberId)));
+        return ResponseEntity.ok(
+                memberService.isValidId(ValidIdCommandDto.builder().memberId(memberId).build())
+        );
     }
 
     @PostMapping(value = "register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> register(@RequestPart(value = "member") MemberCreateRequest memberCreateRequest, @RequestPart(value = "profile") MultipartFile profile) throws MyException {
-        return ResponseEntity.ok(memberService.register(MemberCreateCommand.builder()
-                .memberId(memberCreateRequest.getMemberId())
-                .password(memberCreateRequest.getPassword())
-                .name(memberCreateRequest.getName())
-                .sidoCode(memberCreateRequest.getSidoCode())
-                .gugunCode(memberCreateRequest.getGugunCode())
-                .profile(profile)
-                .build()));
+    public ResponseEntity<?> register(@RequestPart(value = "member") @Valid RegisterRequestDto registerRequestDto, @RequestPart(value = "profile") MultipartFile profile) throws MyException {
+        return ResponseEntity.ok(
+                memberService.register(RegisterCommandDto.from(registerRequestDto, profile))
+        );
     }
 
     @PostMapping(value = "login")

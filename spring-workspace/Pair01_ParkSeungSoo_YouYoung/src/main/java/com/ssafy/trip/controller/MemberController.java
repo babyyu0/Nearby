@@ -1,8 +1,10 @@
 package com.ssafy.trip.controller;
 
+import com.ssafy.trip.model.dto.command.LoginCommandDto;
 import com.ssafy.trip.model.dto.command.MemberLoginCommand;
 import com.ssafy.trip.model.dto.command.RegisterCommandDto;
 import com.ssafy.trip.model.dto.command.ValidIdCommandDto;
+import com.ssafy.trip.model.dto.request.LoginRequestDto;
 import com.ssafy.trip.model.dto.request.MemberLoginRequest;
 import com.ssafy.trip.model.dto.request.RegisterRequestDto;
 import com.ssafy.trip.model.service.MemberService;
@@ -40,8 +42,8 @@ public class MemberController {
     }
 
     @PostMapping(value = "login")
-    public ResponseEntity<?> login(@RequestBody MemberLoginRequest memberLoginRequest) throws MyException {
-        return ResponseEntity.ok(memberService.login(MemberLoginCommand.builder().memberId(memberLoginRequest.getMemberId()).password(memberLoginRequest.getPassword()).build()));
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) throws MyException {
+        return ResponseEntity.ok(memberService.login(LoginCommandDto.from(loginRequestDto)));
     }
 
 }

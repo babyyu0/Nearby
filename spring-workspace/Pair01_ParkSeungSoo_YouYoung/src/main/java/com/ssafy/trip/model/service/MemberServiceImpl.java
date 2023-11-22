@@ -14,8 +14,10 @@ import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.MemberRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
 import com.ssafy.trip.util.ImageUtil;
+import com.ssafy.trip.util.TokenProvider;
 import com.ssafy.trip.util.ValidateUtil;
 import com.ssafy.trip.util.data.RegexPattern;
+import com.ssafy.trip.util.data.Role;
 import com.ssafy.trip.util.exception.ErrorMessage;
 import com.ssafy.trip.util.exception.MyException;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class MemberServiceImpl implements MemberService {
     @Value("${member.profile.img.url}")
     private static String MEMBER_PROFILE_IMG_URI;
     private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
@@ -51,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
             validIdResponseDto = ValidIdResponseDto.builder()
                     .valid(false)
                     .message("아이디 형식이 올바르지 않습니다.").build();
-        } else if (memberRepository.findByMemberId(validIdCommandDto.memberId()).isPresent()) {
+        } else if (memberRepository.findById(validIdCommandDto.memberId()).isPresent()) {
             validIdResponseDto = ValidIdResponseDto.builder()
                     .valid(false)
                     .message("중복된 아이디입니다.")
@@ -65,7 +68,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public boolean register(RegisterCommandDto registerCommandDto) throws MyException {
         ValidateUtil.clientValidate(registerCommandDto);
-        if (memberRepository.findByMemberId(registerCommandDto.memberId()).isPresent()) {
+        if (memberRepository.findById(registerCommandDto.memberId()).isPresent()) {
             throw new MyException(ErrorMessage.ID_DUPLICATED);
         }
 
@@ -81,7 +84,7 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new MyException(ErrorMessage.GUGUN_NOT_FOUND));
 
         Member member = Member.builder()
-                .memberId(registerCommandDto.memberId())
+                .id(registerCommandDto.memberId())
                 .password(passwordEncoder.encode(registerCommandDto.password()))
                 .name(registerCommandDto.name())
                 // .sido(sido)
@@ -99,7 +102,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public LoginResponseDto login(LoginCommandDto loginCommandDto) throws MyException {
         ValidateUtil.clientValidate(loginCommandDto);  // 유효성 검사
-        Member member = memberRepository.findByMemberId(loginCommandDto.id())
+        Member member = memberRepository.findById(loginCommandDto.id())
                 .orElseThrow(() -> new MyException(ErrorMessage.MEMBER_NOT_FOUND));
 
         // 비밀번호 틀렸을 시
@@ -107,7 +110,9 @@ public class MemberServiceImpl implements MemberService {
             throw new MyException(ErrorMessage.MEMBER_NOT_FOUND);
         }
 
-
+        // Access Token, Refresh Token 생성
+        String accessToken = tokenProvider.generateAccessToken(member.getId(), Role.USER.getRole());
+        String refreshToken = tokenProvider.generateRefreshToken(member.getId(), Role.USER.getRole());
 
         LoginResponseDto loginResponseDto = LoginResponseDto.from(member,
                 ImageUtil.toByteArray(MEMBER_PROFILE_IMG_URI, member.getProfileImg()));

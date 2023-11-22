@@ -1,5 +1,6 @@
 package com.ssafy.trip.controller;
 
+import com.ssafy.trip.aop.TimeTrace;
 import com.ssafy.trip.model.dto.command.LoginCommandDto;
 import com.ssafy.trip.model.dto.command.LogoutCommandDto;
 import com.ssafy.trip.model.dto.command.RegisterCommandDto;
@@ -34,6 +35,7 @@ public class MemberController {
         );
     }
 
+    @TimeTrace
     @PostMapping(value = "register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> register(@RequestPart(value = "member") @Valid RegisterRequestDto registerRequestDto, @RequestPart(value = "profile") MultipartFile profile) throws MyException {
         return ResponseEntity.ok(
@@ -41,6 +43,7 @@ public class MemberController {
         );
     }
 
+    @TimeTrace
     @PostMapping(value = "login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) throws MyException {
         return ResponseEntity.ok(memberService.login(LoginCommandDto.from(loginRequestDto)));

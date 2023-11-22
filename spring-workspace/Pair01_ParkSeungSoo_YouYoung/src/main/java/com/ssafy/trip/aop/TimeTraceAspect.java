@@ -11,7 +11,7 @@ import org.springframework.util.StopWatch;
 @Aspect
 @Component
 @Slf4j
-public class MeasuringInterceptor {
+public class TimeTraceAspect {
     @Pointcut("@annotation(com.ssafy.trip.aop.TimeTrace)")
     private void timeTracePointcut() {
     }

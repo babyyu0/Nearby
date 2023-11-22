@@ -31,7 +31,6 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    @TimeTrace
     public List<SidoGetResponseDto> getSido() throws MyException {
         List<Sido> sidoList = sidoRepository.findAll();
 
@@ -52,7 +51,6 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    @TimeTrace
     public List<GugunGetResponseDto> getGugun() throws MyException {
         List<Gugun> gugunList = gugunRepository.findAll();
 

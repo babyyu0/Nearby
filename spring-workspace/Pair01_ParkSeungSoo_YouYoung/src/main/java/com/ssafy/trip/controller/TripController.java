@@ -1,5 +1,6 @@
 package com.ssafy.trip.controller;
 
+import com.ssafy.trip.aop.TimeTrace;
 import com.ssafy.trip.model.service.TripService;
 import com.ssafy.trip.util.exception.MyException;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TripController {
 	private final TripService tripService;
+	@TimeTrace
 	@GetMapping("sido")
 	public ResponseEntity<?> getSido() throws MyException {
 		return ResponseEntity.ok(tripService.getSido());
 	}
+	@TimeTrace
 	@GetMapping("gugun")
 	public ResponseEntity<?> getGugun() throws MyException {
 		return ResponseEntity.ok(tripService.getGugun());

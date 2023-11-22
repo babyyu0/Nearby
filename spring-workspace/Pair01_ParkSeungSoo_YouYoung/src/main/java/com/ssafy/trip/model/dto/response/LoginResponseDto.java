@@ -26,7 +26,7 @@ public record LoginResponseDto(
 
     public static LoginResponseDto from(Member member, byte[] profile) {
         return LoginResponseDto.builder()
-                .id(member.getMemberId())
+                .id(member.getId())
                 .name(member.getName())
                 .profile(profile)
                 .build();

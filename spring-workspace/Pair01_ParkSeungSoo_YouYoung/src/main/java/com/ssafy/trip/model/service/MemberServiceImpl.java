@@ -43,7 +43,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional(readOnly = true)
-    @TimeTrace
     public ValidIdResponseDto isValidId(ValidIdCommandDto validIdCommandDto) throws MyException {
         ValidIdResponseDto validIdResponseDto = ValidIdResponseDto.builder()
                 .valid(true)
@@ -68,7 +67,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    @TimeTrace
     public boolean register(RegisterCommandDto registerCommandDto) throws MyException {
         ValidateUtil.clientValidate(registerCommandDto);
         if (memberRepository.findById(registerCommandDto.memberId()).isPresent()) {
@@ -103,7 +101,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    @TimeTrace
     public LoginResponseDto login(LoginCommandDto loginCommandDto) throws MyException {
         ValidateUtil.clientValidate(loginCommandDto);  // 유효성 검사
         Member member = memberRepository.findById(loginCommandDto.id())

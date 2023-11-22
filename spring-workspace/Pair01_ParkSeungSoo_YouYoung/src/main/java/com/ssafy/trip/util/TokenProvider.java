@@ -37,7 +37,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     // 토큰 생성
-    public String generateToken(String memberId, String role, SecretKey key, long validity) throws NoSuchAlgorithmException {
+    public String generateToken(String memberId, String role, long validity) {
         Claims claims = Jwts.claims().setSubject(memberId);  // 사용하는 클레임 세트
         claims.put("role", role);  // 임의 역할 부여
 
@@ -50,13 +50,13 @@ public class TokenProvider implements InitializingBean {
     }
 
     // 토큰 생성
-    public String generateAccessToken(String memberId, String role, SecretKey key) throws NoSuchAlgorithmException {
-        return generateToken(memberId, role, key, accessValidity);
+    public String generateAccessToken(String memberId, String role) {
+        return generateToken(memberId, role, accessValidity);
     }
 
     // 토큰 생성
-    public String generateRefreshToken(String memberId, String role, SecretKey key) throws NoSuchAlgorithmException {
-        return generateToken(memberId, role, key, refreshValidity);
+    public String generateRefreshToken(String memberId, String role) {
+        return generateToken(memberId, role, refreshValidity);
     }
 
     // Authorization Header를 통해 인증

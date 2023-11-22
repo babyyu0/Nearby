@@ -1,5 +1,6 @@
 package com.ssafy.trip.model.service;
 
+import com.ssafy.trip.aop.TimeTrace;
 import com.ssafy.trip.model.dto.response.GugunGetResponseDto;
 import com.ssafy.trip.model.dto.response.SidoGetResponseDto;
 import com.ssafy.trip.model.entity.Gugun;
@@ -30,6 +31,7 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    @TimeTrace
     public List<SidoGetResponseDto> getSido() throws MyException {
         List<Sido> sidoList = sidoRepository.findAll();
 
@@ -50,6 +52,7 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    @TimeTrace
     public List<GugunGetResponseDto> getGugun() throws MyException {
         List<Gugun> gugunList = gugunRepository.findAll();
 

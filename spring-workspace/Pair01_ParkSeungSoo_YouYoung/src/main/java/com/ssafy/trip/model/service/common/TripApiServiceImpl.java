@@ -1,4 +1,4 @@
-package com.ssafy.trip.model.service.common;
+/*package com.ssafy.trip.model.service.common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,8 +10,8 @@ import com.ssafy.trip.model.repository.SidoRepository;
 import com.ssafy.trip.util.data.ApiData;
 import com.ssafy.trip.util.exception.MyException;
 import com.ssafy.trip.util.exception.trip.CityInvalidException;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -108,3 +108,4 @@ public class TripApiServiceImpl implements TripApiService {
         }
     }
 }
+*/

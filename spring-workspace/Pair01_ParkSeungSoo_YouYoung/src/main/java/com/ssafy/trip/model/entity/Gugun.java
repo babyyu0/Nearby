@@ -14,8 +14,6 @@ import org.hibernate.annotations.Comment;
 @Getter
 public class Gugun {
 	@Id
-	@Column(name = "code", columnDefinition = "TINYINT UNSIGNED")
-	@Comment("고유 번호")
 	private int gugunCode;
 
 	@Column(name = "name", nullable = false, columnDefinition = "VARCHAR(20) CHARACTER SET UTF8")
@@ -23,9 +21,6 @@ public class Gugun {
 	private String gugunName;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
-	@JoinColumn(name = "sido_code")
-	@Comment("행정구역 고유 번호")
 	private Sido sido;
 
 	@Builder

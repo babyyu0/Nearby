@@ -30,8 +30,8 @@ public class Member {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "gugun_code", nullable = false, columnDefinition = "BIGINT COMMENT '행정구역 고유 번호'"),
-            @JoinColumn(name = "sido_code", nullable = false, columnDefinition = "BIGINT COMMENT '하위 행정구역 고유 번호'"),
+            @JoinColumn(name = "gugun_code", referencedColumnName = "code", nullable = false, columnDefinition = "TINYINT UNSIGNED COMMENT '행정구역 고유 번호'"),
+            @JoinColumn(name = "sido_code", referencedColumnName = "sido_code", nullable = false, columnDefinition = "TINYINT UNSIGNED COMMENT '하위 행정구역 고유 번호'"),
     })
     private Gugun gugun;
 

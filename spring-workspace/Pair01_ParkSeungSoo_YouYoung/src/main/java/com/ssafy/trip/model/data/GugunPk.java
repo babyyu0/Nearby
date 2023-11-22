@@ -3,28 +3,24 @@ package com.ssafy.trip.model.data;
 import com.ssafy.trip.model.entity.Sido;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Comment;
 
 import java.io.Serializable;
 
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder(builderMethodName = "InnerBuilder")
-@Slf4j
 public class GugunPk implements Serializable {
-    private long gugunCode;
+    @Column(name = "code", columnDefinition = "TINYINT UNSIGNED")
+    @Comment("고유 번호")
+    private int gugunCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "sido_code")
+    @Comment("행정구역 고유 번호")
     private Sido sido;
 
-    public static GugunPkBuilder builder() {
-        return GugunPk.InnerBuilder();
-    }
-
-    public GugunPkBuilder gugunCode(long gugunCode) {
-        return InnerBuilder().gugunCode(gugunCode);
-    }
-
-    public GugunPkBuilder sido(Sido sido) {
-        return InnerBuilder().sido(sido);
+    @Builder
+    public GugunPk(int gugunCode, Sido sido) {
+        this.gugunCode = gugunCode;
+        this.sido = sido;
     }
 }

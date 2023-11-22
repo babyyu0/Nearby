@@ -7,11 +7,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 public record GugunGetResponseDto(
-        @Positive(message = "지역(구, 군) 코드는 자연수여야 합니다.")
+        @Positive(message = "하위 행정구역 코드는 자연수여야 합니다.")
         int code,
-        @NotBlank(message = "지역(구, 군) 이름이 존재하지 않습니다.")
+        @NotBlank(message = "하위 행정구역 이름이 존재하지 않습니다.")
         String name,
-        @Positive(message = "지역(시, 도) 코드는 자연수여야 합니다.")
+        @Positive(message = "행정구역 코드는 자연수여야 합니다.")
         int sidoCode
 ) {
         @Builder(access = AccessLevel.PRIVATE)

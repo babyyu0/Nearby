@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-@Entity(name = "attraction_info")
+@Entity(name = "attraction_desc")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class AttractionDesc {

@@ -88,7 +88,7 @@ public class TokenProvider implements InitializingBean {
 
     // 토큰으로부터 받은 정보를 기반으로 Authentication 객체 반환
     public Authentication getAuthentication(String token) {
-        return new UsernamePasswordAuthenticationToken(getMemberId(token, key), "", createAuthorityList(getRole(token, key)));
+        return new UsernamePasswordAuthenticationToken(getMemberId(token), "", createAuthorityList(getRole(token)));
     }
 
     // 토큰에 담겨있는 회원 ID 획득

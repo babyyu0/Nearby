@@ -7,31 +7,43 @@ import com.ssafy.trip.model.entity.Gugun;
 import com.ssafy.trip.model.entity.Sido;
 import com.ssafy.trip.model.repository.GugunRepository;
 import com.ssafy.trip.model.repository.SidoRepository;
+import com.ssafy.trip.util.TripUtil;
 import com.ssafy.trip.util.ValidateUtil;
 import com.ssafy.trip.util.exception.ErrorMessage;
 import com.ssafy.trip.util.exception.MyException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class TripServiceImpl implements TripService {
-
+    private final TripUtil tripUtil;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
 
-    @Autowired
-    public TripServiceImpl(SidoRepository sidoRepository, GugunRepository gugunRepository) {
-        this.sidoRepository = sidoRepository;
-        this.gugunRepository = gugunRepository;
+    @Override
+    public boolean refreshSido() {
+        tripUtil.setSido();
+
+        return true;
     }
 
     @Override
-    public List<SidoGetResponseDto> getSido() throws MyException {
+    public boolean refreshGugun() {
+        tripUtil.setGugun();
+
+        return true;
+    }
+
+    @Override
+    public List<SidoGetResponseDto> getSido() {
         List<Sido> sidoList = sidoRepository.findAll();
 
         if(sidoList.isEmpty()) {
@@ -51,7 +63,7 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<GugunGetResponseDto> getGugun() throws MyException {
+    public List<GugunGetResponseDto> getGugun() {
         List<Gugun> gugunList = gugunRepository.findAll();
 
         if(gugunList.isEmpty()) {

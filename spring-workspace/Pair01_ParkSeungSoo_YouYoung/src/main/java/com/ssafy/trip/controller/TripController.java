@@ -14,6 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TripController {
 	private final TripService tripService;
+	@GetMapping("sido/refresh")
+	public ResponseEntity<?> refreshSido() throws MyException {
+		return ResponseEntity.ok(tripService.refreshSido());
+	}
+	@GetMapping("gugun/refresh")
+	public ResponseEntity<?> refreshGugun() throws MyException {
+		return ResponseEntity.ok(tripService.refreshGugun());
+	}
 	@TimeTrace
 	@GetMapping("sido")
 	public ResponseEntity<?> getSido() throws MyException {
@@ -24,6 +32,7 @@ public class TripController {
 	public ResponseEntity<?> getGugun() throws MyException {
 		return ResponseEntity.ok(tripService.getGugun());
 	}
+
 }
 
 /*

@@ -7,6 +7,8 @@ import com.ssafy.trip.util.exception.MyException;
 import java.util.List;
 
 public interface TripService {
-    List<SidoGetResponseDto> getSido() throws MyException;
-    List<GugunGetResponseDto> getGugun() throws MyException;
+    boolean refreshSido();
+    boolean refreshGugun();
+    List<SidoGetResponseDto> getSido();
+    List<GugunGetResponseDto> getGugun();
 }

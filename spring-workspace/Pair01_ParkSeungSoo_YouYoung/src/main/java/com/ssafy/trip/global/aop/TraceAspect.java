@@ -1,6 +1,5 @@
 package com.ssafy.trip.global.aop;
 
-import java.text.NumberFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -31,7 +30,7 @@ public class TraceAspect {
             return joinPoint.proceed(); // 실제 타겟 호출
         } finally {
             stopWatch.stop();
-            log.debug("{} Total time = {}s",
+            log.debug("{} Total time : {}s",
                     joinPoint.getSignature().toShortString(),
                     stopWatch.getTotalTimeSeconds());
         }
@@ -41,6 +40,6 @@ public class TraceAspect {
         Runtime runtime = Runtime.getRuntime();
         long usedMemory = runtime.totalMemory() - runtime.freeMemory();
 
-        log.debug("Used Memory: " + (usedMemory/ 1024) + " kb");
+        log.debug("Used Memory : " + (usedMemory/ 1024) + " kb");
     }
 }

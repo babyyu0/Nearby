@@ -37,7 +37,7 @@ public class MemberController {
 
     @TimeTrace
     @PostMapping(value = "register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> register(@RequestPart(value = "member") @Valid RegisterRequestDto registerRequestDto, @RequestPart(value = "profile") MultipartFile profile) throws MyException {
+    public ResponseEntity<?> register(@RequestPart(value = "member") @Valid RegisterRequestDto registerRequestDto, @RequestPart(value = "profile", required = false) MultipartFile profile) throws MyException {
         return ResponseEntity.ok(
                 memberService.register(RegisterCommandDto.from(registerRequestDto, profile))
         );

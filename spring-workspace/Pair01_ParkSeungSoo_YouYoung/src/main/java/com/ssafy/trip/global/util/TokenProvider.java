@@ -92,7 +92,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     // 토큰에 담겨있는 회원 ID 획득
-    public String getMemberId(String token, SecretKey key) {
+    public String getMemberId(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -100,7 +100,7 @@ public class TokenProvider implements InitializingBean {
                 .getBody().getSubject();
     }
 
-    private String getRole(String token, SecretKey key) {
+    private String getRole(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

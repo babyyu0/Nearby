@@ -109,11 +109,14 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public LoginResponseDto login(LoginCommandDto loginCommandDto) throws MyException {
         ValidateUtil.clientValidate(loginCommandDto);  // 유효성 검사
-        Member member = memberRepository.findById(loginCommandDto.id())
-                .orElseThrow(() -> new MyException(ErrorMessage.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findById(loginCommandDto.id()).orElseThrow(() -> {
+            log.debug("login : 회원 아이디 존재 X");
+            return new MyException(ErrorMessage.MEMBER_NOT_FOUND);
+        });
 
         // 비밀번호 틀렸을 시
         if (!passwordEncoder.matches(loginCommandDto.password(), member.getPassword())) {
+            log.debug("login : 비밀번호 틀림");
             throw new MyException(ErrorMessage.MEMBER_NOT_FOUND);
         }
 
@@ -145,10 +148,23 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MemberGetResponseDto getMember(MemberGetCommandDto memberGetCommandDto) {
         ValidateUtil.clientValidate(memberGetCommandDto);
-        Member member = memberRepository.findById(memberGetCommandDto.id()).orElseThrow(() -> {
-            log.debug("getMember : 멤버 아이디 존재 X");
+
+        if(!tokenProvider.getMemberId(memberGetCommandDto.accessToken())
+                .equals(memberGetCommandDto.id())) {  // 토큰 아이디와 요청 아이디 비교
+            log.debug("getMember : 잘못된 토큰");
             throw new MyException(ErrorMessage.MEMBER_NOT_FOUND);
+        }
+
+        Member member = memberRepository.findById(memberGetCommandDto.id()).orElseThrow(() -> {
+            log.debug("getMember : 회원 아이디 존재 X");
+            return new MyException(ErrorMessage.MEMBER_NOT_FOUND);
         });
+
+        // 비밀번호 틀렸을 시
+        if (!passwordEncoder.matches(memberGetCommandDto.password(), member.getPassword())) {
+            log.debug("getMember : 비밀번호 틀림");
+            throw new MyException(ErrorMessage.MEMBER_NOT_FOUND);
+        }
 
         SidoGetResponseDto sidoGetResponseDto = SidoGetResponseDto.from(member.getGugun().getSido());
         ValidateUtil.serverValidate(sidoGetResponseDto);

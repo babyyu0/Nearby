@@ -17,18 +17,18 @@ import org.springframework.data.redis.core.index.Indexed;
 @Getter
 public class MemberToken {
 
-    @NotBlank(message = "리프레시 토큰이 존재하지 않습니다.")
-    @Indexed
-    String refreshToken;
     @NotBlank(message = "아이디가 존재하지 않습니다.")
     @Pattern(regexp = RegexPattern.EMAIL, message = "아이디가 올바르지 않습니다.")
     @Comment("회원 아이디")
-    @Id
-    private Member member;
+    @Id private String id;
+
+    @NotBlank(message = "리프레시 토큰이 존재하지 않습니다.")
+    @Indexed
+    private String refreshToken;
 
     @Builder
-    public MemberToken(Member member, String refreshToken) {
-        this.member = member;
+    public MemberToken(String id, String refreshToken) {
+        this.id = id;
         this.refreshToken = refreshToken;
     }
 }

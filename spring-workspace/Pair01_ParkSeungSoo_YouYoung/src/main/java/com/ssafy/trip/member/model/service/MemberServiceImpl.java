@@ -11,6 +11,7 @@ import com.ssafy.trip.area.model.entity.Gugun;
 import com.ssafy.trip.member.model.entity.Member;
 import com.ssafy.trip.area.model.entity.Sido;
 import com.ssafy.trip.area.model.repository.GugunRepository;
+import com.ssafy.trip.member.model.entity.MemberToken;
 import com.ssafy.trip.member.model.repository.MemberRepository;
 import com.ssafy.trip.area.model.repository.SidoRepository;
 import com.ssafy.trip.global.util.ImageUtil;
@@ -20,6 +21,7 @@ import com.ssafy.trip.global.util.data.RegexPattern;
 import com.ssafy.trip.global.util.data.Role;
 import com.ssafy.trip.global.util.exception.ErrorMessage;
 import com.ssafy.trip.global.util.exception.MyException;
+import com.ssafy.trip.member.model.repository.MemberTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +39,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
+    private final MemberTokenRepository memberTokenRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
 
@@ -114,8 +117,21 @@ public class MemberServiceImpl implements MemberService {
         String accessToken = tokenProvider.generateAccessToken(member.getId(), Role.USER.getRole());
         String refreshToken = tokenProvider.generateRefreshToken(member.getId(), Role.USER.getRole());
 
-        LoginResponseDto loginResponseDto = LoginResponseDto.from(member,
-                ImageUtil.toByteArray(MEMBER_PROFILE_IMG_URI, member.getProfileImg()));
+        MemberToken memberToken = MemberToken.builder()
+                .id(member.getId())
+                .refreshToken(refreshToken)
+                .build();
+
+        ValidateUtil.serverValidate(memberToken);
+        memberTokenRepository.save(memberToken);  // 액세스 토큰 저장
+
+        LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .profile(ImageUtil.toByteArray(MEMBER_PROFILE_IMG_URI, member.getProfileImg()))
+                .build();
         ValidateUtil.serverValidate(loginResponseDto);  // 유효성 검사
 
         return loginResponseDto;

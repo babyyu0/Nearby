@@ -6,9 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public record RegisterRequestDto(
         @NotBlank(message = "아이디가 존재하지 않습니다.")
         @Pattern(regexp = RegexPattern.EMAIL, message = "아이디가 올바르지 않습니다.")

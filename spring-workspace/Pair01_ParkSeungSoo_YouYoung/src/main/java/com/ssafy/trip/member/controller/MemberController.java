@@ -3,10 +3,12 @@ package com.ssafy.trip.member.controller;
 import com.ssafy.trip.global.util.exception.MyException;
 import com.ssafy.trip.member.model.dto.command.LoginCommandDto;
 import com.ssafy.trip.member.model.dto.command.LogoutCommandDto;
+import com.ssafy.trip.member.model.dto.command.MemberGetCommandDto;
 import com.ssafy.trip.member.model.dto.command.RegisterCommandDto;
 import com.ssafy.trip.member.model.dto.command.ValidIdCommandDto;
 import com.ssafy.trip.member.model.dto.request.LoginRequestDto;
 import com.ssafy.trip.member.model.dto.request.LogoutRequestDto;
+import com.ssafy.trip.member.model.dto.request.MemberGetRequestDto;
 import com.ssafy.trip.member.model.dto.request.RegisterRequestDto;
 import com.ssafy.trip.member.model.service.MemberService;
 import jakarta.validation.Valid;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,6 +54,12 @@ public class MemberController {
     @PostMapping(value = "login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDto loginRequestDto) throws MyException {
         return ResponseEntity.ok(memberService.login(LoginCommandDto.from(loginRequestDto)));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getMember(@RequestHeader("Authorization") String accessToken,
+            @Valid MemberGetRequestDto memberGetRequestDto) throws MyException {
+        return ResponseEntity.ok(memberService.getMember(MemberGetCommandDto.from(memberGetRequestDto, accessToken)));
     }
 
     @PostMapping(value = "logout")

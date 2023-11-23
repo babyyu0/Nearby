@@ -1,11 +1,15 @@
 package com.ssafy.trip.member.model.service;
 
+import com.ssafy.trip.area.model.dto.response.GugunGetResponseDto;
+import com.ssafy.trip.area.model.dto.response.SidoGetResponseDto;
 import com.ssafy.trip.area.model.entity.primary.GugunPk;
 import com.ssafy.trip.member.model.dto.command.LoginCommandDto;
 import com.ssafy.trip.member.model.dto.command.LogoutCommandDto;
+import com.ssafy.trip.member.model.dto.command.MemberGetCommandDto;
 import com.ssafy.trip.member.model.dto.command.RegisterCommandDto;
 import com.ssafy.trip.member.model.dto.command.ValidIdCommandDto;
 import com.ssafy.trip.member.model.dto.response.LoginResponseDto;
+import com.ssafy.trip.member.model.dto.response.MemberGetResponseDto;
 import com.ssafy.trip.member.model.dto.response.ValidIdResponseDto;
 import com.ssafy.trip.area.model.entity.Gugun;
 import com.ssafy.trip.member.model.entity.Member;
@@ -135,6 +139,33 @@ public class MemberServiceImpl implements MemberService {
         ValidateUtil.serverValidate(loginResponseDto);  // 유효성 검사
 
         return loginResponseDto;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MemberGetResponseDto getMember(MemberGetCommandDto memberGetCommandDto) {
+        ValidateUtil.clientValidate(memberGetCommandDto);
+        Member member = memberRepository.findById(memberGetCommandDto.id()).orElseThrow(() -> {
+            log.debug("getMember : 멤버 아이디 존재 X");
+            throw new MyException(ErrorMessage.MEMBER_NOT_FOUND);
+        });
+
+        SidoGetResponseDto sidoGetResponseDto = SidoGetResponseDto.from(member.getGugun().getSido());
+        ValidateUtil.serverValidate(sidoGetResponseDto);
+
+        GugunGetResponseDto gugunGetResponseDto = GugunGetResponseDto.from(member.getGugun());
+        ValidateUtil.serverValidate(gugunGetResponseDto);
+
+        MemberGetResponseDto memberGetResponseDto = MemberGetResponseDto.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .sidoGetResponseDto(sidoGetResponseDto)
+                .gugunGetResponseDto(gugunGetResponseDto)
+                .profile(ImageUtil.toByteArray(MEMBER_PROFILE_IMG_URI, member.getProfileImg()))
+                .build();
+
+        ValidateUtil.serverValidate(memberGetResponseDto);
+        return memberGetResponseDto;
     }
 
     @Override

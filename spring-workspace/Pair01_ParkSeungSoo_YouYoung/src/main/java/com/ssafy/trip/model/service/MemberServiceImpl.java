@@ -74,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         String profileName = null;
-        if (!registerCommandDto.profile().isEmpty()) {  // 프로필 사진 존재할 경우
+        if (registerCommandDto.profile() != null) {  // 프로필 사진 존재할 경우
             profileName = ImageUtil.saveIamge(MEMBER_PROFILE_IMG_URI, registerCommandDto.profile());
         }
 

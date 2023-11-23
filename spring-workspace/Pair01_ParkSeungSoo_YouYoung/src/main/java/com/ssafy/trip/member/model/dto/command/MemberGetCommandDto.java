@@ -25,7 +25,7 @@ public record MemberGetCommandDto(
                 this.accessToken = accessToken;
         }
 
-        public static MemberGetCommandDto from (@Valid MemberGetRequestDto memberGetCommandDto, String accessToken) {
+        public static MemberGetCommandDto from (MemberGetRequestDto memberGetCommandDto, String accessToken) {
                 return MemberGetCommandDto.builder()
                         .id(memberGetCommandDto.id())
                         .password(memberGetCommandDto.password())

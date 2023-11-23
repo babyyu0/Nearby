@@ -56,9 +56,9 @@ public class MemberController {
         return ResponseEntity.ok(memberService.login(LoginCommandDto.from(loginRequestDto)));
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<?> getMember(@RequestHeader("Authorization") String accessToken,
-            @Valid MemberGetRequestDto memberGetRequestDto) throws MyException {
+            @RequestBody @Valid MemberGetRequestDto memberGetRequestDto) throws MyException {
         return ResponseEntity.ok(memberService.getMember(MemberGetCommandDto.from(memberGetRequestDto, accessToken)));
     }
 

@@ -7,6 +7,7 @@ import org.hibernate.annotations.Comment;
 
 import java.io.Serializable;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GugunPk implements Serializable {
     @Column(name = "code", columnDefinition = "TINYINT UNSIGNED")
     @Comment("고유 번호")

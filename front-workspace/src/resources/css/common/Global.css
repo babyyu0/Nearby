@@ -1,12 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;600;700&display=swap');
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
 * {
-    font-family: 'IBM Plex Sans KR', sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
     font-weight: 400;
+}
+.bold {
+    font-family: 'Nanum Gothic', sans-serif;
+    font-weight: 700;
 }
 
 :root {
-    --bold-color: #1B44BF;
-    --light-color: #99BFF2;
-    --extra-light-color: #F2F2F2;
+    --one-color: #557090;
+    --two-color: #272727;
+    --three-color: #383838;
+    --four-color: #a3a3a3;
+    --five-color: #fdfdfd;
 }

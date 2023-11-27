@@ -2,7 +2,7 @@
     height: 10vh;
     width: 100%;
 
-    background-color: var(--extra-light-color);
+    /* background-color: var(--extra-light-color); */
 }
 
 .contents {
@@ -18,24 +18,57 @@
 .leftContents, .rightContents {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 
     height: 100%;
 }
 
 .logoBox {
-    margin-right: 10%;
+    margin-right: 2vw;
 
-    height: 60%;
+    height: 100%;
 }
 .logoBox > img {
     height: 100%;
 }
 
-.leftMenu, .rightMenu {
-    margin-left: 10%;
+.searchBox {
+    display: flex;
+    justify-content: space-between;
 
+    padding: 1.4vh 1.4vw;
+    border-radius: 50px;
+    border: 1px solid var(--four-color);
+    width: 20rem;
+}
+.searchBox > .search {
+    border: none;
+    width: 80%;
+}
+.searchBox > .search:focus-visible {
+    outline: none;
+}
+.searchBox > .searchBtn {
+    height: 1.2rem;
+}
+
+.leftMenu, .rightMenu {
+    margin-left: 2vw;
+
+    font-weight: 700;
     text-decoration: none;
     color: black;
-    font-size: 1.2rem;
+    white-space: nowrap;
+}
+
+.login {
+    margin-left: 10%;
+    padding: 1.4vh 1.4vw;
+    border-radius: 50px;
+
+    font-weight: 700;
+    text-decoration: none;
+    color: white;
+    background-color: black;
     white-space: nowrap;
 }

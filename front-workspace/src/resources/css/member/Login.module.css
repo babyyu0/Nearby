@@ -19,7 +19,13 @@
 .title {
   margin: 2vh 0;
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 700;
+}
+.titleColored {
+  color: var(--one-color);
+  margin: 2vh 0;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .contents {
@@ -58,19 +64,26 @@
 }
 
 .inputLabel {
+  position: relative;
+  left: -3% ;
   padding-bottom: 1vh;
   width: 100%;
   text-align: left;
 }
 
-.inputText,
-.inputText:focus {
+.inputText {
   left: auto;
   margin: 0;
   padding: 3%;
   width: 100%;
 
-  border: none;
+  border: 1px solid var(--four-color);
+  border-radius: 10px;
+
+  outline: none;
+}
+.inputText:focus {
+  border: 1px solid var(--two-color);
 }
 
 .find {
@@ -81,11 +94,13 @@
 }
 
 .confirm {
-  padding: 0.6rem 1.4rem;
+  padding: 1.2vh 1.4vw;
 
   min-width: 6rem;
+  color: var(--five-color);
+  background-color: black;
+  font-weight: 700;
 
-  background-color: var(--light-color);
   border: none;
   border-radius: 5px;
   cursor: pointer;

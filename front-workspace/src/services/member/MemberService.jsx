@@ -1,13 +1,19 @@
 import { api } from "../common/ApiSevice";
 import Swal from "sweetalert2";
 
-const login = (data) => {
-    const response = api.post(`/member/login`, JSON.stringify(data));
-    if(response.status === 200) {
-        localStorage.setItem('member', response.data);
-    }
+const login = async (data) => {
+    console.log("data: ", data);
+    try {
+        const response = await api.post(`/member/login`, JSON.stringify(data));
+        return response;
+    } catch(error) {
+        Swal.fire({
+            icon: 'error',
+            title: error.response.data
+        });
 
-    return response;
+        return;
+    }   
 }
 
 const register = (data, profile) => {

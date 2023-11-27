@@ -11,6 +11,7 @@ import { login } from "../../services/member/MemberService";
 import { memberAtom } from "../../jotai/member";
 
 // Components
+import HeaderComponent from "../../components/common/HeaderComponent";
 import LoginComponent from "../../components/member/LoginComponent";
 
 // Style
@@ -24,14 +25,14 @@ function LoginContainer() {
   const [member, setMember] = useAtom(memberAtom);
 
   const doLogin = async () => {
-    const request = {"memberId": id, password};
+    const request = {id, password};
     const response = await login(request);
 
-    if(response.data) {
+    if(response && response.data) {
       setMember(response.data);
       Swal.fire({
         icon: "success",
-        title: "로그인을 성공 했습니다.",
+        title: "로그인에 성공 했습니다.",
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/");
@@ -42,11 +43,12 @@ function LoginContainer() {
 
   return (
     <>
+      <HeaderComponent />
       <div className={loginStyle.container}>
         <NavLink to="/" className={loginStyle.logoBox}>
           <img className={loginStyle.logo} src="/image/logo.png" alt="logo" />
         </NavLink>
-        <span className={loginStyle.title}>로그인</span>
+        <span className={loginStyle.title}>Always <span className={loginStyle.titleColored}>Nearby</span> You ! </span>
         <LoginComponent loginStyle={loginStyle} id={id} setId={setId} password={password} setPassword={setPassword} doLogin={doLogin} />
       </div>
     </>

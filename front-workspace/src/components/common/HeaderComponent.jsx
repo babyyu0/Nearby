@@ -13,6 +13,10 @@ function HeaderComponent() {
           <NavLink to="/" className={header.logoBox}>
             <img className={header.logo} src="/image/logo.png" alt="logo" />
           </NavLink>
+          <div className={header.searchBox}>
+            <input type="text" className={header.search} placeholder="검색어를 입력해 주세요." />
+            <img className={header.searchBtn} src="/image/search.png" alt="search" />
+          </div>
           <NavLink to="/trip" className={header.leftMenu}>
             관광지
           </NavLink>
@@ -22,7 +26,6 @@ function HeaderComponent() {
         </div>
         {(member.name) ?
           (
-
             <div className={header.rightContents}>
               <NavLink to="/my" className={header.rightMenu}>마이페이지</NavLink>
               <img src=""/>
@@ -31,8 +34,7 @@ function HeaderComponent() {
           ) :
           (
             <div className={header.rightContents}>
-              <NavLink to="/login" className={header.rightMenu}>로그인</NavLink>
-              <NavLink to="/register" className={header.rightMenu}>회원가입</NavLink>
+              <NavLink to="/login" className={header.login}>로그인</NavLink>
             </div>
           )
         }

@@ -19,7 +19,7 @@ public class GugunController {
         return ResponseEntity.ok(gugunService.refreshGugun());
     }
 
-    @GetMapping("gugun")
+    @GetMapping
     public ResponseEntity<?> getGugun() throws MyException {
         return ResponseEntity.ok(gugunService.getGugun());
     }

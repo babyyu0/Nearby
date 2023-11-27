@@ -19,7 +19,7 @@ public class SidoController {
         return ResponseEntity.ok(sidoService.refreshSido());
     }
 
-    @GetMapping("sido")
+    @GetMapping
     public ResponseEntity<?> getSido() throws MyException {
         return ResponseEntity.ok(sidoService.getSido());
     }

@@ -1,6 +1,7 @@
 package com.ssafy.trip.member.model.entity;
 
 import com.ssafy.trip.area.model.entity.Gugun;
+import com.ssafy.trip.attraction.model.entity.AttractionHeart;
 import com.ssafy.trip.global.util.data.RegexPattern;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -14,6 +15,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,6 +56,9 @@ public class Member {
     @Column(name = "profile_img", columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")
     @Comment("프로필 이미지")
     private String profileImg;
+
+    @OneToMany(mappedBy = "member")
+    List<AttractionHeart> attractionHeartList;
 
     @Builder
     public Member(int code, String id, String password, String name, Gugun gugun, String profileImg) {

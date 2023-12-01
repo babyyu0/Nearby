@@ -8,11 +8,26 @@ const getNearestList = async (data) => {
     } catch(error) {
         Swal.fire({
             icon: 'error',
-            title: error.response.data
+            title: (error.response) ? error.response.data : process.env.REACT_APP_ERROR_MESSAGE
         });
 
         return;
     }   
 }
 
-export { getNearestList };
+const getPopularList = async () => {
+    try {
+        const response = await api.get(`/trip/popular`);
+        return response.data;
+    } catch (error) {
+        console.log("error: ", process.env.ERROR_MESSAGE);
+        Swal.fire({
+            icon: 'error',
+            title: (error.response) ? error.response.data : process.env.REACT_APP_ERROR_MESSAGE
+        });
+
+        return;
+    }   
+}
+
+export { getNearestList, getPopularList };

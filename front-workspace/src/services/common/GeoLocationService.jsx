@@ -1,10 +1,12 @@
 import Swal from "sweetalert2";
 
-
-const getLocation = () => {
+const getLocation = async () => {
   if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition((position) => {
-        return { myX: position.coords.latitude, myY: position.coords.longitude };
+    return new Promise((resolve, rejected) => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        resolve({ mapX: position.coords.latitude, mapY: position.coords.longitude });
+      }, rejected);
+
     });
   } else {
     Swal.fire({

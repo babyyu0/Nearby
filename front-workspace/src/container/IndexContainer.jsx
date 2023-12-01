@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 // Services
-import { getNearestList } from "../services/MainService";
+import { getNearestList, getPopularList } from "../services/MainService";
 import { getLocation } from "../services/common/GeoLocationService";
 
 // Components
@@ -17,16 +17,26 @@ function IndexContainer() {
   const [popularList, setPopularList] = useState(null);
 
   const refreshNearestList = async () => {
-    const response = await getNearestList(getLocation());
-    console.log(response);
+    const response = await getNearestList(await getLocation());
     setNearestList(response);
+  };
+
+  const refreshPopularList = async () => {
+    const response = await getPopularList();
+    setPopularList(response);
   };
 
   useEffect(() => {
     if (!nearestList) {
       refreshNearestList();
     }
-  }, [nearestList]); // 한 번 호출
+  }, [nearestList]); // 가까운 관광지 호출
+
+  useEffect(() => {
+    if (!popularList) {
+      refreshPopularList();
+    }
+  }, [popularList]); // 유명한 관광지 호출
 
   return (
     <>

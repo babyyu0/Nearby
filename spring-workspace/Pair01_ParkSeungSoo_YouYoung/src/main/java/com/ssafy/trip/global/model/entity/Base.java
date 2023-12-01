@@ -1,4 +1,4 @@
-package com.ssafy.trip.global.entity;
+package com.ssafy.trip.global.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

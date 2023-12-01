@@ -1,8 +1,7 @@
-import { api } from "../common/ApiSevice";
+import { api } from "../common/ApiService";
 import Swal from "sweetalert2";
 
 const login = async (data) => {
-    console.log("data: ", data);
     try {
         const response = await api.post(`/member/login`, JSON.stringify(data));
         return response;

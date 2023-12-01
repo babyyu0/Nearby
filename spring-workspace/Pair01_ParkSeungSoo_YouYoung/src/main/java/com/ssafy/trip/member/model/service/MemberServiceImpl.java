@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class MemberServiceImpl implements MemberService {
 
-    @Value("${member.profile.img.url}")
+    @Value("${url.member.profile-img}")
     private static String MEMBER_PROFILE_IMG_URI;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;

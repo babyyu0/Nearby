@@ -5,7 +5,6 @@ import { memberAtom } from "../../jotai/member";
 
 function HeaderComponent() {
   const [member, setMember] = useAtom(memberAtom);
-  console.log(member);
   return (
     <div className={header.container}>
       <div className={header.contents}>

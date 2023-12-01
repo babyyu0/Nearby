@@ -1,0 +1,34 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+    width: 100vw;
+    margin-bottom: 10vh;
+}
+
+.mainBanner {
+    width: 100%;
+    height: 60vh;
+    background-image: url("../../../public/image/main/main-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.popularList {
+    width: 80%;
+    margin-top: 2vh;
+}
+
+.menuTitle {
+    margin: 2vh 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+} 
+
+.noContent {
+    width: 100%;
+    padding: 2vh 2vw;
+    margin: 0 auto;
+}

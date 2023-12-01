@@ -10,9 +10,11 @@
 }
 
 :root {
-    --one-color: #557090;
-    --two-color: #272727;
-    --three-color: #383838;
-    --four-color: #a3a3a3;
-    --five-color: #fdfdfd;
+    --blue-color-1: #010326;
+    --blue-color-2: #162D59;
+    --blue-color-3: #5377A6;
+    --blue-color-4: #89B3D9;
+    --black-color: #0D0D0D;
+    --gray-color: #8F93AE;
+    --white-color: #F2F2F2;
 }

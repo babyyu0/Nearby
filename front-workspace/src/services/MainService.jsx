@@ -6,9 +6,10 @@ const getNearestList = async (data) => {
         const response = await api.get(`/attraction/nearest?my-x=${data.mapX}&my-y=${data.mapY}`);
         return response.data;
     } catch(error) {
+        console.log("error: ", error);
         Swal.fire({
             icon: 'error',
-            title: (error.response) ? error.response.data : process.env.REACT_APP_ERROR_MESSAGE
+            title: (error.response) ? error.response.data.message : process.env.REACT_APP_ERROR_MESSAGE
         });
 
         return;
@@ -20,10 +21,9 @@ const getPopularList = async () => {
         const response = await api.get(`/attraction/popular`);
         return response.data;
     } catch (error) {
-        console.log("error: ", process.env.ERROR_MESSAGE);
         Swal.fire({
             icon: 'error',
-            title: (error.response) ? error.response.data : process.env.REACT_APP_ERROR_MESSAGE
+            title: (error.response) ? error.response.data.message : process.env.REACT_APP_ERROR_MESSAGE
         });
 
         return;

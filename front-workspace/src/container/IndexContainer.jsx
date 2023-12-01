@@ -36,7 +36,7 @@ function IndexContainer() {
                               <CardComponent />
                           ))
                       ) : (
-                        <div className={mainStyle.noContent}>🤔 인기 관광지가 없습니다! 하트를 눌러 좋아하는 관광지를 표시하세요!</div>
+                        <div className={mainStyle.noContent}>🤔 인기 관광지가 없습니다! 하트를 눌러 좋아하는 관광지를 표시하세요.</div>
                       )
                   }
         </div>

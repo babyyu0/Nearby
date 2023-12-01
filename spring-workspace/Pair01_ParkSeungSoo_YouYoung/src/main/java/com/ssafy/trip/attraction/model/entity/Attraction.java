@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -33,11 +35,25 @@ public class Attraction {
     })
     private Gugun gugun;
 
+    @OneToOne(mappedBy = "attraction")
+    AttractionInfo attractionInfo;
+
+    @OneToOne(mappedBy = "attraction")
+    AttractionDesc attractionDesc;
+
+    @OneToMany(mappedBy = "attraction")
+    List<AttractionHeart> attractionHeartList;
+
+    @Column(name = "img", columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")
+    @Comment("관광지 이미지")
+    private String img;
+
     @Builder
-    public Attraction(int code, ContentType contentType, String title, Gugun gugun) {
+    public Attraction(int code, ContentType contentType, String title, Gugun gugun, String img) {
         this.code = code;
         this.contentType = contentType;
         this.title = title;
         this.gugun = gugun;
+        this.img = img;
     }
 }

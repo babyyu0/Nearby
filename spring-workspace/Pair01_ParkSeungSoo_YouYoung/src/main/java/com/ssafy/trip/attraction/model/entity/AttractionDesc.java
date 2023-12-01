@@ -12,18 +12,18 @@ import org.hibernate.annotations.Comment;
 @Getter
 public class AttractionDesc {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "code")
     @Comment("고유 번호")
-    @Id private Attraction code;
+    @Id private Attraction attraction;
 
     @Column(name = "desc", nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     @Comment("설명")
     private String desc;
 
     @Builder
-    public AttractionDesc(Attraction code, String desc) {
-        this.code = code;
+    public AttractionDesc(Attraction attraction, String desc) {
+        this.attraction = attraction;
         this.desc = desc;
     }
 }

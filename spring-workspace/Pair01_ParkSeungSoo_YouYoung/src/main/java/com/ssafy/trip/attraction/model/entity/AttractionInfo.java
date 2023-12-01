@@ -12,10 +12,10 @@ import org.hibernate.annotations.Comment;
 @Getter
 public class AttractionInfo {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "code")
     @Comment("고유 번호")
-    @Id private Attraction code;
+    @Id private Attraction attraction;
 
     @Column(name = "addr1", nullable = false, columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")
     @Comment("주소")
@@ -38,8 +38,8 @@ public class AttractionInfo {
     private double mapY;
 
     @Builder
-    public AttractionInfo(Attraction code, String addr1, String addr2, String tel, double mapX, double mapY) {
-        this.code = code;
+    public AttractionInfo(Attraction attraction, String addr1, String addr2, String tel, double mapX, double mapY) {
+        this.attraction = attraction;
         this.addr1 = addr1;
         this.addr2 = addr2;
         this.tel = tel;

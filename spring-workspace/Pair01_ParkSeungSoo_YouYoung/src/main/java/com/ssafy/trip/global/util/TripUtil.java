@@ -28,15 +28,15 @@ public class TripUtil {
 
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
-    @Value("${trip.url.sido}")
+    @Value("${url.attraction.api.sido}")
     private String SIDO_URL;
-    @Value("${trip.parameter.api-key}")
+    @Value("${parameter.attraction.api.key}")
     private String API_KEY;
-    @Value("${trip.parameter.os}")
+    @Value("${parameter.attraction.os}")
     private String OS;
-    @Value("${trip.parameter.mobile-app}")
+    @Value("${parameter.attraction.mobile-app}")
     private String MOBILE_APP;
-    @Value("${trip.parameter.type}")
+    @Value("${parameter.attraction.type}")
     private String TYPE;
 
     public void setSido() {

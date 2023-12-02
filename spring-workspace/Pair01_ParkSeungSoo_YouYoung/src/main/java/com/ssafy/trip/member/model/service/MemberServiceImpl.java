@@ -2,29 +2,25 @@ package com.ssafy.trip.member.model.service;
 
 import com.ssafy.trip.area.model.dto.response.GugunGetResponseDto;
 import com.ssafy.trip.area.model.dto.response.SidoGetResponseDto;
-import com.ssafy.trip.area.model.entity.primary.GugunPk;
-import com.ssafy.trip.member.model.dto.command.LoginCommandDto;
-import com.ssafy.trip.member.model.dto.command.LogoutCommandDto;
-import com.ssafy.trip.member.model.dto.command.MemberGetCommandDto;
-import com.ssafy.trip.member.model.dto.command.RegisterCommandDto;
-import com.ssafy.trip.member.model.dto.command.ValidIdCommandDto;
-import com.ssafy.trip.member.model.dto.response.LoginResponseDto;
-import com.ssafy.trip.member.model.dto.response.MemberGetResponseDto;
-import com.ssafy.trip.member.model.dto.response.ValidIdResponseDto;
 import com.ssafy.trip.area.model.entity.Gugun;
-import com.ssafy.trip.member.model.entity.Member;
 import com.ssafy.trip.area.model.entity.Sido;
+import com.ssafy.trip.area.model.entity.primary.GugunPk;
 import com.ssafy.trip.area.model.repository.GugunRepository;
-import com.ssafy.trip.member.model.entity.MemberToken;
-import com.ssafy.trip.member.model.repository.MemberRepository;
 import com.ssafy.trip.area.model.repository.SidoRepository;
 import com.ssafy.trip.global.util.ImageUtil;
 import com.ssafy.trip.global.util.TokenProvider;
 import com.ssafy.trip.global.util.ValidateUtil;
 import com.ssafy.trip.global.util.data.RegexPattern;
-import com.ssafy.trip.global.util.data.Role;
 import com.ssafy.trip.global.util.exception.ErrorMessage;
 import com.ssafy.trip.global.util.exception.MyException;
+import com.ssafy.trip.member.model.dto.command.*;
+import com.ssafy.trip.member.model.dto.response.LoginResponseDto;
+import com.ssafy.trip.member.model.dto.response.MemberGetResponseDto;
+import com.ssafy.trip.member.model.dto.response.ValidIdResponseDto;
+import com.ssafy.trip.member.model.entity.Member;
+import com.ssafy.trip.member.model.entity.MemberRole;
+import com.ssafy.trip.member.model.entity.MemberToken;
+import com.ssafy.trip.member.model.repository.MemberRepository;
 import com.ssafy.trip.member.model.repository.MemberTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -121,8 +117,8 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // Access Token, Refresh Token 생성
-        String accessToken = tokenProvider.generateAccessToken(member.getId(), Role.USER.getRole());
-        String refreshToken = tokenProvider.generateRefreshToken(member.getId(), Role.USER.getRole());
+        String accessToken = tokenProvider.generateAccessToken(member.getId(), MemberRole.USER.getRole());
+        String refreshToken = tokenProvider.generateRefreshToken(member.getId(), MemberRole.USER.getRole());
 
         MemberToken memberToken = MemberToken.builder()
                 .id(member.getId())

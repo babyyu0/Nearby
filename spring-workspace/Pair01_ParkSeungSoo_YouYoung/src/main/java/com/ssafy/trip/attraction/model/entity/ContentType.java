@@ -15,7 +15,6 @@ import org.hibernate.annotations.Comment;
 public class ContentType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "TINYINT UNSIGNED")
     @Comment("고유 번호")
     private int code;
@@ -25,7 +24,7 @@ public class ContentType {
     private String name;
 
     @Builder
-    public ContentType(int id, String name) {
+    public ContentType(int code, String name) {
         this.code = code;
         this.name = name;
     }

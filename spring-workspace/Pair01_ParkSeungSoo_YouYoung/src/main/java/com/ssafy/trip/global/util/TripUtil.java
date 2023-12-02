@@ -7,6 +7,9 @@ import com.ssafy.trip.area.model.entity.Gugun;
 import com.ssafy.trip.area.model.entity.Sido;
 import com.ssafy.trip.area.model.repository.GugunRepository;
 import com.ssafy.trip.area.model.repository.SidoRepository;
+import com.ssafy.trip.attraction.model.entity.ContentType;
+import com.ssafy.trip.attraction.model.entity.ContentTypeEnum;
+import com.ssafy.trip.attraction.model.repository.ContentTypeRepository;
 import com.ssafy.trip.global.util.exception.ErrorMessage;
 import com.ssafy.trip.global.util.exception.MyException;
 import java.io.IOException;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TripUtil {
 
+    private final ContentTypeRepository contentTypeRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
     @Value("${url.attraction.api.sido}")
@@ -38,6 +42,20 @@ public class TripUtil {
     private String MOBILE_APP;
     @Value("${parameter.attraction.type}")
     private String TYPE;
+
+    public void setContentType() {
+        for (ContentTypeEnum contentTypeEnum : ContentTypeEnum.values()) {
+            System.out.println("contentTypeEnum: " + contentTypeEnum);
+            System.out.println("contentTypeEnum.getCode(): " + contentTypeEnum.getCode());
+            ContentType contentType = ContentType.builder()
+                    .code(contentTypeEnum.getCode())
+                    .name(contentTypeEnum.getName())
+                    .build();
+            ValidateUtil.serverValidate(contentType);
+
+            contentTypeRepository.save(contentType);
+        }
+    }
 
     public void setSido() {
         HttpClient client = HttpClient.newBuilder().build();

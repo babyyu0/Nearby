@@ -5,5 +5,6 @@ import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
 import java.util.List;
 
 public interface AttractionService {
+    boolean refreshContentType();
     List<AttractionGetResponseDto> getPopularAttraction();
 }

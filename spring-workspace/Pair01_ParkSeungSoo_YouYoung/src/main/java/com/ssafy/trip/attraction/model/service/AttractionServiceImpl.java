@@ -5,6 +5,7 @@ import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
 import com.ssafy.trip.attraction.model.entity.Attraction;
 import com.ssafy.trip.attraction.model.repository.AttractionHeartRepository;
 import com.ssafy.trip.global.util.ImageUtil;
+import com.ssafy.trip.global.util.TripUtil;
 import com.ssafy.trip.global.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +18,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttractionServiceImpl implements AttractionService  {
 
+    private final TripUtil tripUtil;
     @Value("${url.attraction.img}")
     private static String ATTRACTION_IMG_URI;
     private final AttractionHeartRepository attractionHeartRepository;
+
+    @Override
+    public boolean refreshContentType() {
+        tripUtil.setContentType();
+        return true;
+    }
+
     @Override
     public List<AttractionGetResponseDto> getPopularAttraction() {
         List<Tuple> attractionHeartList = attractionHeartRepository.findAllByOrderByCountDesc();

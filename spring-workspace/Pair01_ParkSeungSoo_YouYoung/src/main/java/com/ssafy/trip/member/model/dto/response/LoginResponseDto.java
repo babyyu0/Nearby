@@ -1,11 +1,9 @@
 package com.ssafy.trip.member.model.dto.response;
 
-import com.ssafy.trip.member.model.entity.Member;
-import com.ssafy.trip.global.util.data.RegexPattern;
+import com.ssafy.trip.global.data.RegexPattern;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
 import lombok.Builder;
 
 public record LoginResponseDto(

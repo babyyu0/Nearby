@@ -2,13 +2,11 @@ package com.ssafy.trip.member.model.entity;
 
 import com.ssafy.trip.area.model.entity.Gugun;
 import com.ssafy.trip.attraction.model.entity.AttractionHeart;
-import com.ssafy.trip.global.util.data.RegexPattern;
+import com.ssafy.trip.global.data.RegexPattern;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;

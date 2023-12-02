@@ -14,13 +14,16 @@ public record AttractionGetResponseDto(
         String title,
         @PositiveOrZero(message = "거리는 양수여야 합니다.")
         double km,
+        @PositiveOrZero(message = "하트 수는 양수여야 합니다.")
+        int heart,
         byte[] img
 ) {
         @Builder
-        public AttractionGetResponseDto(int code, String title, double km, byte[] img) {
+        public AttractionGetResponseDto(int code, String title, double km, int heart, byte[] img) {
                 this.code = code;
                 this.title = title;
                 this.km = km;
+                this.heart = heart;
                 this.img = img;
         }
 }

@@ -28,15 +28,17 @@ public class AttractionServiceImpl implements AttractionService  {
 
         AttractionGetResponseDto attractionGetResponseDto;
         Attraction attraction;
-        double km = 1;
-        for(Tuple attractionHeart : attractionHeartList) {
-            attraction = attractionHeart.get(0, Attraction.class);
+        double km; String heart;
+        for(Tuple attractionTuple : attractionHeartList) {
+            attraction = attractionTuple.get(0, Attraction.class);
+            heart = attractionTuple.get(1, String.class);
             km = 1;  // TO DO :: KM 계산하기
 
             attractionGetResponseDto = AttractionGetResponseDto.builder()
                     .code(attraction.getCode())
                     .title(attraction.getTitle())
                     .km(km)
+                    .heart(heart == null ? 0 : Integer.parseInt(heart))
                     .img(ImageUtil.toByteArray(ATTRACTION_IMG_URI, attraction.getImg()))
                     .build();
             ValidateUtil.serverValidate(attractionGetResponseDto);

@@ -10,7 +10,7 @@ import com.ssafy.trip.area.model.repository.SidoRepository;
 import com.ssafy.trip.global.util.ImageUtil;
 import com.ssafy.trip.global.util.TokenProvider;
 import com.ssafy.trip.global.util.ValidateUtil;
-import com.ssafy.trip.global.util.data.RegexPattern;
+import com.ssafy.trip.global.data.RegexPattern;
 import com.ssafy.trip.global.util.exception.ErrorMessage;
 import com.ssafy.trip.global.util.exception.MyException;
 import com.ssafy.trip.member.model.dto.command.*;

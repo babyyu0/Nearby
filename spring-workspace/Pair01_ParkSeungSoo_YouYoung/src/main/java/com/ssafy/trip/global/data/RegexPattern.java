@@ -1,4 +1,4 @@
-package com.ssafy.trip.global.util.data;
+package com.ssafy.trip.global.data;
 
 public interface RegexPattern {
     String EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,20}$";

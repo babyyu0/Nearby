@@ -1,7 +1,7 @@
 package com.ssafy.trip.member.model.dto.command;
 
 import com.ssafy.trip.member.model.dto.request.RegisterRequestDto;
-import com.ssafy.trip.global.util.data.RegexPattern;
+import com.ssafy.trip.global.data.RegexPattern;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;

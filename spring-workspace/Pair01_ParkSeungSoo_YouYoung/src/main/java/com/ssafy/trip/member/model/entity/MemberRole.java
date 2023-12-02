@@ -1,4 +1,4 @@
-package com.ssafy.trip.global.util.data;
+package com.ssafy.trip.member.model.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

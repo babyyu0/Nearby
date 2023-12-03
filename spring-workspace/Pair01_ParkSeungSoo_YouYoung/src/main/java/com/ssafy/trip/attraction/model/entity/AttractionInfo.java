@@ -42,11 +42,11 @@ public class AttractionInfo extends Base {
     @Comment("분류1")
     private String cat1;
 
-    @Column(name = "cat1", nullable = false, columnDefinition = "VARCHAR(5) CHARACTER SET UTF8")
+    @Column(name = "cat2", nullable = false, columnDefinition = "VARCHAR(5) CHARACTER SET UTF8")
     @Comment("분류2")
     private String cat2;
 
-    @Column(name = "cat1", nullable = false, columnDefinition = "VARCHAR(9) CHARACTER SET UTF8")
+    @Column(name = "cat3", nullable = false, columnDefinition = "VARCHAR(9) CHARACTER SET UTF8")
     @Comment("분류3")
     private String cat3;
 

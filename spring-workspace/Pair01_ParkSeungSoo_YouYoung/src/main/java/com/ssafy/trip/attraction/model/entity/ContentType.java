@@ -1,6 +1,9 @@
 package com.ssafy.trip.attraction.model.entity;
 
-import jakarta.persistence.*;
+import com.ssafy.trip.global.model.entity.Base;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +15,7 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Slf4j
-public class ContentType {
+public class ContentType extends Base {
 
     @Id
     @Column(columnDefinition = "TINYINT UNSIGNED")

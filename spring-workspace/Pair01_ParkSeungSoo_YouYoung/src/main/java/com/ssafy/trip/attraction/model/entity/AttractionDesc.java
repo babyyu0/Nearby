@@ -1,5 +1,6 @@
 package com.ssafy.trip.attraction.model.entity;
 
+import com.ssafy.trip.global.model.entity.Base;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import org.hibernate.annotations.Comment;
 @Entity(name = "attraction_desc")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class AttractionDesc {
+public class AttractionDesc extends Base {
 
     @OneToOne
     @JoinColumn(name = "code")

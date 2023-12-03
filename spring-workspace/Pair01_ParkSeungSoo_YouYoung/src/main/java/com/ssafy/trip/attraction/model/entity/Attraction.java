@@ -1,6 +1,7 @@
 package com.ssafy.trip.attraction.model.entity;
 
 import com.ssafy.trip.area.model.entity.Gugun;
+import com.ssafy.trip.global.model.entity.Base;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Attraction {
+public class Attraction extends Base {
 
     @Column(columnDefinition = "TINYINT UNSIGNED")
     @Comment("고유 번호")
@@ -55,23 +56,23 @@ public class Attraction {
     @Comment("관광지 이미지 2")
     private String imgSub;
 
-    @Column(name = "crated_at", nullable = false, columnDefinition = "VARCHAR(14) CHARACTER SET UTF8")
-    @Comment("생성 시간")
-    private String createdAt;
+    @Column(name = "created_time", nullable = false, columnDefinition = "VARCHAR(14) CHARACTER SET UTF8")
+    @Comment("생성 시간 (외부 데이터)")
+    private String createdTime;
 
-    @Column(name = "updated_at", nullable = false, columnDefinition = "VARCHAR(14) CHARACTER SET UTF8")
-    @Comment("수정 시간")
-    private String updatedAt;
+    @Column(name = "updated_time", nullable = false, columnDefinition = "VARCHAR(14) CHARACTER SET UTF8")
+    @Comment("수정 시간 (외부 데이터)")
+    private String updatedTime;
 
     @Builder
-    public Attraction(int code, ContentType contentType, String title, Gugun gugun, String img, String imgSub, String createdAt, String updatedAt) {
+    public Attraction(int code, ContentType contentType, String title, Gugun gugun, String img, String imgSub, String createdTime, String updatedTime) {
         this.code = code;
         this.contentType = contentType;
         this.title = title;
         this.gugun = gugun;
         this.img = img;
         this.imgSub = imgSub;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createdTime = createdTime;
+        this.updatedTime = updatedTime;
     }
 }

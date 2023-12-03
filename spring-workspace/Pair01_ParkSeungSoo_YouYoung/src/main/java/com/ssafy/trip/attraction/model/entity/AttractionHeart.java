@@ -1,6 +1,7 @@
 package com.ssafy.trip.attraction.model.entity;
 
 import com.ssafy.trip.area.model.entity.Gugun;
+import com.ssafy.trip.global.model.entity.Base;
 import com.ssafy.trip.member.model.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import org.hibernate.annotations.Comment;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class AttractionHeart {
+public class AttractionHeart extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("고유 번호")
     @Id int id;

@@ -61,7 +61,7 @@ public class TripUtil {
 
     public void setSido() {
         HttpClient client = HttpClient.newBuilder().build();
-        String sidoUrl = API_URL + File.separator + "areaCode1" + "?" + "serviceKey=" + API_KEY
+        String sidoUrl = API_URL + "/areaCode1" + "?" + "serviceKey=" + API_KEY
                 + "&MobileOS=" + OS
                 + "&MobileApp=" + MOBILE_APP
                 + "&_type=" + TYPE
@@ -120,7 +120,7 @@ public class TripUtil {
         HttpClient client = HttpClient.newBuilder().build();
         String gugunUrl;
         for (Sido sido : sidoList) {
-            gugunUrl = API_URL + File.separator + "areaCode1" + "?" + "serviceKey=" + API_KEY
+            gugunUrl = API_URL + "/areaCode1" + "?" + "serviceKey=" + API_KEY
                     + "&MobileOS=" + OS
                     + "&MobileApp=" + MOBILE_APP
                     + "&_type=" + TYPE
@@ -171,5 +171,65 @@ public class TripUtil {
                 throw new MyException(ErrorMessage.GUGUN_INVALID);
             }
         }
+    }
+
+    public void setAttraction() {
+        HttpClient client = HttpClient.newBuilder().build();
+        for (char i = '가'; i < '힣'; i++) {
+            log.info("" + i);
+        }
+        /*String attractionUrl;
+        for (Sido sido : sidoList) {
+            gugunUrl = API_URL + File.separator + "areaCode1" + "?" + "serviceKey=" + API_KEY
+                    + "&MobileOS=" + OS
+                    + "&MobileApp=" + MOBILE_APP
+                    + "&_type=" + TYPE
+                    + "&areaCode=" + sido.getSidoCode()
+                    + "&numOfRows=100";
+
+            HttpRequest getRequest = HttpRequest.newBuilder()
+                    .uri(URI.create(gugunUrl))
+                    .GET().build();
+
+            HttpResponse<String> response;  // Response 받을 변수
+            try {
+                response = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
+            } catch (IOException | InterruptedException e) {
+                log.debug("setGugun : Response 받기 실패 - {}", e.getMessage());
+                throw new MyException(ErrorMessage.GUGUN_INVALID);
+            }
+
+            // 응답 코드 확인
+            int statusCode = response.statusCode();
+            if (statusCode != HttpStatus.OK.value()) {
+                log.debug("setGugun : API 호출 200 ok 아님");
+                throw new MyException(ErrorMessage.GUGUN_INVALID);
+            }
+
+            ObjectMapper objectmapper = new ObjectMapper();
+            try {
+                //  불러오기
+                JsonNode jsonNode = objectmapper.readTree(response.body())
+                        .get("response").get("body")
+                        .get("items").get("item");
+
+                JsonNode curJsonNode;
+                Gugun gugun;
+                for (int i = 0; i < jsonNode.size(); i++) {
+                    curJsonNode = jsonNode.get(i);
+                    gugun = Gugun.builder()
+                            .gugunCode(curJsonNode.get("code").asInt())
+                            .gugunName(curJsonNode.get("name").asText())
+                            .sido(sido)
+                            .build();
+
+                    ValidateUtil.serverValidate(gugun);
+                    gugunRepository.save(gugun);
+                }
+            } catch (JsonProcessingException e) {
+                log.debug("setGugun : 데이터 뽑기 실패 - {}", e.getMessage());
+                throw new MyException(ErrorMessage.GUGUN_INVALID);
+            }
+        }*/
     }
 }

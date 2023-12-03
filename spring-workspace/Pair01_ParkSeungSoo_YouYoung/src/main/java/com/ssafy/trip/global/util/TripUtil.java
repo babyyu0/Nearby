@@ -12,6 +12,8 @@ import com.ssafy.trip.attraction.model.entity.ContentTypeEnum;
 import com.ssafy.trip.attraction.model.repository.ContentTypeRepository;
 import com.ssafy.trip.global.util.exception.ErrorMessage;
 import com.ssafy.trip.global.util.exception.MyException;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -32,8 +34,8 @@ public class TripUtil {
     private final ContentTypeRepository contentTypeRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
-    @Value("${url.attraction.api.sido}")
-    private String SIDO_URL;
+    @Value("${url.attraction.api}")
+    private String API_URL;
     @Value("${parameter.attraction.api.key}")
     private String API_KEY;
     @Value("${parameter.attraction.os}")
@@ -59,7 +61,7 @@ public class TripUtil {
 
     public void setSido() {
         HttpClient client = HttpClient.newBuilder().build();
-        String sidoUrl = SIDO_URL + "?" + "serviceKey=" + API_KEY
+        String sidoUrl = API_URL + File.separator + "areaCode1" + "?" + "serviceKey=" + API_KEY
                 + "&MobileOS=" + OS
                 + "&MobileApp=" + MOBILE_APP
                 + "&_type=" + TYPE
@@ -118,7 +120,7 @@ public class TripUtil {
         HttpClient client = HttpClient.newBuilder().build();
         String gugunUrl;
         for (Sido sido : sidoList) {
-            gugunUrl = SIDO_URL + "?" + "serviceKey=" + API_KEY
+            gugunUrl = API_URL + File.separator + "areaCode1" + "?" + "serviceKey=" + API_KEY
                     + "&MobileOS=" + OS
                     + "&MobileApp=" + MOBILE_APP
                     + "&_type=" + TYPE

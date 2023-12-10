@@ -15,8 +15,13 @@ public class AttractionController {
 
     private final AttractionService attractionService;
 
+    @GetMapping("refresh")
+    public ResponseEntity<?> refreshAttraction() {
+        return ResponseEntity.ok(attractionService.refreshAttraction());
+    }
+
     @GetMapping("content-type/refresh")
-    public ResponseEntity<?> refreshContentType() throws MyException {
+    public ResponseEntity<?> refreshContentType() {
         return ResponseEntity.ok(attractionService.refreshContentType());
     }
     @GetMapping("popular")

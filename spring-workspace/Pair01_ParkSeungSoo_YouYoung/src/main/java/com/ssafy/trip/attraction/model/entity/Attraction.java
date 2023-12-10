@@ -8,10 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -21,12 +18,13 @@ public class Attraction extends Base {
 
     @Column(columnDefinition = "TINYINT UNSIGNED")
     @Comment("고유 번호")
-    @Id private int code;
+    @Id
+    private int code;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_type_code", nullable = false)
     @Comment("관광 타입")
-        private ContentType contentType;
+    private ContentType contentType;
 
     @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")
     @Comment("관광지명")

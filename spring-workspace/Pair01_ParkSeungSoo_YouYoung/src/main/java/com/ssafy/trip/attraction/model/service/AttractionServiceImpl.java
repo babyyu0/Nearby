@@ -24,6 +24,12 @@ public class AttractionServiceImpl implements AttractionService  {
     private final AttractionHeartRepository attractionHeartRepository;
 
     @Override
+    public boolean refreshAttraction() {
+        tripUtil.setAttraction();
+        return true;
+    }
+
+    @Override
     public boolean refreshContentType() {
         tripUtil.setContentType();
         return true;

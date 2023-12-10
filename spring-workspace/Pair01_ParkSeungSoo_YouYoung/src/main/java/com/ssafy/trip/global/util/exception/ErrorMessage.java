@@ -15,9 +15,11 @@ public enum ErrorMessage {
     ID_DUPLICATED(BAD_REQUEST, "중복된 아이디 입니다."),
     MEMBER_NOT_FOUND(BAD_REQUEST, "회원을 찾을 수 없습니다."),
     SIDO_NOT_FOUND(BAD_REQUEST, "행정구역을 찾을 수 없습니다"),
-    GUGUN_NOT_FOUND(BAD_REQUEST, "하위 행정구역을 찾을 수 없습니다"),
     SIDO_INVALID(INTERNAL_SERVER_ERROR, "행정구역이 유효하지 않습니다."),
-    GUGUN_INVALID(INTERNAL_SERVER_ERROR, "하위 행정구역이 유효하지 않습니다.");
+    GUGUN_NOT_FOUND(BAD_REQUEST, "하위 행정구역을 찾을 수 없습니다"),
+    GUGUN_INVALID(INTERNAL_SERVER_ERROR, "하위 행정구역이 유효하지 않습니다."),
+    ATTRACTION_NOT_FOUND(BAD_REQUEST, "관광지를 찾을 수 없습니다"),
+    ATTRACTION_INVALID(INTERNAL_SERVER_ERROR, "관광지가 유효하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;

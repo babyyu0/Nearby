@@ -146,6 +146,33 @@ REACT_APP_ERROR_MESSAGE = "서버 오류입니다. \n 상황이 지속되면 문
 > npm start
 ```
 
+# 팀원 소개
+<table>
+  <tr>
+    <td align="center"><img src="https://avatars.githubusercontent.com/u/58788576?v=4&size=120" /></td>
+    <td align="center"><img src="https://avatars.githubusercontent.com/u/69618305?v=4&size=120" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>유영 (본인)</b></td>
+    <td align="center">박승수</td>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+        <li>회원 관리</li>
+        <li>관광지 정보 조회</li>
+        <li>전반적인 리팩토링</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>세션 회원 인증</li>
+        <li>세션 탈취 및 중복 방지</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
 # 개발 과정
 * [Entity, DTO 리팩토링 과정](https://velog.io/@babyyu0/%EA%B7%BC%EC%B2%98-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-1)
 * [Entity 복합키 구현 과정](https://velog.io/@babyyu0/%EA%B7%BC%EC%B2%98-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-2)

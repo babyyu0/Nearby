@@ -89,4 +89,63 @@ Nearby는 선택한 지역의 매력적인 관광지를 다양한 조건과 함�
 |회원|회원가입|<p align='left'><a href='http://localhost:3000/register'>/register</a></p>|
 |회원|로그인|<p align='left'><a href='http://localhost:3000/login'>/login</a></p>|
 
+# 실행 가이드
+<h3>
+    <img src="https://em-content.zobj.net/source/apple/354/teacher_1f9d1-200d-1f3eb.png" width=16 height=16 alt="선생님 아이콘" />
+    &nbsp;로컬 실행 가이드
+</h3>
 
+**1. Git Clone**
+```git
+$ git clone https://github.com/babyyu0/Nearby
+```
+  
+**2. 백엔드 레포지토리 내 `application-local.properties` 생성**
+```properties
+# DB Connection
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url={insert your DB url}
+spring.datasource.username={insert your DB user name}
+spring.datasource.password={insert your DB password}
+
+# Redis Connection
+spring.data.redis.host={insert your DB user url}
+spring.data.redis.password={insert your DB password}
+spring.data.redis.port={insert your DB port}
+
+# JPA Settings
+spring.jpa.properties.hibernate.auto_quote_keyword=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+
+# JWT Final Fields
+token.validity.access={insert access token validity}
+token.validity.refresh={insert refresh token validity}
+token.secret={insert your secret key}
+
+# URL Final Fields
+url.member.profile-img={insert your image path}
+url.attraction.img={insert your image path}
+url.attraction.api=http://apis.data.go.kr/B551011/KorService1
+
+# Parameter Fields
+parameter.attraction.api.key={insert your API key}
+parameter.attraction.os={insert your OS}
+parameter.attraction.mobile-app=nearby
+parameter.attraction.type=json
+```
+  
+**3. 프론트엔드 레포지토리 내 `.env` 생성**
+```env
+REACT_APP_ERROR_MESSAGE = "서버 오류입니다. \n 상황이 지속되면 문의 게시판을 이용해 주세요."
+```
+  
+**4. 개발 툴로 백엔드 실행**  
+**5. 개발 툴로 프론트엔드 실행**
+```node
+> npm start
+```
+
+# 개발 과정
+* [Entity, DTO 리팩토링 과정](https://velog.io/@babyyu0/%EA%B7%BC%EC%B2%98-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-1)
+* [Entity 복합키 구현 과정](https://velog.io/@babyyu0/%EA%B7%BC%EC%B2%98-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-2)

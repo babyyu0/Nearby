@@ -23,6 +23,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,8 +53,6 @@ public class TripUtil {
 
     public void setContentType() {
         for (ContentTypeEnum contentTypeEnum : ContentTypeEnum.values()) {
-            System.out.println("contentTypeEnum: " + contentTypeEnum);
-            System.out.println("contentTypeEnum.getCode(): " + contentTypeEnum.getCode());
             ContentType contentType = ContentType.builder()
                     .code(contentTypeEnum.getCode())
                     .name(contentTypeEnum.getName())
@@ -64,14 +64,21 @@ public class TripUtil {
     }
 
     public void setSido() {
+        // null값 삽입
+        Sido sido = Sido.builder()
+                .sidoCode(0)
+                .sidoName("분류되지 않음")
+                .build();
+
+        ValidateUtil.serverValidate(sido);
+        sidoRepository.save(sido);
+
         HttpClient client = HttpClient.newBuilder().build();
         String sidoUrl = API_URL + "/areaCode1" + "?" + "serviceKey=" + API_KEY
                 + "&MobileOS=" + OS
                 + "&MobileApp=" + MOBILE_APP
                 + "&_type=" + TYPE
                 + "&numOfRows=100";
-
-        log.debug("== setSido : SIDO URL : {}", sidoUrl);
 
         HttpRequest getRequest = HttpRequest.newBuilder()
                 .uri(URI.create(sidoUrl))
@@ -100,7 +107,7 @@ public class TripUtil {
             JsonNode curJsonNode;
             for (int i = 0; i < jsonNode.size(); i++) {
                 curJsonNode = jsonNode.get(i);
-                Sido sido = Sido.builder()
+                    sido = Sido.builder()
                         .sidoCode(curJsonNode.get("code").asInt())
                         .sidoName(curJsonNode.get("name").asText())
                         .build();
@@ -108,7 +115,7 @@ public class TripUtil {
                 ValidateUtil.serverValidate(sido);
                 sidoRepository.save(sido);
             }
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException | RuntimeException e) {
             log.debug("setSido : 데이터 뽑기 실패 - {}", e.getMessage());
             throw new MyException(ErrorMessage.SIDO_INVALID);
         }
@@ -116,7 +123,7 @@ public class TripUtil {
 
     public void setGugun() {
         List<Sido> sidoList = sidoRepository.findAll();
-        if (sidoList == null) {
+        if (sidoList.isEmpty()) {
             log.debug("setGugun : SIDO List 없음");
             throw new MyException(ErrorMessage.SIDO_INVALID);
         }
@@ -124,6 +131,16 @@ public class TripUtil {
         HttpClient client = HttpClient.newBuilder().build();
         String gugunUrl;
         for (Sido sido : sidoList) {
+            // null 값 삽입
+            Gugun gugun = Gugun.builder()
+                    .gugunCode(0)
+                    .gugunName("분류되지 않음")
+                    .sido(sido)
+                    .build();
+
+            ValidateUtil.serverValidate(gugun);
+            gugunRepository.save(gugun);
+
             gugunUrl = API_URL + "/areaCode1" + "?" + "serviceKey=" + API_KEY
                     + "&MobileOS=" + OS
                     + "&MobileApp=" + MOBILE_APP
@@ -156,9 +173,9 @@ public class TripUtil {
                 JsonNode jsonNode = objectmapper.readTree(response.body())
                         .get("response").get("body")
                         .get("items").get("item");
+                if(jsonNode == null) continue;
 
                 JsonNode curJsonNode;
-                Gugun gugun;
                 for (int i = 0; i < jsonNode.size(); i++) {
                     curJsonNode = jsonNode.get(i);
                     gugun = Gugun.builder()
@@ -170,7 +187,7 @@ public class TripUtil {
                     ValidateUtil.serverValidate(gugun);
                     gugunRepository.save(gugun);
                 }
-            } catch (JsonProcessingException e) {
+            } catch (JsonProcessingException | RuntimeException e) {
                 log.debug("setGugun : 데이터 뽑기 실패 - {}", e.getMessage());
                 throw new MyException(ErrorMessage.GUGUN_INVALID);
             }
@@ -180,13 +197,15 @@ public class TripUtil {
     public void setAttraction() {
         HttpClient client = HttpClient.newBuilder().build();
         String attractionUrl;
-        for (char word = '가'; word <= '힣'; word++) {
-            attractionUrl = API_URL + "/searchKeyword1" + "?" + "serviceKey=" + API_KEY
+        long pageNo = 1;
+
+        while(true) {
+            attractionUrl = API_URL + "/areaBasedSyncList1" + "?" + "serviceKey=" + API_KEY
                     + "&MobileOS=" + OS
                     + "&MobileApp=" + MOBILE_APP
                     + "&_type=" + TYPE
-                    + "&keyword=" + word
-                    + "&numOfRows=10000";
+                    + "&numOfRows=1000"
+                    + "&pageNo=" + (pageNo++);
 
             HttpRequest getRequest = HttpRequest.newBuilder()
                     .uri(URI.create(attractionUrl))
@@ -197,18 +216,25 @@ public class TripUtil {
                 response = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
             } catch (IOException | InterruptedException e) {
                 log.debug("setAttraction : Response 받기 실패 - {}", e.getMessage());
-                throw new MyException(ErrorMessage.GUGUN_INVALID);
+                throw new MyException(ErrorMessage.ATTRACTION_INVALID);
             }
 
             // 응답 코드 확인
             int statusCode = response.statusCode();
             if (statusCode != HttpStatus.OK.value()) {
                 log.debug("setAttraction : API 호출 200 ok 아님");
-                throw new MyException(ErrorMessage.GUGUN_INVALID);
+                throw new MyException(ErrorMessage.ATTRACTION_INVALID);
             }
 
             ObjectMapper objectmapper = new ObjectMapper();
+
             try {
+                if(objectmapper.readTree(response.body())
+                        .get("response").get("body")
+                        .get("numOfRows").asInt() <= 0) {  // 더이상 불러올 관광지가 없을 경우
+                    break;
+                }
+
                 //  불러오기
                 JsonNode jsonNode = objectmapper.readTree(response.body())
                         .get("response").get("body")
@@ -216,17 +242,29 @@ public class TripUtil {
 
                 JsonNode curJsonNode;
                 Attraction attraction;
-                GugunPk gugunPk;
+                Optional<Sido> sido;
+                Optional<Gugun> gugun;
                 for (int i = 0; i < jsonNode.size(); i++) {
                     curJsonNode = jsonNode.get(i);
-                    gugunPk = GugunPk.builder()
+                    gugun = gugunRepository.findById(GugunPk.builder()
                             .sido(sidoRepository.findById(curJsonNode.get("areacode").asInt())
                                     .orElseThrow(() -> {
                                         log.debug("setAttraction : 행정구역 코드 받기 실패");
                                         return new MyException(ErrorMessage.SIDO_INVALID);
                                     }))
                             .gugunCode(curJsonNode.get("sigungucode").asInt())
-                            .build();
+                            .build());
+                    if (gugun.isEmpty()) {
+                        gugun = gugunRepository.findById(GugunPk.builder()
+                                .sido(sidoRepository.findById(curJsonNode.get("areacode").asInt())
+                                        .orElseThrow(() -> {
+                                            log.debug("setAttraction : 행정구역 코드 받기 실패");
+                                            return new MyException(ErrorMessage.SIDO_INVALID);
+                                        }))
+                                .gugunCode(0)
+                                .build());
+                    }
+
                     attraction = Attraction.builder()
                             .code(curJsonNode.get("contentid").asInt())
                             .contentType(contentTypeRepository.findById(curJsonNode.get("contenttypeid").asInt())
@@ -235,15 +273,22 @@ public class TripUtil {
                                         return new MyException(ErrorMessage.ATTRACTION_INVALID);
                                     }))
                             .title(curJsonNode.get("title").asText())
-                            .gugun()
+                            .gugun(gugun.orElseThrow(() -> {
+                                log.debug("setAttraction : 하위 행정구역 코드 받기 실패");
+                                return new MyException(ErrorMessage.GUGUN_INVALID);
+                            }))
+                            // .img(curJsonNode.get("title").asText())
+                            .createdTime(curJsonNode.get("createdtime").asText())
+                            .updatedTime(curJsonNode.get("modifiedtime").asText())
                             .build();
 
+                    log.debug("attraction :: " + attraction);
                     ValidateUtil.serverValidate(attraction);
                     attractionRepository.save(attraction);
                 }
-            } catch (JsonProcessingException e) {
-                log.debug("setGugun : 데이터 뽑기 실패 - {}", e.getMessage());
-                throw new MyException(ErrorMessage.GUGUN_INVALID);
+            } catch (JsonProcessingException | RuntimeException e) {
+                log.debug("setAttraction : 데이터 뽑기 실패 - {}", e.getMessage());
+                throw new MyException(ErrorMessage.ATTRACTION_INVALID);
             }
         }
     }

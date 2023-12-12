@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 public class Attraction extends Base {
 
-    @Column(columnDefinition = "TINYINT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED")
     @Comment("고유 번호")
     @Id
     private int code;

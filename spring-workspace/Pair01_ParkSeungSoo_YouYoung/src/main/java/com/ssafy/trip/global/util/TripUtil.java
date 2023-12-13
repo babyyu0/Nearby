@@ -9,9 +9,12 @@ import com.ssafy.trip.area.model.entity.primary.GugunPk;
 import com.ssafy.trip.area.model.repository.GugunRepository;
 import com.ssafy.trip.area.model.repository.SidoRepository;
 import com.ssafy.trip.attraction.model.entity.Attraction;
+import com.ssafy.trip.attraction.model.entity.AttractionInfo;
 import com.ssafy.trip.attraction.model.entity.ContentType;
 import com.ssafy.trip.attraction.model.entity.ContentTypeEnum;
+import com.ssafy.trip.attraction.model.repository.AttractionInfoRepository;
 import com.ssafy.trip.attraction.model.repository.AttractionRepository;
+import com.ssafy.trip.attraction.model.repository.CatRepository;
 import com.ssafy.trip.attraction.model.repository.ContentTypeRepository;
 import com.ssafy.trip.global.util.exception.ErrorMessage;
 import com.ssafy.trip.global.util.exception.MyException;
@@ -37,7 +40,9 @@ import org.springframework.stereotype.Component;
 public class TripUtil {
 
     private final ContentTypeRepository contentTypeRepository;
+    private final CatRepository catRepository;
     private final AttractionRepository attractionRepository;
+    private final AttractionInfoRepository attractionInfoRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
     @Value("${url.attraction.api}")
@@ -50,18 +55,6 @@ public class TripUtil {
     private String MOBILE_APP;
     @Value("${parameter.attraction.type}")
     private String TYPE;
-
-    public void setContentType() {
-        for (ContentTypeEnum contentTypeEnum : ContentTypeEnum.values()) {
-            ContentType contentType = ContentType.builder()
-                    .code(contentTypeEnum.getCode())
-                    .name(contentTypeEnum.getName())
-                    .build();
-            ValidateUtil.serverValidate(contentType);
-
-            contentTypeRepository.save(contentType);
-        }
-    }
 
     public void setSido() {
         // null값 삽입
@@ -85,6 +78,7 @@ public class TripUtil {
                 .GET().build();
 
         HttpResponse<String> response;  // Response 받을 변수
+
         try {
             response = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
@@ -107,7 +101,7 @@ public class TripUtil {
             JsonNode curJsonNode;
             for (int i = 0; i < jsonNode.size(); i++) {
                 curJsonNode = jsonNode.get(i);
-                    sido = Sido.builder()
+                sido = Sido.builder()
                         .sidoCode(curJsonNode.get("code").asInt())
                         .sidoName(curJsonNode.get("name").asText())
                         .build();
@@ -173,7 +167,7 @@ public class TripUtil {
                 JsonNode jsonNode = objectmapper.readTree(response.body())
                         .get("response").get("body")
                         .get("items").get("item");
-                if(jsonNode == null) continue;
+                if (jsonNode == null) continue;
 
                 JsonNode curJsonNode;
                 for (int i = 0; i < jsonNode.size(); i++) {
@@ -199,7 +193,14 @@ public class TripUtil {
         String attractionUrl;
         long pageNo = 1;
 
-        while(true) {
+
+        JsonNode curJsonNode;
+        Attraction attraction;
+        AttractionInfo attractionInfo;
+        Optional<Gugun> gugun;
+        int gugunCode;
+
+        while (true) {
             attractionUrl = API_URL + "/areaBasedSyncList1" + "?" + "serviceKey=" + API_KEY
                     + "&MobileOS=" + OS
                     + "&MobileApp=" + MOBILE_APP
@@ -229,7 +230,7 @@ public class TripUtil {
             ObjectMapper objectmapper = new ObjectMapper();
 
             try {
-                if(objectmapper.readTree(response.body())
+                if (objectmapper.readTree(response.body())
                         .get("response").get("body")
                         .get("numOfRows").asInt() <= 0) {  // 더이상 불러올 관광지가 없을 경우
                     break;
@@ -240,30 +241,41 @@ public class TripUtil {
                         .get("response").get("body")
                         .get("items").get("item");
 
-                JsonNode curJsonNode;
-                Attraction attraction;
-                Optional<Sido> sido;
-                Optional<Gugun> gugun;
                 for (int i = 0; i < jsonNode.size(); i++) {
                     curJsonNode = jsonNode.get(i);
+                    gugunCode = curJsonNode.get("sigungucode").asInt();
+
                     gugun = gugunRepository.findById(GugunPk.builder()
                             .sido(sidoRepository.findById(curJsonNode.get("areacode").asInt())
                                     .orElseThrow(() -> {
                                         log.debug("setAttraction : 행정구역 코드 받기 실패");
-                                        return new MyException(ErrorMessage.SIDO_INVALID);
+                                        return new MyException(ErrorMessage.ATTRACTION_INVALID);
                                     }))
-                            .gugunCode(curJsonNode.get("sigungucode").asInt())
+                            .gugunCode((gugunCode != 99) ? gugunCode : 0)
                             .build());
-                    if (gugun.isEmpty()) {
-                        gugun = gugunRepository.findById(GugunPk.builder()
-                                .sido(sidoRepository.findById(curJsonNode.get("areacode").asInt())
-                                        .orElseThrow(() -> {
-                                            log.debug("setAttraction : 행정구역 코드 받기 실패");
-                                            return new MyException(ErrorMessage.SIDO_INVALID);
-                                        }))
-                                .gugunCode(0)
-                                .build());
-                    }
+
+                    attractionInfo = AttractionInfo.builder()
+                            .addr1(curJsonNode.get("addr1").asText())
+                            .addr2(curJsonNode.get("addr2").asText())
+                            .tel(curJsonNode.get("tel").asText())
+                            .mapX(curJsonNode.get("mapx").asDouble())
+                            .mapY(curJsonNode.get("mapy").asDouble())
+                            .cat1(catRepository.findById(curJsonNode.get("cat1").asText())
+                                    .orElseThrow(() -> {
+                                        log.debug("setAttraction : 분류 1 받기 실패");
+                                        return new MyException(ErrorMessage.ATTRACTION_INVALID);
+                                    }))
+                            .cat2(catRepository.findById(curJsonNode.get("cat2").asText())
+                                    .orElseThrow(() -> {
+                                        log.debug("setAttraction : 분류 2 받기 실패");
+                                        return new MyException(ErrorMessage.ATTRACTION_INVALID);
+                                    }))
+                            .cat3(catRepository.findById(curJsonNode.get("cate").asText())
+                                    .orElseThrow(() -> {
+                                        log.debug("setAttraction : 분류 3 받기 실패");
+                                        return new MyException(ErrorMessage.ATTRACTION_INVALID);
+                                    }))
+                            .build();
 
                     attraction = Attraction.builder()
                             .code(curJsonNode.get("contentid").asInt())
@@ -275,14 +287,13 @@ public class TripUtil {
                             .title(curJsonNode.get("title").asText())
                             .gugun(gugun.orElseThrow(() -> {
                                 log.debug("setAttraction : 하위 행정구역 코드 받기 실패");
-                                return new MyException(ErrorMessage.GUGUN_INVALID);
+                                return new MyException(ErrorMessage.ATTRACTION_INVALID);
                             }))
                             // .img(curJsonNode.get("title").asText())
                             .createdTime(curJsonNode.get("createdtime").asText())
                             .updatedTime(curJsonNode.get("modifiedtime").asText())
                             .build();
 
-                    log.debug("attraction :: " + attraction);
                     ValidateUtil.serverValidate(attraction);
                     attractionRepository.save(attraction);
                 }

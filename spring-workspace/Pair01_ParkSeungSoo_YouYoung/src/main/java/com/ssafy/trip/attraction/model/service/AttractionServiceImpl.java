@@ -3,7 +3,10 @@ package com.ssafy.trip.attraction.model.service;
 import com.querydsl.core.Tuple;
 import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
 import com.ssafy.trip.attraction.model.entity.Attraction;
+import com.ssafy.trip.attraction.model.entity.ContentType;
+import com.ssafy.trip.attraction.model.entity.ContentTypeEnum;
 import com.ssafy.trip.attraction.model.repository.AttractionHeartRepository;
+import com.ssafy.trip.attraction.model.repository.ContentTypeRepository;
 import com.ssafy.trip.global.util.ImageUtil;
 import com.ssafy.trip.global.util.TripUtil;
 import com.ssafy.trip.global.util.ValidateUtil;
@@ -21,6 +24,7 @@ public class AttractionServiceImpl implements AttractionService  {
     private final TripUtil tripUtil;
     @Value("${url.attraction.img}")
     private static String ATTRACTION_IMG_URI;
+    private final ContentTypeRepository contentTypeRepository;
     private final AttractionHeartRepository attractionHeartRepository;
 
     @Override
@@ -31,7 +35,15 @@ public class AttractionServiceImpl implements AttractionService  {
 
     @Override
     public boolean refreshContentType() {
-        tripUtil.setContentType();
+        for (ContentTypeEnum contentTypeEnum : ContentTypeEnum.values()) {  // Enum에 저장된 ContentType
+            ContentType contentType = ContentType.builder()
+                    .code(contentTypeEnum.getCode())
+                    .name(contentTypeEnum.getName())
+                    .build();
+            ValidateUtil.serverValidate(contentType);
+
+            contentTypeRepository.save(contentType);
+        }
         return true;
     }
 

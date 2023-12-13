@@ -15,14 +15,19 @@ public class AttractionController {
 
     private final AttractionService attractionService;
 
-    @GetMapping("refresh")
-    public ResponseEntity<?> refreshAttraction() {
-        return ResponseEntity.ok(attractionService.refreshAttraction());
-    }
-
     @GetMapping("content-type/refresh")
     public ResponseEntity<?> refreshContentType() {
         return ResponseEntity.ok(attractionService.refreshContentType());
+    }
+
+    @GetMapping("cat/refresh")
+    public ResponseEntity<?> refreshCat() {
+        return ResponseEntity.ok(attractionService.refreshCat(1, "", ""));
+    }
+
+    @GetMapping("refresh")
+    public ResponseEntity<?> refreshAttraction() {
+        return ResponseEntity.ok(attractionService.refreshAttraction());
     }
     @GetMapping("popular")
     public ResponseEntity<?> getPopularAttraction() {

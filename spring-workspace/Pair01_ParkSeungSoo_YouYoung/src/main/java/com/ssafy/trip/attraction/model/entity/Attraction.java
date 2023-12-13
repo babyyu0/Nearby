@@ -38,13 +38,13 @@ public class Attraction extends Base {
     private Gugun gugun;
 
     @OneToOne(mappedBy = "attraction")
-    AttractionInfo attractionInfo;
+    private AttractionInfo attractionInfo;
 
     @OneToOne(mappedBy = "attraction")
-    AttractionDesc attractionDesc;
+    private AttractionDesc attractionDesc;
 
     @OneToMany(mappedBy = "attraction")
-    List<AttractionHeart> attractionHeartList;
+    private List<AttractionHeart> attractionHeartList;
 
     @Column(name = "img", columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     @Comment("관광지 이미지")

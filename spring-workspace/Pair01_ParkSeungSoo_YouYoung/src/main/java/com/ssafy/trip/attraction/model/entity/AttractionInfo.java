@@ -12,11 +12,16 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class AttractionInfo extends Base {
+    @Column(columnDefinition = "INT UNSIGNED")
+    @Comment("고유 번호")
+    @Id
+    private int code;
 
     @OneToOne
-    @JoinColumn(name = "code")
+    @MapsId
+    @JoinColumn(name = "code", nullable = false, columnDefinition = "INT UNSIGNED")
     @Comment("고유 번호")
-    @Id private Attraction attraction;
+    private Attraction attraction;
 
     @Column(name = "addr1", nullable = false, columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")
     @Comment("주소")
@@ -56,6 +61,18 @@ public class AttractionInfo extends Base {
     @Builder
     public AttractionInfo(Attraction attraction, String addr1, String addr2, String tel, double mapX, double mapY, Cat cat1, Cat cat2, Cat cat3) {
         this.attraction = attraction;
+        this.addr1 = addr1;
+        this.addr2 = addr2;
+        this.tel = tel;
+        this.mapX = mapX;
+        this.mapY = mapY;
+        this.cat1 = cat1;
+        this.cat2 = cat2;
+        this.cat3 = cat3;
+    }
+    @Builder
+    public AttractionInfo(int code, String addr1, String addr2, String tel, double mapX, double mapY, Cat cat1, Cat cat2, Cat cat3) {
+        this.code = code;
         this.addr1 = addr1;
         this.addr2 = addr2;
         this.tel = tel;

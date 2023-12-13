@@ -12,11 +12,16 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class AttractionDesc extends Base {
+    @Column(columnDefinition = "INT UNSIGNED")
+    @Comment("고유 번호")
+    @Id
+    private int code;
 
     @OneToOne
-    @JoinColumn(name = "code")
+    @MapsId
+    @JoinColumn(name = "code", nullable = false, columnDefinition = "INT UNSIGNED")
     @Comment("고유 번호")
-    @Id private Attraction attraction;
+    private Attraction attraction;
 
     @Column(name = "desc", nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     @Comment("설명")

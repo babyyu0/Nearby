@@ -38,20 +38,23 @@ public class AttractionInfo extends Base {
     @Comment("y 좌표")
     private double mapY;
 
-    @Column(name = "cat1", nullable = false, columnDefinition = "VARCHAR(3) CHARACTER SET UTF8")
-    @Comment("분류1")
-    private String cat1;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cat1_code")
+    @Comment("분류 1")
+    private Cat cat1;
 
-    @Column(name = "cat2", nullable = false, columnDefinition = "VARCHAR(5) CHARACTER SET UTF8")
-    @Comment("분류2")
-    private String cat2;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cat2_code")
+    @Comment("분류 2")
+    private Cat cat2;
 
-    @Column(name = "cat3", nullable = false, columnDefinition = "VARCHAR(9) CHARACTER SET UTF8")
-    @Comment("분류3")
-    private String cat3;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cat3_code")
+    @Comment("분류 3")
+    private Cat cat3;
 
     @Builder
-    public AttractionInfo(Attraction attraction, String addr1, String addr2, String tel, double mapX, double mapY, String cat1, String cat2, String cat3) {
+    public AttractionInfo(Attraction attraction, String addr1, String addr2, String tel, double mapX, double mapY, Cat cat1, Cat cat2, Cat cat3) {
         this.attraction = attraction;
         this.addr1 = addr1;
         this.addr2 = addr2;

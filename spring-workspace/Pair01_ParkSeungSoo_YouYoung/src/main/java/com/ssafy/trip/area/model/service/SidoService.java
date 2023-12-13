@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface SidoService {
     boolean refreshSido();
-    List<SidoGetResponseDto> getSido();
+    List<SidoGetResponseDto> getSidoList();
 
 }

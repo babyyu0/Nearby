@@ -20,8 +20,8 @@ public class GugunController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getGugun() throws MyException {
-        return ResponseEntity.ok(gugunService.getGugun());
+    public ResponseEntity<?> getGugunList() throws MyException {
+        return ResponseEntity.ok(gugunService.getGugunList());
     }
 
 }

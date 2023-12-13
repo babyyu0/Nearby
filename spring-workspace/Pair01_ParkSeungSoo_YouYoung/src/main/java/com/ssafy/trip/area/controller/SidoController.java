@@ -20,7 +20,7 @@ public class SidoController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getSido() throws MyException {
-        return ResponseEntity.ok(sidoService.getSido());
+    public ResponseEntity<?> getSidoList() throws MyException {
+        return ResponseEntity.ok(sidoService.getSidoList());
     }
 }

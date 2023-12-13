@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface GugunService {
     boolean refreshGugun();
-    List<GugunGetResponseDto> getGugun();
+    List<GugunGetResponseDto> getGugunList();
 }

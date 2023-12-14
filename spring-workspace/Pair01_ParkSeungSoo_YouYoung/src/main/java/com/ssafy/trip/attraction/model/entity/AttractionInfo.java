@@ -35,13 +35,13 @@ public class AttractionInfo extends Base {
     @Comment("전화 번호")
     private String tel;
 
-    @Column(name = "map_x", nullable = false)
+    @Column(name = "longitude", nullable = false)
     @Comment("x 좌표")
-    private double mapX;
+    private double longitude;
 
-    @Column(name = "map_y", nullable = false)
+    @Column(name = "latitude", nullable = false)
     @Comment("y 좌표")
-    private double mapY;
+    private double latitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cat1_code")
@@ -59,25 +59,13 @@ public class AttractionInfo extends Base {
     private Cat cat3;
 
     @Builder
-    public AttractionInfo(Attraction attraction, String addr1, String addr2, String tel, double mapX, double mapY, Cat cat1, Cat cat2, Cat cat3) {
+    public AttractionInfo(Attraction attraction, String addr1, String addr2, String tel, double longitude, double latitude, Cat cat1, Cat cat2, Cat cat3) {
         this.attraction = attraction;
         this.addr1 = addr1;
         this.addr2 = addr2;
         this.tel = tel;
-        this.mapX = mapX;
-        this.mapY = mapY;
-        this.cat1 = cat1;
-        this.cat2 = cat2;
-        this.cat3 = cat3;
-    }
-    @Builder
-    public AttractionInfo(int code, String addr1, String addr2, String tel, double mapX, double mapY, Cat cat1, Cat cat2, Cat cat3) {
-        this.code = code;
-        this.addr1 = addr1;
-        this.addr2 = addr2;
-        this.tel = tel;
-        this.mapX = mapX;
-        this.mapY = mapY;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.cat1 = cat1;
         this.cat2 = cat2;
         this.cat3 = cat3;

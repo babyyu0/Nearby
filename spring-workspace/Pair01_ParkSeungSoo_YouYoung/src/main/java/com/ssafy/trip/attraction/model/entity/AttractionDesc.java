@@ -17,19 +17,18 @@ public class AttractionDesc extends Base {
     @Id
     private int code;
 
-    @OneToOne
-    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code", nullable = false, columnDefinition = "INT UNSIGNED")
     @Comment("고유 번호")
     private Attraction attraction;
 
-    @Column(name = "desc", nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
+    @Column(name = "desc", nullable = false, columnDefinition = "TEXT CHARACTER SET UTF8")
     @Comment("설명")
     private String desc;
 
     @Builder
-    public AttractionDesc(Attraction attraction, String desc) {
-        this.attraction = attraction;
+    public AttractionDesc(int code, String desc) {
+        this.code = code;
         this.desc = desc;
     }
 }

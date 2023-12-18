@@ -17,8 +17,7 @@ public class AttractionInfo extends Base {
     @Id
     private int code;
 
-    @OneToOne
-    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code", nullable = false, columnDefinition = "INT UNSIGNED")
     @Comment("고유 번호")
     private Attraction attraction;
@@ -59,8 +58,8 @@ public class AttractionInfo extends Base {
     private Cat cat3;
 
     @Builder
-    public AttractionInfo(Attraction attraction, String addr1, String addr2, String tel, double longitude, double latitude, Cat cat1, Cat cat2, Cat cat3) {
-        this.attraction = attraction;
+    public AttractionInfo(int code, String addr1, String addr2, String tel, double longitude, double latitude, Cat cat1, Cat cat2, Cat cat3) {
+        this.code = code;
         this.addr1 = addr1;
         this.addr2 = addr2;
         this.tel = tel;

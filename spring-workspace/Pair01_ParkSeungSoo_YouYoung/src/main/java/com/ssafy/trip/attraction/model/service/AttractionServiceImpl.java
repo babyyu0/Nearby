@@ -120,7 +120,6 @@ public class AttractionServiceImpl implements AttractionService {
             if ((response = TripApiUtil.getResponse(attractionUrl)) == null) {
                 throw new MyException(ErrorMessage.ATTRACTION_INVALID);
             }
-            System.out.println(response.body());
             ObjectMapper objectmapper = new ObjectMapper();
 
             try {
@@ -169,25 +168,25 @@ public class AttractionServiceImpl implements AttractionService {
                         attraction = attractionRepository.save(attraction);
 
                         AttractionInfo attractionInfo = AttractionInfo.builder()
-                                .attraction(attraction)
+                                .code(attraction.getCode())
                                 .addr1(item.get("addr1").asText())
                                 .addr2(item.get("addr2").asText())
                                 .tel(item.get("tel").asText())
-                                .longitude(item.get("mapx").canConvertToInt() ? item.get("mapx").asDouble() : 0)
-                                .latitude(item.get("mapy").canConvertToInt() ? item.get("mapy").asDouble() : 0)
+                                .longitude(item.get("mapx") != null ? item.get("mapx").asDouble() : 0)
+                                .latitude(item.get("mapy") != null ? item.get("mapy").asDouble() : 0)
                                 .cat1(catRepository.findById(item.get("cat1").asText()).orElse(null))
                                 .cat2(catRepository.findById(item.get("cat2").asText()).orElse(null))
                                 .cat3(catRepository.findById(item.get("cat3").asText()).orElse(null))
                                 .build();
                         ValidateUtil.serverValidate(attractionInfo);
-                        attractionInfo = attractionInfoRepository.save(attractionInfo);
+                        attractionInfoRepository.save(attractionInfo);
 
                         AttractionDesc attractionDesc = AttractionDesc.builder()
-                                .attraction(attraction)
+                                .code(attraction.getCode())
                                 .desc(desc)
                                 .build();
                         ValidateUtil.serverValidate(attractionDesc);
-                        attractionDesc = attractionDescRepository.save(attractionDesc);
+                        attractionDescRepository.save(attractionDesc);
                         
                         log.info("{}번 {} 저장 완료.", attraction.getCode(), attraction.getTitle());
                     }

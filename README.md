@@ -1,11 +1,6 @@
 <div align="center">
-  <h1 style="display:'inline-block'"> <img src='https://github.com/babyyu0/EnjoyTrip/blob/main/front-workspace/public/image/logo.png' width=50vw> Nearby : 관광지 정보 조회 웹사이트</h1>
+  <h1 style="display:'inline-block'"> <img src='https://github.com/babyyu0/EnjoyTrip/blob/main/front-workspace/public/image/logo.png' width=200vw></h1>
 </div>
-
-<h3>
-    Always Nearby You!&nbsp;
-    <img src="https://em-content.zobj.net/source/apple/354/globe-showing-asia-australia_1f30f.png" width=16 height=16 alt="지구본 아이콘" />
-</h3>
 
 연인과의 데이트, 가족과의 나들이, 친구와의 약속...  
 항상 어디갈지 고민인 당신을 위해 **Always Nearby You**, 당신의 곁에 있습니다.
@@ -54,7 +49,7 @@ Nearby는 선택한 지역의 매력적인 관광지를 다양한 조건과 함�
     &nbsp;API 명세
 </h3>
 
-#### 회원
+#### ➤ 회원
 |대분류|기능|Method|URL|권한|
 |:-:|:-:|:-:|:-:|:-:|
 |회원|아이디 중복 확인|`GET`|<p align='left'>/member/exist/{member-id}</p>|`관리자`  `사용자`|
@@ -62,7 +57,7 @@ Nearby는 선택한 지역의 매력적인 관광지를 다양한 조건과 함�
 |회원|로그인|`POST`|<p align='left'>/member/login</p>|`관리자`  `사용자`|
 |회원|로그아웃|`POST`|<p align='left'>/member/logout</p>|`관리자`  `사용자`|
 
-#### 행정구역
+#### ➤ 행정구역
 |대분류|기능|Method|URL|권한|
 |:-:|:-:|:-:|:-:|:-:|
 |행정구역|행정구역 리스트 조회|`GET`|<p align='left'>/sido</p>|`관리자`  `사용자`|
@@ -70,7 +65,7 @@ Nearby는 선택한 지역의 매력적인 관광지를 다양한 조건과 함�
 |행정구역|하위 행정구역 리스트 조회|`GET`|<p align='left'>/gugun</p>|`관리자`  `사용자`|
 |행정구역|공공데이터 하위 행정구역 불러오기|`GET`|<p align='left'>/gugun/refresh</p>|`관리자`|
 
-#### 관광지
+#### ➤ 관광지
 |대분류|기능|Method|URL|권한|
 |:-:|:-:|:-:|:-:|:-:|
 |관광지|가까운 관광지 리스트 조회|`GET`|<p align='left'>/attraction/nearest</p>|`관리자`  `사용자`|
@@ -79,8 +74,8 @@ Nearby는 선택한 지역의 매력적인 관광지를 다양한 조건과 함�
 |관광지|공공데이터 관광지 불러오기|`GET`|<p align='left'>/attraction/refresh</p>|`관리자`|
 
 <h3>
-    <img src="https://em-content.zobj.net/source/apple/354/framed-picture_1f5bc-fe0f.png" width=16 height=16 alt="퍼즐 아이콘" />
-    &nbsp;API 명세
+    <img src="https://em-content.zobj.net/source/apple/354/link_1f517.png" width=16 height=16 alt="링크 아이콘" />
+    &nbsp;URL
 </h3>
 
 |대분류|화면|URL|
@@ -88,6 +83,21 @@ Nearby는 선택한 지역의 매력적인 관광지를 다양한 조건과 함�
 |메인|메인|<p align='left'><a href='http://localhost:3000/'>/</a></p>|
 |회원|회원가입|<p align='left'><a href='http://localhost:3000/register'>/register</a></p>|
 |회원|로그인|<p align='left'><a href='http://localhost:3000/login'>/login</a></p>|
+
+<h3>
+    <img src="https://em-content.zobj.net/source/apple/354/desktop-computer_1f5a5-fe0f.png" width=16 height=16 alt="컴퓨터 아이콘" />
+    &nbsp;기능 설명
+</h3>
+
+#### ◉ 헤더
+1. 로고를 클릭하면 메인 화면으로 이동합니다.
+2. 검색 창을 통해 가고 싶은 특정 관광지를 검색할 수 있습니다.
+3. '관광지' 카테고리로 이동해 지역에 따른 관광지를 찾아볼 수 있습니다.
+4. '로그인' 버튼을 클릭하면 로그인 화면으로 이동합니다.
+
+#### ◉ 메인 화면
+1. 현재 자신의 위치와 가장 가까운 관광지를 최대 5개 볼 수 있습니다.
+2. 많은 회원들이 '좋아요'를 누른 관광지를 최대 5개 볼 수 있습니다.
 
 # 실행 가이드
 <h3>
@@ -101,6 +111,11 @@ $ git clone https://github.com/babyyu0/Nearby
 ```
   
 **2. 백엔드 레포지토리 내 `application-local.properties` 생성**
+
+<details>
+    <summary>application-local.properties</summary>
+    <div markdown="1">
+      
 ```properties
 # DB Connection
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
@@ -134,14 +149,28 @@ parameter.attraction.os={insert your OS}
 parameter.attraction.mobile-app=nearby
 parameter.attraction.type=json
 ```
+
+</details>
   
 **3. 프론트엔드 레포지토리 내 `.env` 생성**
+
+<details>
+    <summary>.env</summary>
+    <div markdown="1">
+      
 ```env
 REACT_APP_ERROR_MESSAGE = "서버 오류입니다. \n 상황이 지속되면 문의 게시판을 이용해 주세요."
 ```
+
+</details>
   
 **4. 개발 툴로 백엔드 실행**  
-**5. 개발 툴로 프론트엔드 실행**
+**5. 프론트엔드 필요 라이브러리 다운로드**
+```node
+> npm i
+```
+
+**6. 개발 툴로 프론트엔드 실행**
 ```node
 > npm start
 ```
@@ -155,6 +184,10 @@ REACT_APP_ERROR_MESSAGE = "서버 오류입니다. \n 상황이 지속되면 문
   <tr>
     <td align="center"><b>유영 (본인)</b></td>
     <td align="center">박승수</td>
+  </tr>
+  <tr>
+    <td align="center">Full Stack</td>
+    <td align="center">Security</td>
   </tr>
   <tr>
     <td>

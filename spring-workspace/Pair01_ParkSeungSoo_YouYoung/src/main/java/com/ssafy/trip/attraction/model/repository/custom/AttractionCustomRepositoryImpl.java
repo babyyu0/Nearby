@@ -28,19 +28,18 @@ public class AttractionCustomRepositoryImpl implements AttractionCustomRepositor
         NumberExpression<Double> attLongitude = attraction.attractionInfo.longitude.doubleValue();  // 경도
         Expression<Double> myLatitude = Expressions.constant(latitude);  // 위도
         Expression<Double> myLongitude = Expressions.constant(longitude);  // 경도
-        queryFactory.select(
-                attraction.as("attraction"),
-                MathExpressions.acos(
-                        MathExpressions.cos(MathExpressions.radians(attLatitude))
-                                .multiply(MathExpressions.cos(MathExpressions.radians(myLatitude)))
-                                .multiply(MathExpressions.cos(MathExpressions.radians(myLongitude).subtract(MathExpressions.radians(attLongitude))))
-                                .add(MathExpressions.sin(MathExpressions.radians(attLatitude))
-                                        .multiply(MathExpressions.sin(MathExpressions.radians(myLatitude)))
-                                )
-                ).multiply(6371).abs().as("dist")).from(attraction)
+        return queryFactory.select(
+                        attraction.as("attraction"),
+                        MathExpressions.acos(
+                                MathExpressions.cos(MathExpressions.radians(attLatitude))
+                                        .multiply(MathExpressions.cos(MathExpressions.radians(myLatitude)))
+                                        .multiply(MathExpressions.cos(MathExpressions.radians(myLongitude).subtract(MathExpressions.radians(attLongitude))))
+                                        .add(MathExpressions.sin(MathExpressions.radians(attLatitude))
+                                                .multiply(MathExpressions.sin(MathExpressions.radians(myLatitude)))
+                                        )
+                        ).multiply(6371).abs().as("dist")).from(attraction)
                 .orderBy(Expressions.stringPath("dist").asc())
                 .limit(4)
                 .fetch();
-        return null;
     }
 }

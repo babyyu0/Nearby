@@ -1,5 +1,7 @@
 package com.ssafy.trip.attraction.controller;
 
+import com.ssafy.trip.attraction.model.dto.command.NearestAttractionCommandDto;
+import com.ssafy.trip.attraction.model.dto.request.NearestAttractionRequestDto;
 import com.ssafy.trip.attraction.model.service.AttractionService;
 import com.ssafy.trip.global.util.exception.MyException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,10 @@ public class AttractionController {
     @GetMapping("refresh")
     public ResponseEntity<?> refreshAttraction() {
         return ResponseEntity.ok(attractionService.refreshAttraction());
+    }
+    @GetMapping("nearest")
+    public ResponseEntity<?> getNearestAttraction(NearestAttractionRequestDto nearestAttractionRequestDto) {
+        return ResponseEntity.ok(attractionService.getNearestAttraction(NearestAttractionCommandDto.from(nearestAttractionRequestDto)));
     }
     @GetMapping("popular")
     public ResponseEntity<?> getPopularAttraction() {

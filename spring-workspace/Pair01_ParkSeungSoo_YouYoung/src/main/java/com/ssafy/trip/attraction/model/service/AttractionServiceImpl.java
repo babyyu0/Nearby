@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.Tuple;
 import com.ssafy.trip.area.util.AreaUtil;
+import com.ssafy.trip.attraction.model.dto.command.NearestAttractionCommandDto;
 import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
 import com.ssafy.trip.attraction.model.entity.*;
 import com.ssafy.trip.attraction.model.repository.*;
@@ -107,7 +108,7 @@ public class AttractionServiceImpl implements AttractionService {
     @Transactional(rollbackFor = MyException.class)
     public boolean refreshAttraction() {
         int pageNo = 1;
-        int numOfRows = 60000;  // 조회 페이지 5만
+        int numOfRows = 2000;  // 조회 페이지 2천
 
         while (true) {
             String attractionUrl = API_URL + "/areaBasedSyncList1?serviceKey=" + API_KEY
@@ -119,15 +120,14 @@ public class AttractionServiceImpl implements AttractionService {
             if ((response = TripApiUtil.getResponse(attractionUrl)) == null) {
                 throw new MyException(ErrorMessage.ATTRACTION_INVALID);
             }
+            System.out.println(response.body());
             ObjectMapper objectmapper = new ObjectMapper();
 
             try {
                 JsonNode jsonNode = objectmapper.readTree(response.body())
                         .get("response").get("body");
 
-                JsonNode itemNodes = objectmapper.readTree(response.body())
-                        .get("response").get("body")
-                        .get("items").get("item");
+                JsonNode itemNodes = jsonNode.get("items").get("item");
 
                 if (itemNodes.isArray()) {
                     for (JsonNode item : itemNodes) {
@@ -173,8 +173,8 @@ public class AttractionServiceImpl implements AttractionService {
                                 .addr1(item.get("addr1").asText())
                                 .addr2(item.get("addr2").asText())
                                 .tel(item.get("tel").asText())
-                                .mapX(item.get("mapx").canConvertToInt() ? item.get("mapx").asDouble() : 0)
-                                .mapY(item.get("mapy").canConvertToInt() ? item.get("mapy").asDouble() : 0)
+                                .longitude(item.get("mapx").canConvertToInt() ? item.get("mapx").asDouble() : 0)
+                                .latitude(item.get("mapy").canConvertToInt() ? item.get("mapy").asDouble() : 0)
                                 .cat1(catRepository.findById(item.get("cat1").asText()).orElse(null))
                                 .cat2(catRepository.findById(item.get("cat2").asText()).orElse(null))
                                 .cat3(catRepository.findById(item.get("cat3").asText()).orElse(null))
@@ -196,12 +196,43 @@ public class AttractionServiceImpl implements AttractionService {
                 if (jsonNode.get("numOfRows").asInt() < numOfRows) break;  // 반복문 종료 지점
 
             } catch (JsonProcessingException e) {
-                log.debug("refreshAttraction : 데이터 뽑기 실패 - {}", e.getMessage());
+                log.error("refreshAttraction : 데이터 뽑기 실패 - {}", e.getMessage());
                 throw new MyException(ErrorMessage.ATTRACTION_INVALID);
             }
         }
 
         return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AttractionGetResponseDto> getNearestAttraction(NearestAttractionCommandDto nearestAttractionCommandDto) {
+        List<Tuple> attractionNearestList = attractionRepository.findAllByOrderByMeterAsc(nearestAttractionCommandDto.latitude(), nearestAttractionCommandDto.longitude());
+
+        List<AttractionGetResponseDto> attractionGetResponseDtoList = new ArrayList<>();
+
+        AttractionGetResponseDto attractionGetResponseDto;
+        Attraction attraction;
+        String dist;
+        int heart;
+        for (Tuple attractionTuple : attractionNearestList) {
+            attraction = attractionTuple.get(0, Attraction.class);
+            heart = attractionHeartRepository.countAllByAttraction(attraction);
+            dist = attractionTuple.get(1, String.class);  // TO DO :: KM 계산하기
+
+            attractionGetResponseDto = AttractionGetResponseDto.builder()
+                    .code(attraction.getCode())
+                    .title(attraction.getTitle())
+                    .km(dist == null ? -1.0 : Double.parseDouble(dist))
+                    .heart(heart)
+                    .img(ImageUtil.toByteArray(ATTRACTION_IMG_URI, attraction.getImg()))
+                    .build();
+            ValidateUtil.serverValidate(attractionGetResponseDto);
+
+            attractionGetResponseDtoList.add(attractionGetResponseDto);
+        }
+
+        return attractionGetResponseDtoList;
     }
 
     @Override

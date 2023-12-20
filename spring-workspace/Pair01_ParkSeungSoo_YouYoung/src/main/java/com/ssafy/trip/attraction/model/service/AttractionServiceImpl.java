@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.Tuple;
 import com.ssafy.trip.area.util.AreaUtil;
+import com.ssafy.trip.attraction.model.dto.command.AttractionDescRefreshCommandDto;
 import com.ssafy.trip.attraction.model.dto.command.NearestAttractionCommandDto;
 import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
 import com.ssafy.trip.attraction.model.entity.*;
@@ -77,8 +78,8 @@ public class AttractionServiceImpl implements AttractionService {
                     .get("response").get("body")
                     .get("items").get("item");
 
-            if(jsonNode.isArray()) {
-                for(JsonNode catNode : jsonNode) {
+            if (jsonNode.isArray()) {
+                for (JsonNode catNode : jsonNode) {
                     String code = catNode.get("code").asText();
 
                     Cat cat = Cat.builder()
@@ -89,7 +90,7 @@ public class AttractionServiceImpl implements AttractionService {
                     ValidateUtil.serverValidate(cat);
                     catRepository.save(cat);
 
-                    if(code.length() == 3) {
+                    if (code.length() == 3) {
                         refreshCat(2, code, "");
                     } else if (code.length() == 5) {
                         refreshCat(3, code.substring(0, 3), code);
@@ -108,7 +109,7 @@ public class AttractionServiceImpl implements AttractionService {
     @Transactional(rollbackFor = MyException.class)
     public boolean refreshAttraction() {
         int pageNo = 1;
-        int numOfRows = 2000;  // 조회 페이지 2천
+        int numOfRows = 60000;  // 조회 데이터 수
 
         while (true) {
             String attractionUrl = API_URL + "/areaBasedSyncList1?serviceKey=" + API_KEY
@@ -130,22 +131,6 @@ public class AttractionServiceImpl implements AttractionService {
 
                 if (itemNodes.isArray()) {
                     for (JsonNode item : itemNodes) {
-                        String attractionDescUrl = API_URL + "/detailCommon1?serviceKey=" + API_KEY
-                                + TripApiUtil.DEFAULT_PARAM  // 기본 URL
-                                + "&contentId=" + item.get("contentid").asInt()
-                                + "&overviewYN=Y";
-
-                        HttpResponse<String> descResponse;
-                        if ((descResponse = TripApiUtil.getResponse(attractionDescUrl)) == null) {
-                            throw new MyException(ErrorMessage.ATTRACTION_INVALID);
-                        }
-
-                        String desc = (objectmapper.readTree(descResponse.body())
-                                .get("response").get("body").get("totalCount").asInt() <= 0) ? "-"  // 설명 없을 경우 빈 칸
-                                : objectmapper.readTree(descResponse.body())
-                                .get("response").get("body").get("items").get("item")
-                                .get(0).get("overview").asText();  // 설명 삽입
-
                         ContentType contentType = contentTypeRepository.findById(item.get("contenttypeid").asInt())
                                 .orElseThrow(() -> {
                                     log.debug("refreshAttraction : 콘텐츠 타입 받기 실패");
@@ -181,13 +166,6 @@ public class AttractionServiceImpl implements AttractionService {
                         ValidateUtil.serverValidate(attractionInfo);
                         attractionInfoRepository.save(attractionInfo);
 
-                        AttractionDesc attractionDesc = AttractionDesc.builder()
-                                .code(attraction.getCode())
-                                .desc(desc)
-                                .build();
-                        ValidateUtil.serverValidate(attractionDesc);
-                        attractionDescRepository.save(attractionDesc);
-                        
                         log.info("{}번 {} 저장 완료.", attraction.getCode(), attraction.getTitle());
                     }
                 }
@@ -198,6 +176,46 @@ public class AttractionServiceImpl implements AttractionService {
                 log.error("refreshAttraction : 데이터 뽑기 실패 - {}", e.getMessage());
                 throw new MyException(ErrorMessage.ATTRACTION_INVALID);
             }
+        }
+
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = MyException.class)
+    public boolean refreshAttractionDesc(AttractionDescRefreshCommandDto attractionDescRefreshCommandDto) {
+        Attraction attraction = attractionRepository.findById(attractionDescRefreshCommandDto.attractionCode())
+                .orElseThrow(() -> {
+                    log.debug("refreshAttractionDesc : 관광지 조회 실패");
+                    return new MyException(ErrorMessage.ATTRACTION_NOT_FOUND);
+                });
+        String attractionDescUrl = API_URL + "/detailCommon1?serviceKey=" + API_KEY
+                + TripApiUtil.DEFAULT_PARAM  // 기본 URL
+                + "&contentId=" + attractionDescRefreshCommandDto.attractionCode()
+                + "&overviewYN=Y";
+
+        HttpResponse<String> descResponse;
+        if ((descResponse = TripApiUtil.getResponse(attractionDescUrl)) == null) {
+            throw new MyException(ErrorMessage.ATTRACTION_INVALID);
+        }
+        ObjectMapper objectmapper = new ObjectMapper();
+
+        try {
+            String desc = (objectmapper.readTree(descResponse.body())
+                    .get("response").get("body").get("totalCount").asInt() <= 0) ? "-"  // 설명 없을 경우 빈 칸
+                    : objectmapper.readTree(descResponse.body())
+                    .get("response").get("body").get("items").get("item")
+                    .get(0).get("overview").asText();  // 설명 삽입*/
+
+            AttractionDesc attractionDesc = AttractionDesc.builder()
+                    .code(attraction.getCode())
+                    .desc(desc)
+                    .build();
+            ValidateUtil.serverValidate(attractionDesc);
+            attractionDescRepository.save(attractionDesc);
+        } catch (JsonProcessingException e) {
+            log.error("refreshAttractionDesc : 데이터 뽑기 실패 - {}", e.getMessage());
+            throw new MyException(ErrorMessage.ATTRACTION_INVALID);
         }
 
         return true;

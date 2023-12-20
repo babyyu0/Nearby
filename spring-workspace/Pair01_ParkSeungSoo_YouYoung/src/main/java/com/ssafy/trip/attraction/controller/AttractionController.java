@@ -1,5 +1,6 @@
 package com.ssafy.trip.attraction.controller;
 
+import com.ssafy.trip.attraction.model.dto.command.AttractionDescRefreshCommandDto;
 import com.ssafy.trip.attraction.model.dto.command.NearestAttractionCommandDto;
 import com.ssafy.trip.attraction.model.dto.request.NearestAttractionRequestDto;
 import com.ssafy.trip.attraction.model.service.AttractionService;
@@ -7,6 +8,7 @@ import com.ssafy.trip.global.util.exception.MyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +32,10 @@ public class AttractionController {
     @GetMapping("refresh")
     public ResponseEntity<?> refreshAttraction() {
         return ResponseEntity.ok(attractionService.refreshAttraction());
+    }
+    @GetMapping("{contentId}/refresh")
+    public ResponseEntity<?> refreshAttractionDesc(@PathVariable("contentId") int contentId) {
+        return ResponseEntity.ok(attractionService.refreshAttractionDesc(AttractionDescRefreshCommandDto.of(contentId)));
     }
     @GetMapping("nearest")
     public ResponseEntity<?> getNearestAttraction(NearestAttractionRequestDto nearestAttractionRequestDto) {

@@ -30,7 +30,7 @@ public class AttractionInfo extends Base {
     @Comment("상세 주소")
     private String addr2;
 
-    @Column(name = "tel", nullable = false, columnDefinition = "VARCHAR(20) CHARACTER SET UTF8")
+    @Column(name = "tel", nullable = false, columnDefinition = "VARCHAR(50) CHARACTER SET UTF8")
     @Comment("전화 번호")
     private String tel;
 

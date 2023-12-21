@@ -10,6 +10,7 @@ import com.ssafy.trip.attraction.model.dto.command.NearestAttractionCommandDto;
 import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
 import com.ssafy.trip.attraction.model.entity.*;
 import com.ssafy.trip.attraction.model.repository.*;
+import com.ssafy.trip.global.data.RegexPattern;
 import com.ssafy.trip.global.util.ImageUtil;
 import com.ssafy.trip.global.util.TripApiUtil;
 import com.ssafy.trip.global.util.ValidateUtil;
@@ -105,11 +106,22 @@ public class AttractionServiceImpl implements AttractionService {
         return true;
     }
 
+    private String findTel(String rawTel) {
+        String tel = rawTel
+                .replace(" ", "")
+                .replace("<br/>", ",")
+                .replace("<br>", ",")
+                .replace("\n", ",")
+                .replace("\t", ",")
+                .split(",")[0];
+        return (tel.matches(RegexPattern.TEL) || tel.matches(RegexPattern.TEL2)) ? tel : "-";
+    }
+
     @Override
     @Transactional(rollbackFor = MyException.class)
     public boolean refreshAttraction() {
         int pageNo = 1;
-        int numOfRows = 60000;  // 조회 데이터 수
+        int numOfRows = 50000;  // 조회 데이터 수
 
         while (true) {
             String attractionUrl = API_URL + "/areaBasedSyncList1?serviceKey=" + API_KEY
@@ -131,13 +143,15 @@ public class AttractionServiceImpl implements AttractionService {
 
                 if (itemNodes.isArray()) {
                     for (JsonNode item : itemNodes) {
+                        log.info("{}번 {} 저장 시작", item.get("contentid").asText(), item.get("title").asText());
+
                         ContentType contentType = contentTypeRepository.findById(item.get("contenttypeid").asInt())
                                 .orElseThrow(() -> {
                                     log.debug("refreshAttraction : 콘텐츠 타입 받기 실패");
                                     return new MyException(ErrorMessage.ATTRACTION_INVALID);
                                 });
-                        int sidoCode = (item.get("areacode").asInt() < 99) ? item.get("areacode").asInt() : 0;  // sido code 값
-                        int gugunCode = (item.get("sigungucode").asInt() < 99) ? item.get("sigungucode").asInt() : 0;  // gugun 코드 값
+                        int sidoCode = (item.get("areacode").asInt() <= 50) ? item.get("areacode").asInt() : 0;  // sido code 값
+                        int gugunCode = (item.get("sigungucode").asInt() <= 50) ? item.get("sigungucode").asInt() : 0;  // gugun 코드 값
 
                         Attraction attraction = Attraction.builder()
                                 .code(item.get("contentid").asInt())
@@ -156,17 +170,17 @@ public class AttractionServiceImpl implements AttractionService {
                                 .code(attraction.getCode())
                                 .addr1(item.get("addr1").asText())
                                 .addr2(item.get("addr2").asText())
-                                .tel(item.get("tel").asText())
+                                .tel(findTel(item.get("tel").asText()))
                                 .longitude(item.get("mapx") != null ? item.get("mapx").asDouble() : 0)
                                 .latitude(item.get("mapy") != null ? item.get("mapy").asDouble() : 0)
                                 .cat1(catRepository.findById(item.get("cat1").asText()).orElse(null))
                                 .cat2(catRepository.findById(item.get("cat2").asText()).orElse(null))
                                 .cat3(catRepository.findById(item.get("cat3").asText()).orElse(null))
                                 .build();
+
                         ValidateUtil.serverValidate(attractionInfo);
                         attractionInfoRepository.save(attractionInfo);
 
-                        log.info("{}번 {} 저장 완료.", attraction.getCode(), attraction.getTitle());
                     }
                 }
 

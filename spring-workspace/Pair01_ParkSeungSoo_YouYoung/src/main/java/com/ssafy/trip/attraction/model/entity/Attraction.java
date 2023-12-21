@@ -15,6 +15,9 @@ import org.hibernate.annotations.Comment;
 import java.util.List;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "idx_title", columnList = "title")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Attraction extends Base {

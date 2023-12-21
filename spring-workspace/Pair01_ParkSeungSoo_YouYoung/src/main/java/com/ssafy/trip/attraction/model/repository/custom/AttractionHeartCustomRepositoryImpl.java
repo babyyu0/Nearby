@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -35,6 +36,8 @@ public class AttractionHeartCustomRepositoryImpl implements AttractionHeartCusto
                 .from(attraction)
                 .orderBy(Expressions.stringPath("memberCount").desc())
                 .limit(4)
-                .fetch();
+                .fetch().stream()
+                .filter(tuple -> tuple.get(1, Long.class) > 0)
+                .collect(Collectors.toList());
     }
 }

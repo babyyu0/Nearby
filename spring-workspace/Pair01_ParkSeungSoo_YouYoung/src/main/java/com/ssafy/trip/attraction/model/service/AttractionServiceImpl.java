@@ -11,7 +11,6 @@ import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
 import com.ssafy.trip.attraction.model.entity.*;
 import com.ssafy.trip.attraction.model.repository.*;
 import com.ssafy.trip.global.data.RegexPattern;
-import com.ssafy.trip.global.util.ImageUtil;
 import com.ssafy.trip.global.util.TripApiUtil;
 import com.ssafy.trip.global.util.ValidateUtil;
 import com.ssafy.trip.global.util.exception.ErrorMessage;
@@ -38,8 +37,6 @@ public class AttractionServiceImpl implements AttractionService {
     private final AttractionDescRepository attractionDescRepository;
     private final AttractionHeartRepository attractionHeartRepository;
 
-    @Value("${url.attraction.img}")
-    private static String ATTRACTION_IMG_URI;
     @Value("${url.attraction.api}")
     private String API_URL;
     @Value("${parameter.attraction.api.key}")
@@ -244,19 +241,19 @@ public class AttractionServiceImpl implements AttractionService {
 
         AttractionGetResponseDto attractionGetResponseDto;
         Attraction attraction;
-        String dist;
+        Double dist;
         int heart;
         for (Tuple attractionTuple : attractionNearestList) {
             attraction = attractionTuple.get(0, Attraction.class);
             heart = attractionHeartRepository.countAllByAttraction(attraction);
-            dist = attractionTuple.get(1, String.class);  // TO DO :: KM 계산하기
+            dist = attractionTuple.get(1, Double.class);  // TO DO :: KM 계산하기
 
             attractionGetResponseDto = AttractionGetResponseDto.builder()
                     .code(attraction.getCode())
                     .title(attraction.getTitle())
-                    .km(dist == null ? -1.0 : Double.parseDouble(dist))
+                    .km(dist == null ? -1.0 : dist)
                     .heart(heart)
-                    .img(ImageUtil.toByteArray(ATTRACTION_IMG_URI, attraction.getImg()))
+                    .img(attraction.getImg())
                     .build();
             ValidateUtil.serverValidate(attractionGetResponseDto);
 
@@ -276,18 +273,18 @@ public class AttractionServiceImpl implements AttractionService {
         AttractionGetResponseDto attractionGetResponseDto;
         Attraction attraction;
         double km;
-        String heart;
+        Long heart;
         for (Tuple attractionTuple : attractionHeartList) {
             attraction = attractionTuple.get(0, Attraction.class);
-            heart = attractionTuple.get(1, String.class);
+            heart = attractionTuple.get(1, Long.class);
             km = 1;  // TO DO :: KM 계산하기
 
             attractionGetResponseDto = AttractionGetResponseDto.builder()
                     .code(attraction.getCode())
                     .title(attraction.getTitle())
                     .km(km)
-                    .heart(heart == null ? 0 : Integer.parseInt(heart))
-                    .img(ImageUtil.toByteArray(ATTRACTION_IMG_URI, attraction.getImg()))
+                    .heart(heart == null ? 0 : heart.intValue())
+                    .img(attraction.getImg())
                     .build();
             ValidateUtil.serverValidate(attractionGetResponseDto);
 

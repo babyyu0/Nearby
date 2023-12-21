@@ -2,6 +2,9 @@ package com.ssafy.trip.attraction.model.entity;
 
 import com.ssafy.trip.global.model.entity.Base;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,24 +15,29 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class AttractionInfo extends Base {
+    @Positive(message = "고유 번호는 양수여야 합니다.")
     @Column(columnDefinition = "INT UNSIGNED")
     @Comment("고유 번호")
     @Id
     private int code;
 
+    @Valid
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code", nullable = false, columnDefinition = "INT UNSIGNED")
     @Comment("고유 번호")
     private Attraction attraction;
 
+    @Size(max = 100, message = "주소는 100자 이하여야 합니다.")
     @Column(name = "addr1", nullable = false, columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")
     @Comment("주소")
     private String addr1;
 
-    @Column(name = "addr2", nullable = false, columnDefinition = "VARCHAR(50) CHARACTER SET UTF8")
+    @Size(max = 255, message = "상세 주소는 255자 이하여야 합니다.")
+    @Column(name = "addr2", nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     @Comment("상세 주소")
     private String addr2;
 
+    @Size(max = 50, message = "전화 번호는 50자 이하여야 합니다.")
     @Column(name = "tel", nullable = false, columnDefinition = "VARCHAR(50) CHARACTER SET UTF8")
     @Comment("전화 번호")
     private String tel;
@@ -42,16 +50,19 @@ public class AttractionInfo extends Base {
     @Comment("y 좌표")
     private double latitude;
 
+    @Valid
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cat1_code")
     @Comment("분류 1")
     private Cat cat1;
 
+    @Valid
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cat2_code")
     @Comment("분류 2")
     private Cat cat2;
 
+    @Valid
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cat3_code")
     @Comment("분류 3")

@@ -3,6 +3,9 @@ package com.ssafy.trip.attraction.model.entity;
 import com.ssafy.trip.area.model.entity.Gugun;
 import com.ssafy.trip.global.model.entity.Base;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,21 +18,24 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Attraction extends Base {
-
+    @Positive(message = "고유 번호는 양수여야 합니다.")
     @Column(columnDefinition = "INT UNSIGNED")
     @Comment("고유 번호")
     @Id
     private int code;
 
+    @Valid
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_type_code", nullable = false)
     @Comment("관광 타입")
     private ContentType contentType;
 
+    @Size(max = 100, message = "관광지명은 100자 이하여야 합니다.")
     @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(100) CHARACTER SET UTF8")
     @Comment("관광지명")
     private String title;
 
+    @Valid
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "gugun_code", referencedColumnName = "code", nullable = false, columnDefinition = "TINYINT UNSIGNED COMMENT '행정구역 고유 번호'"),
@@ -46,10 +52,12 @@ public class Attraction extends Base {
     @OneToMany(mappedBy = "attraction")
     private List<AttractionHeart> attractionHeartList;
 
+    @Size(max = 255, message = "관광지 이미지는 255자 이하여야 합니다.")
     @Column(name = "img", columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     @Comment("관광지 이미지")
     private String img;
 
+    @Size(max = 255, message = "관광지 이미지 2는 255자 이하여야 합니다.")
     @Column(name = "img_sub", columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     @Comment("관광지 이미지 2")
     private String imgSub;

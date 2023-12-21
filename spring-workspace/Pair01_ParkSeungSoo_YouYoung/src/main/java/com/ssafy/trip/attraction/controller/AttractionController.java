@@ -5,6 +5,7 @@ import com.ssafy.trip.attraction.model.dto.command.NearestAttractionCommandDto;
 import com.ssafy.trip.attraction.model.dto.request.NearestAttractionRequestDto;
 import com.ssafy.trip.attraction.model.service.AttractionService;
 import com.ssafy.trip.global.util.exception.MyException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +39,7 @@ public class AttractionController {
         return ResponseEntity.ok(attractionService.refreshAttractionDesc(AttractionDescRefreshCommandDto.of(contentId)));
     }
     @GetMapping("nearest")
-    public ResponseEntity<?> getNearestAttraction(NearestAttractionRequestDto nearestAttractionRequestDto) {
+    public ResponseEntity<?> getNearestAttraction(@Valid NearestAttractionRequestDto nearestAttractionRequestDto) {
         return ResponseEntity.ok(attractionService.getNearestAttraction(NearestAttractionCommandDto.from(nearestAttractionRequestDto)));
     }
     @GetMapping("popular")

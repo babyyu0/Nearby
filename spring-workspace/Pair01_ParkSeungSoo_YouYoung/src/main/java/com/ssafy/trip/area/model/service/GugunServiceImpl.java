@@ -62,7 +62,7 @@ public class GugunServiceImpl implements GugunService {
                         .get("response").get("body")
                         .get("items").get("item");
 
-                if (jsonNode.isArray()) {
+                if (jsonNode != null && jsonNode.isArray()) {
                     for (JsonNode gugunNode : jsonNode) {
                         gugun = Gugun.builder()
                                 .gugunCode(gugunNode.get("code").asInt())

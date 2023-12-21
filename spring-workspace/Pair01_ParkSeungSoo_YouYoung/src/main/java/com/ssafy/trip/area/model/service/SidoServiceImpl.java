@@ -33,6 +33,14 @@ public class SidoServiceImpl implements SidoService {
     @Override
     @Transactional(rollbackFor = MyException.class)
     public boolean refreshSido() {
+
+        Sido sido = Sido.builder()
+                .sidoCode(0)
+                .sidoName("분류되지 않음")
+                .build();
+        ValidateUtil.serverValidate(sido);
+        sidoRepository.save(sido);
+        
         String sidoUrl = API_URL + "/areaCode1?serviceKey=" + API_KEY
                 + TripApiUtil.DEFAULT_PARAM  // 기본 URL
                 + "&numOfRows=100";
@@ -47,7 +55,6 @@ public class SidoServiceImpl implements SidoService {
                     .get("response").get("body")
                     .get("items").get("item");
 
-            Sido sido;
             if (jsonNode.isArray()) {
                 for (JsonNode sidoNode : jsonNode) {
                     sido = Sido.builder()

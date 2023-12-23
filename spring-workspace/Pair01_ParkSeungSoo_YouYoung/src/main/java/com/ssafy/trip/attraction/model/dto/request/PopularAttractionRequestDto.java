@@ -3,7 +3,7 @@ package com.ssafy.trip.attraction.model.dto.request;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record NearestAttractionRequestDto(
+public record PopularAttractionRequestDto(
         @NotNull(message = "위도가 존재하지 않습니다.")
         @Positive(message = "위도는 양수여야 합니다.")
         double latitude,

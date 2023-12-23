@@ -1,8 +1,9 @@
 package com.ssafy.trip.attraction.controller;
 
 import com.ssafy.trip.attraction.model.dto.command.AttractionDescRefreshCommandDto;
-import com.ssafy.trip.attraction.model.dto.command.NearestAttractionCommandDto;
+import com.ssafy.trip.attraction.model.dto.command.MemberDistCommandDto;
 import com.ssafy.trip.attraction.model.dto.request.NearestAttractionRequestDto;
+import com.ssafy.trip.attraction.model.dto.request.PopularAttractionRequestDto;
 import com.ssafy.trip.attraction.model.service.AttractionService;
 import com.ssafy.trip.global.util.exception.MyException;
 import jakarta.validation.Valid;
@@ -40,10 +41,10 @@ public class AttractionController {
     }
     @GetMapping("nearest")
     public ResponseEntity<?> getNearestAttraction(@Valid NearestAttractionRequestDto nearestAttractionRequestDto) {
-        return ResponseEntity.ok(attractionService.getNearestAttraction(NearestAttractionCommandDto.from(nearestAttractionRequestDto)));
+        return ResponseEntity.ok(attractionService.getNearestAttraction(MemberDistCommandDto.from(nearestAttractionRequestDto)));
     }
     @GetMapping("popular")
-    public ResponseEntity<?> getPopularAttraction() {
-        return ResponseEntity.ok(attractionService.getPopularAttraction());
+    public ResponseEntity<?> getPopularAttraction(@Valid PopularAttractionRequestDto popularAttractionRequestDto) {
+        return ResponseEntity.ok(attractionService.getPopularAttraction(MemberDistCommandDto.from(popularAttractionRequestDto)));
     }
 }

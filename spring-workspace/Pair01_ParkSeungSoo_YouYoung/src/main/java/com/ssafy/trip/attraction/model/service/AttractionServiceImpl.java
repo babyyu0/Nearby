@@ -6,10 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.Tuple;
 import com.ssafy.trip.area.util.AreaUtil;
 import com.ssafy.trip.attraction.model.dto.command.AttractionDescRefreshCommandDto;
-import com.ssafy.trip.attraction.model.dto.command.NearestAttractionCommandDto;
+import com.ssafy.trip.attraction.model.dto.command.MemberDistCommandDto;
 import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
 import com.ssafy.trip.attraction.model.entity.*;
 import com.ssafy.trip.attraction.model.repository.*;
+import com.ssafy.trip.attraction.util.AttractionUtil;
 import com.ssafy.trip.global.data.RegexPattern;
 import com.ssafy.trip.global.util.TripApiUtil;
 import com.ssafy.trip.global.util.ValidateUtil;
@@ -234,8 +235,8 @@ public class AttractionServiceImpl implements AttractionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AttractionGetResponseDto> getNearestAttraction(NearestAttractionCommandDto nearestAttractionCommandDto) {
-        List<Tuple> attractionNearestList = attractionRepository.findAllByOrderByMeterAsc(nearestAttractionCommandDto.latitude(), nearestAttractionCommandDto.longitude());
+    public List<AttractionGetResponseDto> getNearestAttraction(MemberDistCommandDto memberDistCommandDto) {
+        List<Tuple> attractionNearestList = attractionRepository.findAllByOrderByMeterAsc(memberDistCommandDto.latitude(), memberDistCommandDto.longitude());
 
         List<AttractionGetResponseDto> attractionGetResponseDtoList = new ArrayList<>();
 
@@ -251,7 +252,7 @@ public class AttractionServiceImpl implements AttractionService {
             attractionGetResponseDto = AttractionGetResponseDto.builder()
                     .code(attraction.getCode())
                     .title(attraction.getTitle())
-                    .km(dist == null ? -1.0 : dist)
+                    .dist(dist == null ? -1.0 : Math.round(dist * 100) / 100.0)
                     .heart(heart)
                     .img(attraction.getImg())
                     .build();
@@ -265,24 +266,25 @@ public class AttractionServiceImpl implements AttractionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AttractionGetResponseDto> getPopularAttraction() {
+    public List<AttractionGetResponseDto> getPopularAttraction(MemberDistCommandDto memberDistCommandDto) {
         List<Tuple> attractionHeartList = attractionHeartRepository.findAllByOrderByCountDesc();
 
         List<AttractionGetResponseDto> attractionGetResponseDtoList = new ArrayList<>();
 
         AttractionGetResponseDto attractionGetResponseDto;
         Attraction attraction;
-        double km;
+        double dist;
         Long heart;
         for (Tuple attractionTuple : attractionHeartList) {
             attraction = attractionTuple.get(0, Attraction.class);
             heart = attractionTuple.get(1, Long.class);
-            km = 1;  // TO DO :: KM 계산하기
+            dist = AttractionUtil.calDist(memberDistCommandDto.latitude(), memberDistCommandDto.longitude(),
+                    attraction.getAttractionInfo().getLatitude(), attraction.getAttractionInfo().getLongitude());
 
             attractionGetResponseDto = AttractionGetResponseDto.builder()
                     .code(attraction.getCode())
                     .title(attraction.getTitle())
-                    .km(km)
+                    .dist(Math.round(dist * 100) / 100.0)
                     .heart(heart == null ? 0 : heart.intValue())
                     .img(attraction.getImg())
                     .build();

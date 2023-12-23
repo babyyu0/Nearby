@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 const getNearestList = async (data) => {
     try {
-        const response = await api.get(`/attraction/nearest?my-x=${data.mapX}&my-y=${data.mapY}`);
+        const response = await api.get(`/attraction/nearest?latitude=${data.mapX}&longitude=${data.mapY}`);
         return response.data;
     } catch(error) {
         console.log("error: ", error);
@@ -16,9 +16,9 @@ const getNearestList = async (data) => {
     }   
 }
 
-const getPopularList = async () => {
+const getPopularList = async (data) => {
     try {
-        const response = await api.get(`/attraction/popular`);
+        const response = await api.get(`/attraction/popular?latitude=${data.mapX}&longitude=${data.mapY}`);
         return response.data;
     } catch (error) {
         Swal.fire({

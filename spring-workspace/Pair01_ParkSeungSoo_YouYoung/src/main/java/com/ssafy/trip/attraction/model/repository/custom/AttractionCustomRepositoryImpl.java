@@ -2,12 +2,9 @@ package com.ssafy.trip.attraction.model.repository.custom;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.MathExpressions;
 import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.ssafy.trip.attraction.model.entity.QAttraction.attraction;
-import static com.ssafy.trip.attraction.model.entity.QAttractionHeart.attractionHeart;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,7 +33,7 @@ public class AttractionCustomRepositoryImpl implements AttractionCustomRepositor
                                         .add(MathExpressions.sin(MathExpressions.radians(attLatitude))
                                                 .multiply(MathExpressions.sin(MathExpressions.radians(myLatitude)))
                                         )
-                        ).multiply(6371).abs().as("dist")).from(attraction)
+                        ).multiply(6371000).abs().as("dist")).from(attraction)
                 .orderBy(Expressions.stringPath("dist").asc())
                 .limit(4)
                 .fetch();

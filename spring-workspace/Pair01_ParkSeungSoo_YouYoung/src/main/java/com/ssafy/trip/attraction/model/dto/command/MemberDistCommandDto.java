@@ -5,21 +5,21 @@ import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.Builder;
 
-public record NearestAttractionCommandDto(
+public record MemberDistCommandDto(
         @Positive(message = "위도는 양수여야 합니다.")
         double latitude,
         @Positive(message = "경도는 양수여야 합니다.")
         double longitude
 ) {
-    public static NearestAttractionCommandDto from(NearestAttractionRequestDto nearestAttractionRequestDto) {
-        return NearestAttractionCommandDto.builder()
+    public static MemberDistCommandDto from(NearestAttractionRequestDto nearestAttractionRequestDto) {
+        return MemberDistCommandDto.builder()
                 .latitude(nearestAttractionRequestDto.latitude())
                 .longitude(nearestAttractionRequestDto.longitude())
                 .build();
     }
 
     @Builder(access = AccessLevel.PRIVATE)
-    public NearestAttractionCommandDto(double latitude, double longitude) {
+    public MemberDistCommandDto(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

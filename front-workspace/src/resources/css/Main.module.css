@@ -25,7 +25,44 @@
     margin: 2vh 0;
     font-size: 1.5rem;
     font-weight: 600;
-} 
+}
+
+.cardContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.cardContents {
+    width: 18vw;
+    height: 42vh;
+    border-radius: 10px;
+    box-shadow: 0px 0px 6px #11111126;
+}
+
+.cardImg {
+    width: 100%;
+    height: 60%;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.cardTitle {
+    padding: 0 1vw;
+    font-size: 1.2rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cardContent {
+    margin: 0;
+    padding: 0 1vw;
+    font-size: 0.8rem;
+    color: var(--gray-color);
+}
 
 .noContent {
     width: 100%;

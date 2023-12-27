@@ -1,5 +1,6 @@
 // Modules
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 // Container
 import IndexContainer from "./container/IndexContainer";
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<IndexContainer />} />
         <Route path="/trip" element={<TripContainer />} />
       </Routes>
+      <div><Toaster/></div>
     </BrowserRouter>
   );
 }

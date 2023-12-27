@@ -22,13 +22,11 @@ function IndexContainer() {
   };
 
   const refreshNearestList = async () => {
-    console.log(myLocation);
     const response = await getNearestList(myLocation);
     setNearestList(response);
   };
 
   const refreshPopularList = async () => {
-    console.log(myLocation);
     const response = await getPopularList(myLocation);
     setPopularList(response);
   };

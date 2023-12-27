@@ -57,7 +57,8 @@ function IndexContainer() {
       <div className={mainStyle.container}>
         <div className={mainStyle.mainBanner}></div>
         <div className={mainStyle.popularList}>
-          <h3 className={mainStyle.menuTitle}>🏠 가까운 관광지를 확인하세요</h3>
+          <h3 className={mainStyle.menuTitle}>🏠 가까운 관광지를 확인하세요
+            {nearestList && nearestList.length === 4 ? (<a href="javascript:void(0)" className={mainStyle.menuMore}>{`더보기 >`}</a>) : (null)}</h3>
           {nearestList && nearestList.length !== 0 ? (
             <div className={mainStyle.cardContainer}>
               {nearestList.map((nearest, index) => (
@@ -71,7 +72,8 @@ function IndexContainer() {
           )}
         </div>
         <div className={mainStyle.popularList}>
-          <h3 className={mainStyle.menuTitle}>🚀 인기 관광지를 확인하세요</h3>
+          <h3 className={mainStyle.menuTitle}>🚀 인기 관광지를 확인하세요
+            {popularList && popularList.length === 4 ? (<a href="javascript:void(0)" className={mainStyle.menuMore}>{`더보기 >`}</a>) : (null)}</h3>
           {popularList && popularList.length !== 0 ? (
             <div className={mainStyle.cardContainer}>
               {popularList.map((popular, index) => (

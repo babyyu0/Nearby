@@ -27,6 +27,12 @@
     font-weight: 600;
 }
 
+.menuMore {
+    margin-left: 0.6rem;
+    font-size: 0.8rem;
+    color: var(--gray-color);
+}
+
 .cardContainer {
     display: flex;
     justify-content: space-between;
@@ -46,22 +52,33 @@
     object-fit: cover;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    cursor: pointer;
 }
 
 .cardTitle {
-    padding: 0 1vw;
+    margin: 0;
+    padding: 2vh 1.4vw;
     font-size: 1.2rem;
     font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    cursor: pointer;
 }
 
 .cardContent {
     margin: 0;
-    padding: 0 1vw;
+    padding: 0.5vh 1.4vw;
     font-size: 0.8rem;
     color: var(--gray-color);
+}
+
+.cardHeart {
+    position: relative;
+    margin-right: 0.2vw;
+    bottom: -2px;
+    width:0.8rem;
+    cursor: pointer;
 }
 
 .noContent {

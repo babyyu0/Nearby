@@ -50,6 +50,7 @@
 }
 .searchBox > .searchBtn {
     height: 1.2rem;
+    cursor: pointer;
 }
 
 .leftMenu, .rightMenu {

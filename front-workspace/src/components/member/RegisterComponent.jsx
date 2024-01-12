@@ -1,34 +1,9 @@
 // Modules
 import { useEffect, useRef } from "react";
 
-function LoginComponent(props) {
-  const registerStyle = props.registerStyle;
-
-  const profile = props.profile;
-  const setProfile = props.setProfile;
+function LoginComponent({ registerStyle, profile, setProfile, id, setId, isExistId, setIdConfirm, password, setPassword, passwordConfirm, setPasswordConfirm, name, setName,
+  sido, setSido, gugun, setGugun, sidoList, gugunList, doRegister }) {
   const fileDOM = useRef();
-
-  const id = props.id;
-  const setId = props.setId;
-  const isExistId = props.isExistId;
-  const setIdConfirm = props.setIdConfirm;
-
-  const password = props.password;
-  const setPassword = props.setPassword;
-  const passwordConfirm = props.passwordConfirm;
-  const setPasswordConfirm = props.setPasswordConfirm;
-
-  const name = props.name;
-  const setName = props.setName;
-  const sido = props.sido;
-  const setSido = props.setSido;
-  const gugun = props.gugun;
-  const setGugun = props.setGugun;
-
-  const sidoList = props.sidoList;
-  const gugunList = props.gugunList;
-
-  const doRegister = props.doRegister;
 
   useEffect(() => {
     document.addEventListener('change', (e) => {
@@ -86,7 +61,7 @@ function LoginComponent(props) {
               {
                 sidoList?
                   sidoList.map((sido, index) => (
-                    <option value={sido.sidoCode} key={index}>{sido.sidoName}</option>
+                    <option value={sido.code} key={index}>{sido.name}</option>
                     )) : null
               }
             </select>
@@ -95,7 +70,7 @@ function LoginComponent(props) {
               {
                 gugunList[sido] && sido?
                   gugunList[sido].map((gugun, index) => (
-                    <option value={gugun.gugunCode} key={index}>{gugun.gugunName}</option>
+                    <option value={gugun.code} key={index}>{gugun.name}</option>
                     )) : null
               }
             </select>

@@ -4,7 +4,8 @@ import Swal from "sweetalert2";
 import { useAtom } from "jotai";
 
 // Services
-import { existId, getCity, register } from "../../services/member/MemberService";
+import { existId, register } from "../../services/member/MemberService";
+import { getArea } from "../../services/attraction/AreaService";
 
 // Atoms
 import { sidoAtom, gugunAtom } from "../../jotai/city";
@@ -63,20 +64,21 @@ function RegisterContainer() {
     }
   };
 
-  const getCities = async () => {
-    const data = await getCity();
+  const refreshArea = async () => {
+    const data = await getArea();
+    console.log("data: ", data.sido);
 
     // 시도 리스트 세팅
     if (!sidoList) {
-      setSidoList(data.sidoList);
+      setSidoList(data.sido);
     }
 
     tmpGugunList = [];
-    data.gugunList.forEach((e) => {
+    data.gugun.forEach((e) => {
       if (!tmpGugunList[e.sidoCode]) {
         tmpGugunList[e.sidoCode] = [];
       }
-      tmpGugunList[e.sidoCode].push({ 'gugunCode': e.gugunCode, 'gugunName': e.gugunName });
+      tmpGugunList[e.sidoCode].push({ 'code': e.code, 'name': e.name });
     });
 
     setGugunList([...tmpGugunList]);
@@ -132,7 +134,7 @@ function RegisterContainer() {
 
   useEffect(() => {
     if (!gugunList || gugunList.length === 0) {
-      getCities();
+      refreshArea();
     }
   }, [gugunList]);
 

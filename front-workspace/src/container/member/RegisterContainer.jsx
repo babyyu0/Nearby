@@ -34,16 +34,10 @@ function RegisterContainer() {
   let tmpGugunList = [];
 
   const isExistId = async () => {
-    if (!id) {
+    if (!new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$').test(id)) {
       Swal.fire({
-        icon: "info",
-        title: "아이디가 입력되지 않았습니다!",
-      });
-      return;
-    } else if (!new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$').test(id)) {
-      Swal.fire({
-        icon: "info",
-        title: "이메일 형식으로 아이디를 입력해 주세요.",
+        icon: "error",
+        title: "올바른 아이디 형식이 아닙니다.",
       });
       return;
     }
@@ -149,7 +143,7 @@ function RegisterContainer() {
           <span className={registerStyle.headerTitle}>회원가입</span>
         </div>
       </div>
-      <div className={registerStyle.container}>
+      <div className={registerStyle.registerContainer}>
         <RegisterComponent
           registerStyle={registerStyle}
           profile={profile} setProfile={setProfile}

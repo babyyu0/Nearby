@@ -1,7 +1,7 @@
 function RegisterDescComponent({registerStyle}) {
   return (
     <>
-      <div className={registerStyle.registerDescContainer}>
+      <div className={registerStyle.registerDescBox}>
         dkdk
       </div>
     </>

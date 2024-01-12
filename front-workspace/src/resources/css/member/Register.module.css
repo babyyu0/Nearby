@@ -46,15 +46,22 @@
   padding: 0 2vw;
   min-width: 300px;
 }
+.areaBox {
+  display: flex;
+  justify-content: space-between;
+}
 .infoLabel {
   display: inline-block;
   font-weight: 600;
   margin-bottom: 1vh;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .infoHelp {
   margin-left: .5vw;
-  vertical-align: middle;
   padding-bottom: 0.2rem; 
+  margin-bottom: 1vh;
   display: inline-block;
 }
 .infoInput {
@@ -71,6 +78,13 @@
 .idBox {
   display: flex;
 }
+.sidoBox, .gugunBox {
+  flex-basis: 48%;
+}
+.sidoInput, .gugunInput {
+  width: 100%;
+  min-width: 150px;
+}
 .idInput {
   display: inline-block;
   min-width: 200px;
@@ -86,8 +100,8 @@
   background-color: var(--main-blue-color);
   border-radius: 5px;
   cursor: pointer;
+  white-space: nowrap;
 }
-
 .infoInput[available=false] {
   border: 1px solid var(--danger-color);
 }

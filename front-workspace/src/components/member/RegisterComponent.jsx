@@ -169,8 +169,8 @@ function LoginComponent({ registerStyle, profile, setProfile, id, setId, isExist
           </div>
         </div>
          */}
-        <div className={`${registerStyle.box} ${registerStyle.confirmBox}`}>
-          <button className={registerStyle.confirm} onClick={doRegister}> 회원가입 </button>
+        <div className={registerStyle.confirmBox}>
+          <button className={registerStyle.confirmBtn} onClick={doRegister}> 회원가입 완료 </button>
         </div>
       </div>
     </>

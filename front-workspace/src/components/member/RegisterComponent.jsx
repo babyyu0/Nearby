@@ -1,23 +1,66 @@
 // Modules
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
+import { Tooltip } from 'react-tooltip';
+import { GoQuestion } from "react-icons/go";
+
+// Styles
+import 'react-tooltip/dist/react-tooltip.css';
 
 function LoginComponent({ registerStyle, profile, setProfile, id, setId, isExistId, setIdConfirm, password, setPassword, passwordConfirm, setPasswordConfirm, name, setName,
   sido, setSido, gugun, setGugun, sidoList, gugunList, doRegister }) {
   const fileDOM = useRef();
+  const [idAvailable, isIdAvailable] = useState(true);
+  const [passwordAvailable, isPasswordAvailable] = useState(true);
+
+  // useEffect(() => {
+  //   document.addEventListener('change', (e) => {
+  //     if (e.target !== fileDOM.current) return;
+  //     const imageSrc = URL.createObjectURL(fileDOM.current.files[0]);
+  //     setProfile(imageSrc);
+  //   });
+
+  //   return URL.revokeObjectURL(fileDOM.current.files[0]);
+  // }, []);
 
   useEffect(() => {
-    document.addEventListener('change', (e) => {
-      if (e.target !== fileDOM.current) return;
-      const imageSrc = URL.createObjectURL(fileDOM.current.files[0]);
-      setProfile(imageSrc);
-    });
+    if (id.trim() && !new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$').test(id)) {
+      isIdAvailable(false);
+    } else {
+      isIdAvailable(true);
+    }
+  }, [id]);
 
-    return URL.revokeObjectURL(fileDOM.current.files[0]);
-  }, []);
+  useEffect(() => {
+    if (password.trim() && !new RegExp('^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,20}$').test(password)) {
+      isPasswordAvailable(false);
+    } else {
+      isPasswordAvailable(true);
+    }
+  }, [password]);
 
   return (
     <>
-      <div className={registerStyle.contents}>
+      <div className={registerStyle.registerBox}>
+        <div className={registerStyle.infoBox}>
+          <label htmlFor="id" className={`${registerStyle.infoLabel} ${registerStyle.idLabel}`}>아이디 (이메일)</label>
+          <div className={registerStyle.idBox}>
+            <input type="text" id="id" className={`${registerStyle.infoInput} ${registerStyle.idInput}`} value={id} onChange={(e) => { setId(e.target.value) }} available={`${idAvailable}`} /> 
+            <button className={registerStyle.idExist} onClick={isExistId}>중복 확인</button>
+          </div>
+          <span className={registerStyle.infoWarning} available={`${idAvailable}`}>올바른 아이디 형식이 아닙니다.</span>
+        </div>
+        <div className={registerStyle.infoBox}>
+          <label htmlFor="password" className={`${registerStyle.infoLabel} ${registerStyle.passwordLabel}`}>비밀번호</label>
+          <GoQuestion className={registerStyle.infoHelp} data-tooltip-content='비밀번호는 하나 이상의 대문자, 소문자, 특수문자를 포함한 6~20자리의 문자입니다.' data-tooltip-id='passwordTooltip' />
+          <Tooltip
+            id='passwordTooltip'
+            place='top-start'
+          />
+          <input type="password" id="password" className={`${registerStyle.infoInput} ${registerStyle.passwordInput}`} value={password} onChange={(e) => { setPassword(e.target.value) }} available={`${passwordAvailable}`} />
+          <span className={registerStyle.infoWarning} available={`${passwordAvailable}`}>올바른 비밀번호 형식이 아닙니다.</span>
+        </div>
+      {/* 
+      <div className={registerStyle.registerContainer}>
         <div className={registerStyle.box}>
           <label className={`${registerStyle.inputLabel} ${registerStyle.inputImgLabel}`} htmlFor="profile">
             <img src={profile} alt="profile"/>
@@ -76,6 +119,7 @@ function LoginComponent({ registerStyle, profile, setProfile, id, setId, isExist
             </select>
           </div>
         </div>
+         */}
         <div className={`${registerStyle.box} ${registerStyle.confirmBox}`}>
           <button className={registerStyle.confirm} onClick={doRegister}> 회원가입 </button>
         </div>

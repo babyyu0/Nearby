@@ -140,11 +140,15 @@ function RegisterContainer() {
 
   return (
     <>
+      <div className={registerStyle.headerContainer}>
+        <div className={registerStyle.headerContents}>
+          <NavLink to="/" className={registerStyle.logoBox}>
+            <img className={registerStyle.logo} src="/image/logo.png" alt="logo" />
+          </NavLink>
+          <span className={registerStyle.headerTitle}>회원가입</span>
+        </div>
+      </div>
       <div className={registerStyle.container}>
-        <NavLink to="/" className={registerStyle.logoBox}>
-          <img className={registerStyle.logo} src="/image/logo.png" alt="logo" />
-        </NavLink>
-        <span className={registerStyle.title}>회원가입</span>
         <RegisterComponent
           registerStyle={registerStyle}
           profile={profile} setProfile={setProfile}

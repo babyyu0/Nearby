@@ -34,6 +34,7 @@ function HeaderComponent() {
             <img className={header.searchBtn} src="/image/search.png" alt="search" onClick={search} />
           </div>
           <NavLink to="/trip" className={header.leftMenu}>관광지</NavLink>
+          <NavLink to="/map" className={header.leftMenu}>지도로보기</NavLink>
           <NavLink to="/board" className={header.leftMenu}>여행게시판</NavLink>
         </div>
         {(member.name) ?

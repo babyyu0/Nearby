@@ -27,113 +27,85 @@
   font-weight: 600;
 }
 
-
-.container {
+.registerContainer {
   display: flex;
   justify-content: center;
-}
-.title {
-  margin: 2vh 0;
-  font-size: 2rem;
-  font-weight: 600;
+  width: 100%;
 }
 
-.contents {
-  width: 50%;
-  padding: 0 10vw;
+.registerBox {
+  flex-basis: 50%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  padding: 5vh;
-  margin-bottom: 5vh;
-
-  min-width: 30vw;
-  min-height: 30vh;
-
-  border-right: 1px solid var(--extra-light-color);
-}
-
-.box {
-  display: flex;
-  padding-bottom: 2vh;
   flex-direction: column;
   align-items: center;
-
-  margin: 0 auto;
-  width: 80%;
+  margin: 3vh 0;
 }
-
-.box > div {
+.infoBox {
+  margin-top: 2vh;
+  width: 50%;
+  padding: 0 2vw;
+  min-width: 300px;
+}
+.infoLabel {
+  display: inline-block;
+  font-weight: 600;
+  margin-bottom: 1vh;
+}
+.infoHelp {
+  margin-left: .5vw;
+  vertical-align: middle;
+  padding-bottom: 0.2rem; 
+  display: inline-block;
+}
+.infoInput {
+  width: 100%;
+  min-width: 300px;
+  height: 2.5rem;
+  padding: 0 1rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid var(--base-gray-color);
+}
+.idBox {
   display: flex;
-  width: 100%;
 }
-
-.confirmBox {
-  padding-top: 2vh;
+.idInput {
+  display: inline-block;
+  min-width: 200px;
+  width: 80%;
+  margin-right: 1rem;
 }
-
-.inputLabel {
-  padding-bottom: 1vh;
-  width: 100%;
-  text-align: left;
-}
-
-.inputImgLabel {
-  height: 20vh;
-  width: 20vh;
-  text-align: center;
-}
-
-.inputImgLabel > img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-.inputImg {
-  display: none;
-}
-
-.inputText,
-.inputText:focus {
-  left: auto;
-  margin: 0;
-  padding: 3%;
-  width: 100%;
-
+.idExist {
+  display: inline-block;
+  width: 20%;
+  min-width: 80px;
+  height: 2.5rem;
   border: none;
-}
-
-.halfInputText,
-.halfInputText:focus {
-  margin-right: 1vw;
-}
-
-.halfInputText:last-child,
-.halfInputText:last-child:focus {
-  margin-right: 0;
-}
-
-.find {
-  margin-right: 1vw;
-  min-width: 8rem;
-  font-size: 0.8rem;
-  color: var(--bold-color);
-}
-
-.confirm {
-  padding: 0.6rem 1.4rem;
-
-  min-width: 6rem;
-
-  background-color: var(--light-color);
-  border: none;
+  background-color: var(--main-blue-color);
   border-radius: 5px;
   cursor: pointer;
 }
 
-.registerDescContainer {
-  width: 50%;
+.infoInput[available=false] {
+  border: 1px solid var(--danger-color);
+}
+.infoInput:focus {
+  outline: 1.2px solid var(--base-gray-color);
+}
+.infoInput[available=false]:focus {
+  outline: 1.2px solid var(--danger-color);
+}
+.infoWarning {
+  display: none;
+}
+.infoWarning[available=false] {
+  display: block;
+  color: var(--danger-color);
+}
+
+.registerDescBox {
+  flex-basis: 50%;
   background-color: red;
 }

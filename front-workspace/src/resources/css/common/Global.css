@@ -26,9 +26,13 @@ a {
     --blue-color-3: #5377A6;
     --blue-color-4: #89B3D9;
     --black-color: #0D0D0D;
-    --gray-color: #8F93AE;
     --base-gray-color: #929CAE;
     --main-gray-color: #E6E9EE;
     --accent-gray-color: #4E5A6E;
+    --base-blue-color: #85AEE6;
+    --main-blue-color: #CBDDF5;
+    --accent-blue-color: #4685D7;
     --white-color: #F2F2F2;
+
+    --danger-color: #C74A35;
 }

@@ -33,7 +33,7 @@ function HeaderComponent() {
             <input type="text" className={header.search} value={word} onChange={(e) => setWord(e.target.value)} placeholder="검색어를 입력해 주세요." />
             <img className={header.searchBtn} src="/image/search.png" alt="search" onClick={search} />
           </div>
-          <NavLink to="/trip" className={header.leftMenu}>관광지</NavLink>
+          <NavLink to="/attraction" className={header.leftMenu}>관광지</NavLink>
           <NavLink to="/map" className={header.leftMenu}>지도로보기</NavLink>
           <NavLink to="/board" className={header.leftMenu}>여행게시판</NavLink>
         </div>

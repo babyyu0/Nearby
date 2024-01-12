@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-function TripComponent({tripStyle}) {
+function AttractionComponent({attractionStyle}) {
   console.log("Kakao : ", window.kakao);
   const mapContainer = useRef();
   const [map, setMap] = useState(null);
@@ -17,12 +17,12 @@ function TripComponent({tripStyle}) {
 
   return (
     <>
-      <div className={tripStyle.tripContents}>
-        <div className={tripStyle.mapBox} ref={mapContainer}></div>
-        <div className={ tripStyle.tripBox }></div>
+      <div className={attractionStyle.tripContents}>
+        <div className={attractionStyle.mapBox} ref={mapContainer}></div>
+        <div className={ attractionStyle.tripBox }></div>
       </div>
     </>
   );
 }
 
-export default TripComponent;
+export default AttractionComponent;

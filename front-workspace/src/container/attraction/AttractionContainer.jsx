@@ -1,11 +1,11 @@
 // Components
 import HeaderComponent from "../../components/common/HeaderComponent";
-import TripComponent from "../../components/trip/TripComponent";
+import TripComponent from "../../components/attraction/AttractionComponent";
 
 // Style
-import tripStyle from "../../resources/css/trip/Trip.module.css";
+import tripStyle from "../../resources/css/attraction/Attraction.module.css";
 
-function TripContainer() {
+function AttractionContainer() {
 
   return (
     <>
@@ -17,4 +17,4 @@ function TripContainer() {
   );
 }
 
-export default TripContainer;
+export default AttractionContainer;

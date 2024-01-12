@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import IndexContainer from "./container/IndexContainer";
 import LoginContainer from "./container/member/LoginContainer";
 import RegisterContainer from "./container/member/RegisterContainer";
-import TripContainer from "./container/trip/TripContainer";
+import AttractionContainer from "./container/attraction/AttractionContainer";
 
 // Styles
 import "./resources/css/common/Global.css";
@@ -18,7 +18,7 @@ function App() {
         <Route path="/login" element={<LoginContainer />} />
         <Route path="/register" element={<RegisterContainer />} />
         <Route path="/" element={<IndexContainer />} />
-        <Route path="/trip" element={<TripContainer />} />
+        <Route path="/attraction" element={<AttractionContainer />} />
       </Routes>
       <div><Toaster/></div>
     </BrowserRouter>

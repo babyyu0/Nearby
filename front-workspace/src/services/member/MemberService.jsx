@@ -48,19 +48,4 @@ const existId = async (data) => {
     if(response.status === 200) return response.data;
 }
 
-const getCity = async () => {
-    const response = await api.get(
-        `/trip/city`
-    ).catch((error) => {
-        Swal.fire({
-            icon: 'error',
-            title: error.respononse.data
-        });
-        
-        return;
-    });
-
-    return response.data;
-}
-
-export { login, register, existId, getCity };
+export { login, register, existId };

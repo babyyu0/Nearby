@@ -1,10 +1,10 @@
 package com.ssafy.trip.member.model.dto.command;
 
-import com.ssafy.trip.member.model.dto.request.RegisterRequestDto;
 import com.ssafy.trip.global.data.RegexPattern;
+import com.ssafy.trip.member.model.dto.request.RegisterRequestDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,30 +20,30 @@ public record RegisterCommandDto(
         @Size(min = 2, max = 20, message = "회원명은 최소 2자, 최대 20자여야 합니다.")
         String name,
 
-        @Positive(message = "행정구역 코드는 자연수여야 합니다.")
+        @PositiveOrZero(message = "행정구역 코드는 0 이상이어야 합니다.")
         int sidoCode,
-        @Positive(message = "하위 행정구역 코드는 자연수여야 합니다.")
+        @PositiveOrZero(message = "하위 행정구역 코드는 0 이상이어야 합니다.")
         int gugunCode,
         MultipartFile profile
 ) {
-        @Builder
-        public RegisterCommandDto(String memberId, String password, String name, int sidoCode, int gugunCode, MultipartFile profile) {
-                this.memberId = memberId;
-                this.password = password;
-                this.name = name;
-                this.sidoCode = sidoCode;
-                this.gugunCode = gugunCode;
-                this.profile = profile;
-        }
+    @Builder
+    public RegisterCommandDto(String memberId, String password, String name, int sidoCode, int gugunCode, MultipartFile profile) {
+        this.memberId = memberId;
+        this.password = password;
+        this.name = name;
+        this.sidoCode = sidoCode;
+        this.gugunCode = gugunCode;
+        this.profile = profile;
+    }
 
-        public static RegisterCommandDto from (RegisterRequestDto registerRequestDto, MultipartFile profile) {
-                return RegisterCommandDto.builder()
-                        .memberId(registerRequestDto.memberId())
-                        .password(registerRequestDto.password())
-                        .name(registerRequestDto.name())
-                        .sidoCode(registerRequestDto.sidoCode())
-                        .gugunCode(registerRequestDto.gugunCode())
-                        .profile(profile)
-                        .build();
-        }
+    public static RegisterCommandDto from(RegisterRequestDto registerRequestDto, MultipartFile profile) {
+        return RegisterCommandDto.builder()
+                .memberId(registerRequestDto.memberId())
+                .password(registerRequestDto.password())
+                .name(registerRequestDto.name())
+                .sidoCode(registerRequestDto.sidoCode())
+                .gugunCode(registerRequestDto.gugunCode())
+                .profile(profile)
+                .build();
+    }
 }

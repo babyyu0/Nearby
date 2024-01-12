@@ -4,7 +4,7 @@ package com.ssafy.trip.member.model.dto.request;
 import com.ssafy.trip.global.data.RegexPattern;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 public record RegisterRequestDto(
@@ -18,9 +18,9 @@ public record RegisterRequestDto(
         @Size(min = 2, max = 20, message = "회원명은 최소 2자, 최대 20자여야 합니다.")
         String name,
 
-        @Positive(message = "행정구역 코드는 자연수여야 합니다.")
+        @PositiveOrZero(message = "행정구역 코드는 0 이상이어야 합니다.")
         int sidoCode,
-        @Positive(message = "하위 행정구역 코드는 자연수여야 합니다.")
+        @PositiveOrZero(message = "하위 행정구역 코드는 0 이상이어야 합니다.")
         int gugunCode
 ) {
 }

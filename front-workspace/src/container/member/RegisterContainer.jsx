@@ -12,6 +12,7 @@ import { sidoAtom, gugunAtom } from "../../jotai/city";
 
 // Components
 import RegisterComponent from "../../components/member/RegisterComponent";
+import RegisterDescComponent from "../../components/member/RegisterDescComponent";
 
 // Styles
 import registerStyle from "../../resources/css/member/Register.module.css";
@@ -160,6 +161,7 @@ function RegisterContainer() {
           sidoList={sidoList} gugunList={gugunList}
           doRegister={doRegister}
         />
+        <RegisterDescComponent registerStyle={registerStyle} />
       </div>
     </>
   );

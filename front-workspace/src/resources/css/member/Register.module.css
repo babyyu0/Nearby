@@ -30,10 +30,7 @@
 
 .container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  width: 100vw;
+  justify-content: center;
 }
 .title {
   margin: 2vh 0;
@@ -42,6 +39,8 @@
 }
 
 .contents {
+  width: 50%;
+  padding: 0 10vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,15 +51,12 @@
   min-width: 30vw;
   min-height: 30vh;
 
-  background-color: var(--extra-light-color);
-  border-radius: 10px;
-}
-.box {
-  padding-bottom: 2vh;
+  border-right: 1px solid var(--extra-light-color);
 }
 
 .box {
   display: flex;
+  padding-bottom: 2vh;
   flex-direction: column;
   align-items: center;
 
@@ -135,4 +131,9 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.registerDescContainer {
+  width: 50%;
+  background-color: red;
 }

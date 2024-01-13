@@ -54,6 +54,7 @@
 }
 
 .leftMenu, .rightMenu {
+    font-family: 'SUITE-Regular' !important;
     margin-left: 2vw;
 
     font-weight: 700;

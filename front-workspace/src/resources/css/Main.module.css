@@ -22,6 +22,7 @@
 }
 
 .menuTitle {
+    font-family: 'SUITE-Regular' !important;
     margin: 2vh 0;
     font-size: 1.5rem;
     font-weight: 600;

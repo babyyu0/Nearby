@@ -75,6 +75,14 @@
   border-radius: 5px;
   border: 1px solid var(--base-gray-color);
 }
+.profileInput {
+  display: block;
+  padding: 0;
+  object-fit: cover;
+  width: 200px;
+  min-width: 200px;
+  height: 200px;
+}
 .idBox {
   display: flex;
 }

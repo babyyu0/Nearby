@@ -23,6 +23,16 @@ function LoginComponent({ registerStyle, profile, setProfile, id, setId, isExist
   //   return URL.revokeObjectURL(fileDOM.current.files[0]);
   // }, []);
 
+  const refreshProfile = (e) => {
+    const {files} = e.target;
+    const uploadFile = files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(uploadFile);
+    reader.onloadend = () => {
+      setProfile(reader.result);
+    }
+  }
+
   useEffect(() => {
     if (id.trim() && !new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$').test(id)) {
       isIdAvailable(false);
@@ -56,6 +66,13 @@ function LoginComponent({ registerStyle, profile, setProfile, id, setId, isExist
   return (
     <>
       <div className={registerStyle.registerBox}>
+        <div className={registerStyle.infoBox}>
+          <label htmlFor="profile">{ /* className={`${registerStyle.infoLabel} ${registerStyle.profileLabel}`} */}
+            <span className={`${registerStyle.infoLabel} ${registerStyle.profileLabel}`}>프로필</span>
+            <img src={profile} alt="프로필"  className={`${registerStyle.infoInput} ${registerStyle.profileInput}`} />
+          </label>
+          <input type="file" id="profile" accept="image/*" style={{ display: 'none' }} ref={fileDOM} onChange={(e) => { refreshProfile(e); }} />
+        </div>
         <div className={registerStyle.infoBox}>
           <label htmlFor="id" className={`${registerStyle.infoLabel} ${registerStyle.idLabel}`}>아이디 (이메일)</label>
           <div className={registerStyle.idBox}>

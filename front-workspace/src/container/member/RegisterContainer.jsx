@@ -114,7 +114,7 @@ function RegisterContainer() {
       });
     } else {
       const response = await register(new Blob([JSON.stringify({ "memberId": id, password, name, "sidoCode": sido, "gugunCode": gugun })], { type: "application/json" }), document.getElementById('profile').files[0]);
-      if (response.status === 200 && response.data === true) {
+      if (response) {
         Swal.fire({
           icon: "success",
           title: "회원가입을 성공 했습니다.",

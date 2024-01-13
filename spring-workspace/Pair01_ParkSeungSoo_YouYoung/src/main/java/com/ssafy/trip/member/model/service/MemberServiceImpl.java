@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     @Value("${url.member.profile-img}")
-    private static String MEMBER_PROFILE_IMG_URI;
+    private String MEMBER_PROFILE_IMG_URI;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
@@ -68,7 +68,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = MyException.class)
     public boolean register(RegisterCommandDto registerCommandDto) throws MyException {
         ValidateUtil.clientValidate(registerCommandDto);
         if (memberRepository.findById(registerCommandDto.memberId()).isPresent()) {

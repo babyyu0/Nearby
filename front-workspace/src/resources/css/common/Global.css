@@ -1,7 +1,13 @@
-@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@font-face {
+    font-family: 'SUITE-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
 
 * {
-    font-family: 'Nanum Gothic', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-weight: 400;
 }
 
@@ -20,6 +26,13 @@ a {
     --blue-color-3: #5377A6;
     --blue-color-4: #89B3D9;
     --black-color: #0D0D0D;
-    --gray-color: #8F93AE;
+    --base-gray-color: #929CAE;
+    --main-gray-color: #E6E9EE;
+    --accent-gray-color: #4E5A6E;
+    --base-blue-color: #85AEE6;
+    --main-blue-color: #CBDDF5;
+    --accent-blue-color: #4685D7;
     --white-color: #F2F2F2;
+
+    --danger-color: #C74A35;
 }

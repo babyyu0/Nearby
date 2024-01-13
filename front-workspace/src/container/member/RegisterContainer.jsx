@@ -12,6 +12,7 @@ import { sidoAtom, gugunAtom } from "../../jotai/city";
 
 // Components
 import RegisterComponent from "../../components/member/RegisterComponent";
+import RegisterDescComponent from "../../components/member/RegisterDescComponent";
 
 // Styles
 import registerStyle from "../../resources/css/member/Register.module.css";
@@ -33,16 +34,10 @@ function RegisterContainer() {
   let tmpGugunList = [];
 
   const isExistId = async () => {
-    if (!id) {
+    if (!new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$').test(id)) {
       Swal.fire({
-        icon: "info",
-        title: "아이디가 입력되지 않았습니다!",
-      });
-      return;
-    } else if (!new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$').test(id)) {
-      Swal.fire({
-        icon: "info",
-        title: "이메일 형식으로 아이디를 입력해 주세요.",
+        icon: "error",
+        title: "올바른 아이디 형식이 아닙니다.",
       });
       return;
     }
@@ -119,7 +114,7 @@ function RegisterContainer() {
       });
     } else {
       const response = await register(new Blob([JSON.stringify({ "memberId": id, password, name, "sidoCode": sido, "gugunCode": gugun })], { type: "application/json" }), document.getElementById('profile').files[0]);
-      if (response.status === 200 && response.data === true) {
+      if (response) {
         Swal.fire({
           icon: "success",
           title: "회원가입을 성공 했습니다.",
@@ -140,11 +135,15 @@ function RegisterContainer() {
 
   return (
     <>
-      <div className={registerStyle.container}>
-        <NavLink to="/" className={registerStyle.logoBox}>
-          <img className={registerStyle.logo} src="/image/logo.png" alt="logo" />
-        </NavLink>
-        <span className={registerStyle.title}>회원가입</span>
+      <div className={registerStyle.headerContainer}>
+        <div className={registerStyle.headerContents}>
+          <NavLink to="/" className={registerStyle.logoBox}>
+            <img className={registerStyle.logo} src="/image/logo.png" alt="logo" />
+          </NavLink>
+          <span className={registerStyle.headerTitle}>회원가입</span>
+        </div>
+      </div>
+      <div className={registerStyle.registerContainer}>
         <RegisterComponent
           registerStyle={registerStyle}
           profile={profile} setProfile={setProfile}
@@ -156,6 +155,7 @@ function RegisterContainer() {
           sidoList={sidoList} gugunList={gugunList}
           doRegister={doRegister}
         />
+        <RegisterDescComponent registerStyle={registerStyle} />
       </div>
     </>
   );

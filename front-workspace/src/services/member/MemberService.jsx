@@ -1,5 +1,6 @@
 import { api } from "../common/ApiService";
 import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 
 const login = async (data) => {
     try {
@@ -15,22 +16,14 @@ const login = async (data) => {
     }   
 }
 
-const register = (data, profile) => {
-    const response = api.post(
-        `/member/register`,
-        { "member" : data, profile },
-        {headers : {
-            "Content-Type": `multipart/form-data`
-        }}).catch((error) => {
-            Swal.fire({
-                icon: 'error',
-                title: error.response.data
-            });
-            
-            return;
-        });
-    
-        return response;
+const register = async (data, profile) => {
+    try {
+        const response = await api.post(`/member/register`, { "member" : data, profile }, {headers: {"Content-Type": `multipart/form-data`}});
+        return response.data;
+    } catch(error) {
+        toast.error((error.response) ? error.response.data.message : process.env.REACT_APP_ERROR_MESSAGE, {duration: 1000});
+        return;
+    }
 }
 
 const existId = async (data) => {

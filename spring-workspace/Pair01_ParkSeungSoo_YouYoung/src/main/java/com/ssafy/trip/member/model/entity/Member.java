@@ -32,7 +32,6 @@ public class Member {
     private String id;
 
     @NotBlank(message = "비밀번호가 존재하지 않습니다.")
-    @Pattern(regexp = RegexPattern.PASSWORD, message = "비밀번호가 올바르지 않습니다.")
     @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     @Comment("비밀번호")
     private String password;

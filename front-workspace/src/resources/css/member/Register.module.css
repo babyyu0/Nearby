@@ -15,14 +15,14 @@
   min-width: 400px;
 }
 .headerContents > .logoBox {
-    margin-right: 0.8vw;
-    height: 100%;
+  margin-right: 0.8vw;
+  height: 100%;
 }
 .headerContents > .logoBox > img {
-    height: 100%;
+  height: 100%;
 }
 .headerContents > .headerTitle {
-  font-family: 'SUITE-Regular' !important;
+  font-family: "SUITE-Regular" !important;
   font-size: 1.4rem;
   font-weight: 600;
 }
@@ -31,16 +31,22 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  background-color: var(--main-gray-color);
 }
+
+
+/** Register Component **/
 
 .registerBox {
   flex-basis: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 3vh 0;
+  padding: 3vh 0;
+  background-color: white;
 }
-.infoBox, .confirmBox {
+.infoBox,
+.confirmBox {
   margin-top: 2vh;
   width: 50%;
   padding: 0 2vw;
@@ -59,8 +65,8 @@
   text-overflow: ellipsis;
 }
 .infoHelp {
-  margin-left: .5vw;
-  padding-bottom: 0.2rem; 
+  margin-left: 0.5vw;
+  padding-bottom: 0.2rem;
   margin-bottom: 1vh;
   display: inline-block;
 }
@@ -86,10 +92,12 @@
 .idBox {
   display: flex;
 }
-.sidoBox, .gugunBox {
+.sidoBox,
+.gugunBox {
   flex-basis: 48%;
 }
-.sidoInput, .gugunInput {
+.sidoInput,
+.gugunInput {
   width: 100%;
   min-width: 150px;
 }
@@ -110,26 +118,21 @@
   cursor: pointer;
   white-space: nowrap;
 }
-.infoInput[available=false] {
+.infoInput[available="false"] {
   border: 1px solid var(--danger-color);
 }
 .infoInput:focus {
   outline: 1.2px solid var(--base-gray-color);
 }
-.infoInput[available=false]:focus {
+.infoInput[available="false"]:focus {
   outline: 1.2px solid var(--danger-color);
 }
 .infoWarning {
   display: none;
 }
-.infoWarning[available=false] {
+.infoWarning[available="false"] {
   display: block;
   color: var(--danger-color);
-}
-
-.registerDescBox {
-  flex-basis: 50%;
-  background-color: red;
 }
 
 .confirmBtn {
@@ -142,4 +145,31 @@
   width: 100%;
   height: 3rem;
   cursor: pointer;
+}
+
+
+/** Register Desc Component **/
+
+.registerDescBox {
+  flex-basis: 50%;
+  width: 50%;
+  padding-top: 10vh;
+}
+.bannerBox {
+  text-align: center;
+  margin: 5vh 0;
+}
+.bannerImg {
+  margin: 0 auto;
+  text-align: center;
+  width: 50%;
+}
+.bannerImg > img {
+  text-align: center;
+  width: 100%;
+}
+.bannerDesc {
+  margin-top: 1rem;
+  font-size: 1.4rem;
+  font-weight: 500;
 }

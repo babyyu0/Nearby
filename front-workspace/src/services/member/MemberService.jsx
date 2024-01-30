@@ -5,15 +5,11 @@ import toast from "react-hot-toast";
 const login = async (data) => {
     try {
         const response = await api.post(`/member/login`, JSON.stringify(data));
-        return response;
+        return response.data;
     } catch(error) {
-        Swal.fire({
-            icon: 'error',
-            title: error.response.data
-        });
-
+        toast.error((error.response) ? error.response.data.message : process.env.REACT_APP_ERROR_MESSAGE, {duration: 1000});
         return;
-    }   
+    }
 }
 
 const register = async (data, profile) => {

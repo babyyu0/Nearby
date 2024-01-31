@@ -1,5 +1,6 @@
 package com.ssafy.trip.attraction.model.service;
 
+import com.ssafy.trip.attraction.model.dto.command.AreaAttractionCommandDto;
 import com.ssafy.trip.attraction.model.dto.command.AttractionDescRefreshCommandDto;
 import com.ssafy.trip.attraction.model.dto.command.MemberDistCommandDto;
 import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
@@ -13,4 +14,5 @@ public interface AttractionService {
     boolean refreshAttractionDesc(AttractionDescRefreshCommandDto attractionDescRefreshCommandDto);
     List<AttractionGetResponseDto> getNearestAttraction(MemberDistCommandDto memberDistCommandDto);
     List<AttractionGetResponseDto> getPopularAttraction(MemberDistCommandDto memberDistCommandDto);
+    List<AttractionGetResponseDto> getAttractionByArea(AreaAttractionCommandDto areaAttractionCommandDto);
 }

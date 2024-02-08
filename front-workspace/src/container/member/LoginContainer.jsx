@@ -1,6 +1,6 @@
 // Modules
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAtom } from "jotai";
 
@@ -13,6 +13,7 @@ import { memberAtom } from "../../jotai/member";
 // Components
 import HeaderComponent from "../../components/common/HeaderComponent";
 import LoginComponent from "../../components/member/LoginComponent";
+import LoginDescComponent from "../../components/member/LoginDescComponent";
 
 // Style
 import loginStyle from "../../resources/css/member/Login.module.css";
@@ -25,11 +26,10 @@ function LoginContainer() {
   const [member, setMember] = useAtom(memberAtom);
 
   const doLogin = async () => {
-    const request = {id, password};
-    const response = await login(request);
+    const response = await login({id, password});
 
-    if(response && response.data) {
-      setMember(response.data);
+    if(response) {
+      setMember(response);
       Swal.fire({
         icon: "success",
         title: "로그인에 성공 했습니다.",
@@ -44,12 +44,9 @@ function LoginContainer() {
   return (
     <>
       <HeaderComponent />
-      <div className={loginStyle.container}>
-        <NavLink to="/" className={loginStyle.logoBox}>
-          <img className={loginStyle.logo} src="/image/logo.png" alt="logo" />
-        </NavLink>
-        <span className={loginStyle.title}>Always <span className={loginStyle.titleColored}>Nearby</span> You ! </span>
+      <div className={loginStyle.loginContainer}>
         <LoginComponent loginStyle={loginStyle} id={id} setId={setId} password={password} setPassword={setPassword} doLogin={doLogin} />
+        <LoginDescComponent loginStyle={loginStyle} navigate={navigate} />
       </div>
     </>
   );

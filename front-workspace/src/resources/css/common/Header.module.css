@@ -1,8 +1,6 @@
 .container {
     height: 10vh;
     width: 100%;
-
-    /* background-color: var(--extra-light-color); */
 }
 
 .contents {
@@ -38,7 +36,7 @@
 
     padding: 1.4vh 1.4vw;
     border-radius: 50px;
-    border: 1px solid var(--gray-color);
+    border: 1px solid var(--base-gray-color);
     width: 20rem;
 }
 .searchBox > .search {
@@ -59,7 +57,7 @@
 
     font-weight: 700;
     text-decoration: none;
-    color: var(--black-color);
+    color: var(--accent-gray-color);
     white-space: nowrap;
 }
 
@@ -71,6 +69,6 @@
     font-weight: 700;
     text-decoration: none;
     color: var(--white-color);
-    background-color: var(--blue-color-2);
+    background-color: var(--accent-blue-color);
     white-space: nowrap;
 }

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.Tuple;
+import com.ssafy.trip.area.model.entity.Gugun;
 import com.ssafy.trip.area.util.AreaUtil;
+import com.ssafy.trip.attraction.model.dto.command.AreaAttractionCommandDto;
 import com.ssafy.trip.attraction.model.dto.command.AttractionDescRefreshCommandDto;
 import com.ssafy.trip.attraction.model.dto.command.MemberDistCommandDto;
 import com.ssafy.trip.attraction.model.dto.response.AttractionGetResponseDto;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ValidationUtils;
 
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
@@ -292,6 +295,43 @@ public class AttractionServiceImpl implements AttractionService {
 
             attractionGetResponseDtoList.add(attractionGetResponseDto);
         }
+
+        return attractionGetResponseDtoList;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AttractionGetResponseDto> getAttractionByArea(AreaAttractionCommandDto areaAttractionCommandDto) {
+        ValidateUtil.clientValidate(areaAttractionCommandDto);
+
+        Gugun gugun = AreaUtil.getGugun(areaAttractionCommandDto.sidoCode(), areaAttractionCommandDto.gugunCode());
+        ContentType contentType = contentTypeRepository.findById(areaAttractionCommandDto.contentType()).orElseThrow(() -> {
+            log.debug("getAttractionByArea : 콘텐츠 타입 받기 실패");
+            return new MyException(ErrorMessage.ATTRACTION_NOT_FOUND);
+        });
+
+        List<Attraction> attractionList = attractionRepository.findByGugunAndContentType(gugun, contentType);
+        List<AttractionGetResponseDto> attractionGetResponseDtoList = new ArrayList<>();
+
+        AttractionGetResponseDto attractionGetResponseDto;
+        double dist;
+        int heart;
+        for (Attraction attraction : attractionList) {
+            heart = attractionHeartRepository.countAllByAttraction(attraction);
+            dist = AttractionUtil.calDist(areaAttractionCommandDto.latitude(), areaAttractionCommandDto.longitude(),
+                    attraction.getAttractionInfo().getLatitude(), attraction.getAttractionInfo().getLongitude());
+
+            attractionGetResponseDto = AttractionGetResponseDto.builder()
+                    .code(attraction.getCode())
+                    .title(attraction.getTitle())
+                    .dist(Math.round(dist * 100) / 100.0)
+                    .heart(heart)
+                    .img(attraction.getImg())
+                    .build();
+            ValidateUtil.serverValidate(attractionGetResponseDto);
+            attractionGetResponseDtoList.add(attractionGetResponseDto);
+        }
+
 
         return attractionGetResponseDtoList;
     }

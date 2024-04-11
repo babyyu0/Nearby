@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.my.nearby.area.model.dao.GugunDao">
+    <select id="select" parameterType="int" resultType="GugunVo">
+        SELECT `code`, `sido_code` AS 'sidoCode', `name`
+        FROM `gugun`
+        WHERE code = #{code};
+    </select>
+    <select id="selectAll" resultType="GugunVo">
+        SELECT `code`, `sido_code` AS 'sidoCode', `name`
+        FROM `gugun`;
+    </select>
+    <select id="selectAllBySidoCode" parameterType="int" resultType="GugunVo">
+        SELECT `code`, `sido_code` AS 'sidoCode', `name`
+        FROM `gugun`
+        WHERE sido_code = #{sidoCode};
+    </select>
+    <insert id="insert" parameterType="GugunVo">
+        INSERT INTO `gugun`(`code`, `sido_code`, `name`)
+        VALUES (#{code}, #{sidoCode}, #{name})
+        ON DUPLICATE KEY UPDATE `name` = #{name};
+    </insert>
+</mapper>

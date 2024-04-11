@@ -1,4 +1,4 @@
-package com.my.nearby.area;
+package com.my.nearby.area.model.vo;
 
 import com.my.nearby.BusinessException;
 import lombok.Getter;

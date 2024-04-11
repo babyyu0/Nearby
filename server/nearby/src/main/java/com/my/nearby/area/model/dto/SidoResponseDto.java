@@ -1,6 +1,7 @@
-package com.my.nearby.area;
+package com.my.nearby.area.model.dto;
 
 import com.my.nearby.BusinessException;
+import com.my.nearby.area.model.vo.SidoVo;
 import org.springframework.http.HttpStatus;
 
 public record SidoResponseDto(

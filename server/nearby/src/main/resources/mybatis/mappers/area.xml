@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.my.nearby.area.model.dao.AreaDao">
+    <select id="select" parameterType="int" resultType="AreaVo">
+        SELECT `area_code` AS 'areaCode', `sigungu_code` AS 'sigunguCode', `name`
+        FROM `area`
+        WHERE code = #{areaCode} AND sigungu_code = #{sigunguCode};
+    </select>
+    <select id="selectAll" resultType="AreaVo">
+        SELECT `area_code` AS 'areaCode', `sigungu_code` AS 'sigunguCode', `name`
+        FROM `area`;
+    </select>
+    <insert id="insert" parameterType="AreaVo">
+        INSERT INTO `area`(`area_code`, `sigungu_code`, `name`, `created_at`, `updated_at`)
+        VALUES (#{areaCode}, #{sigunguCode}, #{name}, NOW(), NOW())
+        ON DUPLICATE KEY UPDATE `name` = #{name}, `updated_at` = NOW();
+    </insert>
+</mapper>

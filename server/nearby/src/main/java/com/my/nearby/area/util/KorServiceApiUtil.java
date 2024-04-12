@@ -1,23 +1,22 @@
 package com.my.nearby.area.util;
 
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Optional;
 
 @Component
 public class KorServiceApiUtil {
     private static RestClient restClient;
 
-    public KorServiceApiUtil() {
+    public KorServiceApiUtil(@Value("${api.korservice.key}") String secretKey) {
         restClient = RestClient.builder()
                 .baseUrl("https://apis.data.go.kr/B551011/KorService1?serviceKey={serviceKey}&MobileOS={MobileOS}&MobileApp={MobileApp}&_type={_type}")
                 .defaultUriVariables(new HashMap<>(){{
-                    put("serviceKey", "IsTiFafsHvkneWO/yF3IPSBSXEPlbh9RBv+AZ2cg4WnY0gvdeOTDYRIIc9Go+UNOc/763DDNVKnA6Tw8pyxdPQ==");
+                    put("serviceKey", secretKey);
                     put("MobileOS", "ETC");
                     put("MobileApp", "nearby");
                     put("_type", "json");

@@ -7,7 +7,7 @@
     <select id="select" parameterType="int" resultType="AreaVo">
         SELECT `area_code` AS 'areaCode', `sigungu_code` AS 'sigunguCode', `name`
         FROM `area`
-        WHERE code = #{areaCode} AND sigungu_code = #{sigunguCode};
+        WHERE area_code = #{areaCode} AND sigungu_code = #{sigunguCode};
     </select>
     <select id="selectAll" resultType="AreaVo">
         SELECT `area_code` AS 'areaCode', `sigungu_code` AS 'sigunguCode', `name`

@@ -68,6 +68,7 @@ Nearby는 선택한 지역의 매력적인 관광지를 다양한 조건과 함�
 #### ➤ 관광지
 |대분류|기능|Method|URL|권한|
 |:-:|:-:|:-:|:-:|:-:|
+|관광지|콘텐츠 분류 코드 갱신하기|`GET`|<p align='left'>/cat/refresh</p>|`관리자`|
 |관광지|가까운 관광지 리스트 조회|`GET`|<p align='left'>/attraction/nearest</p>|`관리자`  `사용자`|
 |관광지|인기 관광지 리스트 조회|`GET`|<p align='left'>/attraction/popular</p>|`관리자`  `사용자`|
 |관광지|공공데이터 관광 콘텐츠 타입 불러오기|`GET`|<p align='left'>/attraction/content-type/refresh</p>|`관리자`|

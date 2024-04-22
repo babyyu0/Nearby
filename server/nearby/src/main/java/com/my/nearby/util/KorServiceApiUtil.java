@@ -1,4 +1,4 @@
-package com.my.nearby.area.util;
+package com.my.nearby.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +35,22 @@ public class KorServiceApiUtil {
                     }
                     throw new RuntimeException("공공데이터포털 API /areaCode1 오류");
                 });
-        System.out.println(result);
+
+        return result.get("response").get("body").get("items").get("item");
+    }
+
+    public static JsonNode getCategoryCode(String catCode) {
+        JsonNode result = restClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/categoryCode1")
+                        .queryParam("cat1", (3 <= catCode.length()) ? catCode.substring(0, 3) : "")
+                        .queryParam("cat2", (5 <= catCode.length()) ? catCode.substring(0, 5) : "")
+                        .build())
+                .exchange((clientRequest, clientResponse) -> {
+                    if(clientResponse.getHeaders().containsKey("content-type") && clientResponse.getHeaders().get("content-type").get(0).equals("application/json")) {
+                        return Objects.requireNonNull(clientResponse.bodyTo(JsonNode.class));
+                    }
+                    throw new RuntimeException("공공데이터포털 API /categoryCode1 오류");
+                });
         return result.get("response").get("body").get("items").get("item");
     }
 }

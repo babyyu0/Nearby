@@ -8,7 +8,7 @@ import com.my.nearby.area.model.dao.AreaDao;
 import com.my.nearby.area.model.dto.AreaCodeDto;
 import com.my.nearby.area.model.dto.AreaResponseDto;
 import com.my.nearby.area.model.vo.AreaVo;
-import com.my.nearby.area.util.KorServiceApiUtil;
+import com.my.nearby.util.KorServiceApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

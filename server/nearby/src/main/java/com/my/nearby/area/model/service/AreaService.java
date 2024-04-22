@@ -9,6 +9,6 @@ public interface AreaService {
 
     List<AreaResponseDto> findAllArea();
 
-    void refreshArea();
-    void refreshSigungu(int areaCode);
+    List<AreaResponseDto> refreshArea();
+    List<AreaResponseDto> refreshSigungu(int areaCode);
 }

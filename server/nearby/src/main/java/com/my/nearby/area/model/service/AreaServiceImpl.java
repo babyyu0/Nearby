@@ -50,7 +50,7 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void refreshArea() {
+    public List<AreaResponseDto> refreshArea() {
         JsonNode jsonNode = KorServiceApiUtil.getAreaCode("");
         ObjectMapper objectMapper = new ObjectMapper();
         List<AreaCodeDto> areaDtoList = new ArrayList<>();
@@ -64,14 +64,18 @@ public class AreaServiceImpl implements AreaService {
             throw new RuntimeException(e.getMessage());
         }
 
+        List<AreaResponseDto> areaResponseDtoList = new ArrayList<>();
         for (AreaCodeDto areaDto : areaDtoList) {
             AreaVo area = new AreaVo(areaDto.code(), 0, areaDto.name());
             areaDao.insert(area);
+            areaResponseDtoList.add(AreaResponseDto.from(area));
         }
+
+        return areaResponseDtoList;
     }
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void refreshSigungu(int areaCode) {
+    public List<AreaResponseDto> refreshSigungu(int areaCode) {
         JsonNode jsonNode = KorServiceApiUtil.getAreaCode(Integer.toString(areaCode));
         ObjectMapper objectMapper = new ObjectMapper();
         List<AreaCodeDto> areaDtoList = new ArrayList<>();
@@ -85,9 +89,13 @@ public class AreaServiceImpl implements AreaService {
             throw new RuntimeException(e.getMessage());
         }
 
+        List<AreaResponseDto> areaResponseDtoList = new ArrayList<>();
         for (AreaCodeDto areaDto : areaDtoList) {
             AreaVo area = new AreaVo(areaCode, areaDto.code(), areaDto.name());
             areaDao.insert(area);
+            areaResponseDtoList.add(AreaResponseDto.from(area));
         }
+
+        return areaResponseDtoList;
     }
 }

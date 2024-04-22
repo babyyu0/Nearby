@@ -53,16 +53,11 @@ public class CategoryServiceImpl implements CategoryService {
             throw new RuntimeException(e.getMessage());
         }
 
-        List<CategoryVo> subCategoryList = new ArrayList<>();
+        List<CategoryResponseDto> subCategoryDtoList = new ArrayList<>();
         for (CategoryDto categoryDto : categoryDtoList) {
             CategoryVo category = new CategoryVo(categoryDto.code(), categoryDto.name());
             categoryDao.insert(category);
-            subCategoryList.add(category);
-        }
-
-        List<CategoryResponseDto> subCategoryDtoList = new ArrayList<>();
-        for(CategoryVo subCategory : subCategoryList) {
-            subCategoryDtoList.add(CategoryResponseDto.from(subCategory));
+            subCategoryDtoList.add(CategoryResponseDto.from(category));
         }
 
         return subCategoryDtoList;

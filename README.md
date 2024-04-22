@@ -57,22 +57,20 @@ Nearby는 선택한 지역의 매력적인 관광지를 다양한 조건과 함�
 |회원|로그인|`POST`|<p align='left'>/member/login</p>|`관리자`  `사용자`|
 |회원|로그아웃|`POST`|<p align='left'>/member/logout</p>|`관리자`  `사용자`|
 
-#### ➤ 행정구역
-|대분류|기능|Method|URL|권한|
-|:-:|:-:|:-:|:-:|:-:|
-|행정구역|행정구역 리스트 조회|`GET`|<p align='left'>/sido</p>|`관리자`  `사용자`|
-|행정구역|공공데이터 행정구역 불러오기|`GET`|<p align='left'>/sido/refresh</p>|`관리자`|
-|행정구역|하위 행정구역 리스트 조회|`GET`|<p align='left'>/gugun</p>|`관리자`  `사용자`|
-|행정구역|공공데이터 하위 행정구역 불러오기|`GET`|<p align='left'>/gugun/refresh</p>|`관리자`|
+#### ➤ 지역
+|대분류|기능|Method|URL|권한|상세설명|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|지역|지역 리스트 조회|`GET`|<p align='left'>/area</p>|`관리자`  `사용자`|지역과 시군구를 통합하여 조회한다.|
+|지역|지역 갱신|`GET`|<p align='left'>/area/refresh</p>|`관리자`|공공데이터포털로부터 정보를 얻어와, 지역과 시군구를 통합하여 갱신한다.|
 
 #### ➤ 관광지
-|대분류|기능|Method|URL|권한|
-|:-:|:-:|:-:|:-:|:-:|
-|관광지|콘텐츠 분류 코드 갱신하기|`GET`|<p align='left'>/cat/refresh</p>|`관리자`|
-|관광지|가까운 관광지 리스트 조회|`GET`|<p align='left'>/attraction/nearest</p>|`관리자`  `사용자`|
-|관광지|인기 관광지 리스트 조회|`GET`|<p align='left'>/attraction/popular</p>|`관리자`  `사용자`|
-|관광지|공공데이터 관광 콘텐츠 타입 불러오기|`GET`|<p align='left'>/attraction/content-type/refresh</p>|`관리자`|
-|관광지|공공데이터 관광지 불러오기|`GET`|<p align='left'>/attraction/refresh</p>|`관리자`|
+|대분류|기능|Method|URL|권한|상세설명|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|관광지|콘텐츠 분류 코드 갱신하기|`GET`|<p align='left'>/cat/refresh</p>|`관리자`|공공데이터포털로부터 정보를 얻어와, 콘텐츠의 대·중·소분류를 통합하여 갱신한다.|
+|관광지|가까운 관광지 리스트 조회|`GET`|<p align='left'>/attraction/nearest</p>|`관리자`  `사용자`||
+|관광지|인기 관광지 리스트 조회|`GET`|<p align='left'>/attraction/popular</p>|`관리자`  `사용자`||
+|관광지|공공데이터 관광 콘텐츠 타입 불러오기|`GET`|<p align='left'>/attraction/content-type/refresh</p>|`관리자`||
+|관광지|공공데이터 관광지 불러오기|`GET`|<p align='left'>/attraction/refresh</p>|`관리자`||
 
 <h3>
     <img src="https://em-content.zobj.net/source/apple/354/link_1f517.png" width=16 height=16 alt="링크 아이콘" />

@@ -1,6 +1,6 @@
 package com.my.nearby;
 
-import com.my.nearby.area.util.KorServiceApiUtil;
+import com.my.nearby.util.KorServiceApiUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,14 @@ public class KorServiceApiUtilTest {
     }
 
     @Test
-    @DisplayName("행정구역 조회 테스트")
+    @DisplayName("지역 코드 조회 테스트")
     public void getAreaCodeTest() {
         korServiceApiUtil.getAreaCode("");
+    }
+    @Test
+    @DisplayName("카테고리 조회 테스트")
+    public void getCategoryCodeTest() {
+        korServiceApiUtil.getCategoryCode("A01");
     }
 
 }
